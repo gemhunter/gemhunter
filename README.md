@@ -6,4 +6,4 @@ gemhunter - a cross compiler for Ruby, written in Python
 To run the compiler, use the following command:
 python src/lexer.py test/nameOfTestFile
 
-
+We do not provide a makefile since running python is too easy.
