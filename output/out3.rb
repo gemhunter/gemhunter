@@ -43,7 +43,14 @@
 # the memory used is linear to the input size. 
  
 if $0	# KEYWORD_IF DOL0 
+<<<<<<< HEAD:test/ex3.rb	# LSHIFT LSHIFT LSHIFT LT CONST COLON IDENTIFIER DIV IDENTIFIER DOT IDENTIFIER 
 	puts "rtgty	edtrghrthethtb	wegerg	wtger"	# IDENTIFIER STRING 
+=======	# CASEEQ CASEEQ EQUAL 
+  puts "dgdth	# IDENTIFIER STRING 
+  fthfthj 
+  dthrftj 
+  dhfth" 
+>>>>>>> a0a7429aebb878f9dc88abdb4839b0bcf44f2362:ex3.rb	# RSHIFT RSHIFT RSHIFT GT IDENTIFIER COLON IDENTIFIER DOT IDENTIFIER 
 end	# KEYWORD_end 
  
 # returns the maximum of the two parameters 

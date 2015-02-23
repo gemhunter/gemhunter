@@ -18,6 +18,12 @@
 #!/usr/bin/ruby
 
 
+
+
+dec = 10
+hex = 0xAF10
+bin = 0b1010
+
 class Customer
    @@no_of_customers=0
    def initialize(id, name, addr)
