@@ -5,9 +5,14 @@ import yacc as yacc
 # Get the token map from the lexer.  This is required.
 from calclex import tokens
 
+print "digraph G {"
+#print "a->b;"
+
 def p_expression_plus(p):
     'expression : expression PLUS term'
     p[0] = p[1] + p[3]
+    print """%s->%s [ label = \"p_expression_plus\" ];
+%s->%s;""" % (p[0],p[1],p[0],p[3])
 
 def p_expression_minus(p):
     'expression : expression MINUS term'
@@ -46,9 +51,10 @@ parser = yacc.yacc()
 
 while True:
    try:
-       s = raw_input('calc > ')
+       s = raw_input()
    except EOFError:
        break
    if not s: continue
    result = parser.parse(s)
-   print result
+   print "}"
+   #print result
