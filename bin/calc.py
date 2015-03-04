@@ -5,11 +5,11 @@ import yacc as yacc
 # Get the token map from the lexer.  This is required.
 from calclex import tokens
 
-
 values = []
 
-print "digraph G {"
-#print "a->b;"
+print """digraph G {
+graph [ordering="out"];
+"""
 
 def p_expression_plus(p):
     'expression : expression PLUS term'
@@ -23,7 +23,7 @@ def p_expression_plus(p):
     print """node%d -> node%d;
     node%d -> node%d;
     node%d -> node%d;
-    """ % (p[0],p[1],p[0],(len(values)-1),p[0],p[3])
+    """ % (p[0],p[1],p[0],(len(values)-2),p[0],p[3])
 
 def p_expression_minus(p):
     'expression : expression MINUS term'
@@ -37,7 +37,7 @@ def p_expression_minus(p):
     print """node%d -> node%d;
     node%d -> node%d;
     node%d -> node%d;
-    """ % (p[0],p[1],p[0],(len(values)-1),p[0],p[3])
+    """ % (p[0],p[1],p[0],(len(values)-2),p[0],p[3])
 
 
 def p_expression_term(p):
@@ -62,7 +62,7 @@ def p_term_times(p):
     print """node%d -> node%d;
     node%d -> node%d;
     node%d -> node%d;
-    """ % (p[0],p[1],p[0],(len(values)-1),p[0],p[3])
+    """ % (p[0],p[1],p[0],(len(values)-2),p[0],p[3])
 
 def p_term_div(p):
     'term : term DIVIDE factor'
@@ -76,7 +76,7 @@ def p_term_div(p):
     print """node%d -> node%d;
     node%d -> node%d;
     node%d -> node%d;
-    """ % (p[0],p[1],p[0],(len(values)-1),p[0],p[3])
+    """ % (p[0],p[1],p[0],(len(values)-2),p[0],p[3])
 
 def p_term_factor(p):
     'term : factor'
@@ -96,10 +96,10 @@ def p_factor_num(p):
     values.append("NUMBER")
     p[0]=len(values)
     temp = p[1]
-    print "node%d [ label = \"term\\n%d\" ]; " %(len(values), temp)
+    print "node%d [ label = \"factor\\n%d\" ]; " %(len(values), temp)
     values.append(temp)
     print """node%d -> node%d;
-    """ % (p[0],(len(values)-1))
+    """ % (p[0],(len(values)-2))
 
 def p_factor_expr(p):
     'factor : LPAREN expression RPAREN'
