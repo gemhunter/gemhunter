@@ -1,5 +1,5 @@
 all: dot ps
-
+	evince out.ps
 dot :  calc.py
 	python calc.py <in >out.dot
 
