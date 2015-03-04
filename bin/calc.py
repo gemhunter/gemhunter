@@ -104,6 +104,18 @@ def p_factor_num(p):
 def p_factor_expr(p):
     'factor : LPAREN expression RPAREN'
     #p[0] = p[2]
+    print "node%d [ label = \"token\\n(\\nLPAREN\" ]; " %(len(values))
+    values.append("LPAREN")
+    print "node%d [ label = \"token\\n)\\nRPAREN\" ]; " %(len(values))
+    values.append("RPAREN")
+    p[0]=len(values)
+    temp = values[p[2]]
+    print "node%d [ label = \"factor\\n%d\" ]; " %(len(values), temp)
+    values.append(temp)
+    print """node%d -> node%d;
+    node%d -> node%d;
+    node%d -> node%d;
+    """ % (p[0],(len(values)-3),p[0],p[2],p[0],(len(values)-2))
 
 # Error rule for syntax errors
 def p_error(p):
