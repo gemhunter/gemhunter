@@ -1,6 +1,8 @@
 # Yacc example
 
 import yacc as yacc
+import logging
+import re
 
 # Get the token map from the lexer.  This is required.
 from calclex import tokens
@@ -122,6 +124,13 @@ def p_error(p):
     print "Syntax error in input!"
 
 # Build the parser
+logging.basicConfig(
+    level = logging.DEBUG,
+    filename = "parselog.txt",
+    filemode = "w"
+)
+log = logging.getLogger()
+
 parser = yacc.yacc()
 
 while True:
@@ -130,6 +139,15 @@ while True:
    except EOFError:
        break
    if not s: continue
-   result = parser.parse(s)
+   result = parser.parse(s,debug=log)
    print "}"
    #print result
+
+
+
+   #obtain the file of rules used
+   outfile = open("actions",'w')
+   with open("parselog.txt") as f:
+       for line in f:
+           if re.match("INFO:root:Action(.*)", line):
+               outfile.write(line)

@@ -1,0 +1,217 @@
+INFO:root:PLY: PARSE DEBUG START
+DEBUG:root:
+DEBUG:root:State  : 0
+DEBUG:root:Stack  : . LexToken(NUMBER,1,1,0)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : NUMBER . LexToken(PLUS,'+',1,1)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [1] and goto state 7
+INFO:root:Result : <int @ 0x1dce158> (1)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : factor . LexToken(PLUS,'+',1,1)
+INFO:root:Action : Reduce rule [term -> factor] with [1] and goto state 6
+INFO:root:Result : <int @ 0x1dce158> (1)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : term . LexToken(PLUS,'+',1,1)
+INFO:root:Action : Reduce rule [expression -> term] with [1] and goto state 3
+INFO:root:Result : <int @ 0x1dce158> (1)
+DEBUG:root:
+DEBUG:root:State  : 5
+DEBUG:root:Stack  : expression . LexToken(PLUS,'+',1,1)
+DEBUG:root:Action : Shift and goto state 9
+DEBUG:root:
+DEBUG:root:State  : 9
+DEBUG:root:Stack  : expression PLUS . LexToken(NUMBER,3,1,2)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : expression PLUS NUMBER . LexToken(MINUS,'-',1,3)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [3] and goto state 7
+INFO:root:Result : <int @ 0x1dce128> (3)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : expression PLUS factor . LexToken(MINUS,'-',1,3)
+INFO:root:Action : Reduce rule [term -> factor] with [3] and goto state 6
+INFO:root:Result : <int @ 0x1dce128> (3)
+DEBUG:root:
+DEBUG:root:State  : 14
+DEBUG:root:Stack  : expression PLUS term . LexToken(MINUS,'-',1,3)
+INFO:root:Action : Reduce rule [expression -> expression PLUS term] with [1,'+',3] and goto state 1
+INFO:root:Result : <int @ 0x1dce110> (4)
+DEBUG:root:
+DEBUG:root:State  : 5
+DEBUG:root:Stack  : expression . LexToken(MINUS,'-',1,3)
+DEBUG:root:Action : Shift and goto state 10
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : expression MINUS . LexToken(NUMBER,4,1,4)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : expression MINUS NUMBER . LexToken(DIVIDE,'/',1,5)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [4] and goto state 7
+INFO:root:Result : <int @ 0x1dce110> (4)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : expression MINUS factor . LexToken(DIVIDE,'/',1,5)
+INFO:root:Action : Reduce rule [term -> factor] with [4] and goto state 6
+INFO:root:Result : <int @ 0x1dce110> (4)
+DEBUG:root:
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : expression MINUS term . LexToken(DIVIDE,'/',1,5)
+DEBUG:root:Action : Shift and goto state 6
+DEBUG:root:
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : expression MINUS term DIVIDE . LexToken(NUMBER,2,1,6)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : expression MINUS term DIVIDE NUMBER . LexToken(TIMES,'*',1,7)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [2] and goto state 7
+INFO:root:Result : <int @ 0x1dce140> (2)
+DEBUG:root:
+DEBUG:root:State  : 11
+DEBUG:root:Stack  : expression MINUS term DIVIDE factor . LexToken(TIMES,'*',1,7)
+INFO:root:Action : Reduce rule [term -> term DIVIDE factor] with [4,'/',2] and goto state 5
+INFO:root:Result : <int @ 0x1dce140> (2)
+DEBUG:root:
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : expression MINUS term . LexToken(TIMES,'*',1,7)
+DEBUG:root:Action : Shift and goto state 7
+DEBUG:root:
+DEBUG:root:State  : 7
+DEBUG:root:Stack  : expression MINUS term TIMES . LexToken(NUMBER,9,1,8)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : expression MINUS term TIMES NUMBER . LexToken(PLUS,'+',1,10)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [9] and goto state 7
+INFO:root:Result : <int @ 0x1dce098> (9)
+DEBUG:root:
+DEBUG:root:State  : 12
+DEBUG:root:Stack  : expression MINUS term TIMES factor . LexToken(PLUS,'+',1,10)
+INFO:root:Action : Reduce rule [term -> term TIMES factor] with [2,'*',9] and goto state 4
+INFO:root:Result : <int @ 0x1dcdfc0> (18)
+DEBUG:root:
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : expression MINUS term . LexToken(PLUS,'+',1,10)
+INFO:root:Action : Reduce rule [expression -> expression MINUS term] with [4,'-',18] and goto state 2
+INFO:root:Result : <int @ 0x1e1da80> (-14)
+DEBUG:root:
+DEBUG:root:State  : 5
+DEBUG:root:Stack  : expression . LexToken(PLUS,'+',1,10)
+DEBUG:root:Action : Shift and goto state 9
+DEBUG:root:
+DEBUG:root:State  : 9
+DEBUG:root:Stack  : expression PLUS . LexToken(NUMBER,3,1,12)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : expression PLUS NUMBER . LexToken(PLUS,'+',1,14)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [3] and goto state 7
+INFO:root:Result : <int @ 0x1dce128> (3)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : expression PLUS factor . LexToken(PLUS,'+',1,14)
+INFO:root:Action : Reduce rule [term -> factor] with [3] and goto state 6
+INFO:root:Result : <int @ 0x1dce128> (3)
+DEBUG:root:
+DEBUG:root:State  : 14
+DEBUG:root:Stack  : expression PLUS term . LexToken(PLUS,'+',1,14)
+INFO:root:Action : Reduce rule [expression -> expression PLUS term] with [-14,'+',3] and goto state 1
+INFO:root:Result : <int @ 0x1e1d9a8> (-11)
+DEBUG:root:
+DEBUG:root:State  : 5
+DEBUG:root:Stack  : expression . LexToken(PLUS,'+',1,14)
+DEBUG:root:Action : Shift and goto state 9
+DEBUG:root:
+DEBUG:root:State  : 9
+DEBUG:root:Stack  : expression PLUS . LexToken(NUMBER,5,1,16)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : expression PLUS NUMBER . LexToken(TIMES,'*',1,18)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [5] and goto state 7
+INFO:root:Result : <int @ 0x1dce0f8> (5)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : expression PLUS factor . LexToken(TIMES,'*',1,18)
+INFO:root:Action : Reduce rule [term -> factor] with [5] and goto state 6
+INFO:root:Result : <int @ 0x1dce0f8> (5)
+DEBUG:root:
+DEBUG:root:State  : 14
+DEBUG:root:Stack  : expression PLUS term . LexToken(TIMES,'*',1,18)
+DEBUG:root:Action : Shift and goto state 7
+DEBUG:root:
+DEBUG:root:State  : 7
+DEBUG:root:Stack  : expression PLUS term TIMES . LexToken(LPAREN,'(',1,20)
+DEBUG:root:Action : Shift and goto state 3
+DEBUG:root:
+DEBUG:root:State  : 3
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN . LexToken(NUMBER,10,1,22)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN NUMBER . LexToken(MINUS,'-',1,25)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [10] and goto state 7
+INFO:root:Result : <int @ 0x1dce080> (10)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN factor . LexToken(MINUS,'-',1,25)
+INFO:root:Action : Reduce rule [term -> factor] with [10] and goto state 6
+INFO:root:Result : <int @ 0x1dce080> (10)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN term . LexToken(MINUS,'-',1,25)
+INFO:root:Action : Reduce rule [expression -> term] with [10] and goto state 3
+INFO:root:Result : <int @ 0x1dce080> (10)
+DEBUG:root:
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN expression . LexToken(MINUS,'-',1,25)
+DEBUG:root:Action : Shift and goto state 10
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN expression MINUS . LexToken(NUMBER,20,1,27)
+DEBUG:root:Action : Shift and goto state 2
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN expression MINUS NUMBER . LexToken(RPAREN,')',1,30)
+INFO:root:Action : Reduce rule [factor -> NUMBER] with [20] and goto state 7
+INFO:root:Result : <int @ 0x1dcdf90> (20)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN expression MINUS factor . LexToken(RPAREN,')',1,30)
+INFO:root:Action : Reduce rule [term -> factor] with [20] and goto state 6
+INFO:root:Result : <int @ 0x1dcdf90> (20)
+DEBUG:root:
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN expression MINUS term . LexToken(RPAREN,')',1,30)
+INFO:root:Action : Reduce rule [expression -> expression MINUS term] with [10,'-',20] and goto state 2
+INFO:root:Result : <int @ 0x1e1da80> (-10)
+DEBUG:root:
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN expression . LexToken(RPAREN,')',1,30)
+DEBUG:root:Action : Shift and goto state 13
+DEBUG:root:
+DEBUG:root:State  : 13
+DEBUG:root:Stack  : expression PLUS term TIMES LPAREN expression RPAREN . $end
+INFO:root:Action : Reduce rule [factor -> LPAREN expression RPAREN] with ['(',-10,')'] and goto state 8
+INFO:root:Result : <int @ 0x1e1da80> (-10)
+DEBUG:root:
+DEBUG:root:State  : 12
+DEBUG:root:Stack  : expression PLUS term TIMES factor . $end
+INFO:root:Action : Reduce rule [term -> term TIMES factor] with [5,'*',-10] and goto state 4
+INFO:root:Result : <int @ 0x1e1d978> (-50)
+DEBUG:root:
+DEBUG:root:State  : 14
+DEBUG:root:Stack  : expression PLUS term . $end
+INFO:root:Action : Reduce rule [expression -> expression PLUS term] with [-11,'+',-50] and goto state 1
+INFO:root:Result : <int @ 0x1e1da80> (-61)
+DEBUG:root:
+DEBUG:root:State  : 5
+DEBUG:root:Stack  : expression . $end
+INFO:root:Done   : Returning <int @ 0x1e1da80> (-61)
+INFO:root:PLY: PARSE DEBUG END

@@ -6,5 +6,8 @@ dot :  calc.py
 ps : out.dot
 	dot -Tps out.dot >out.ps
 
+extract: orig.py
+	python orig.py <in
+
 clean : 
 	rm -rf *.ps *.dot
