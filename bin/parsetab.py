@@ -26,12 +26,12 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> expression PLUS term','expression',3,'p_expression_plus','calc.py',9),
-  ('expression -> expression MINUS term','expression',3,'p_expression_minus','calc.py',13),
-  ('expression -> term','expression',1,'p_expression_term','calc.py',17),
-  ('term -> term TIMES factor','term',3,'p_term_times','calc.py',21),
-  ('term -> term DIVIDE factor','term',3,'p_term_div','calc.py',25),
-  ('term -> factor','term',1,'p_term_factor','calc.py',29),
-  ('factor -> NUMBER','factor',1,'p_factor_num','calc.py',33),
-  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','calc.py',37),
+  ('expression -> expression PLUS term','expression',3,'p_expression_plus','calc.py',15),
+  ('expression -> expression MINUS term','expression',3,'p_expression_minus','calc.py',29),
+  ('expression -> term','expression',1,'p_expression_term','calc.py',44),
+  ('term -> term TIMES factor','term',3,'p_term_times','calc.py',54),
+  ('term -> term DIVIDE factor','term',3,'p_term_div','calc.py',68),
+  ('term -> factor','term',1,'p_term_factor','calc.py',82),
+  ('factor -> NUMBER','factor',1,'p_factor_num','calc.py',93),
+  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','calc.py',105),
 ]
