@@ -142,12 +142,3 @@ while True:
    result = parser.parse(s,debug=log)
    print "}"
    #print result
-
-
-
-   #obtain the file of rules used
-   outfile = open("actions",'w')
-   with open("parselog.txt") as f:
-       for line in f:
-           if re.match("INFO:root:Action(.*)", line):
-               outfile.write(line)
