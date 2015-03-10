@@ -1,10 +1,7 @@
 #python script to obtain the yacc parser file from bnf file
 
-
-
-
 parser = open("newparser.py",'w')
-bnf = open("calc.bnf")
+bnf = open("cfg.bnf")
 
 preamble = '''#Generated parser
 
@@ -12,7 +9,7 @@ import yacc as yacc
 import logging
 
 # Get the token map from the lexer.  This is required.
-from calclex import tokens
+from lexer import tokens
 '''
 
 afterword = '''
@@ -60,7 +57,6 @@ for line in bnf:
 parser.write("\'\'\'\n\n")
 
 parser.write(afterword)
-
 
 parser.close()
 bnf.close()

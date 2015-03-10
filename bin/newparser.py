@@ -4,7 +4,7 @@ import yacc as yacc
 import logging
 
 # Get the token map from the lexer.  This is required.
-from calclex import tokens
+from lexer import tokens
 def p_expression(p):
 	'''expression : expression PLUS term
 	           | expression MINUS term
