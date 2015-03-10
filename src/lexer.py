@@ -182,12 +182,13 @@ def t_INSTANCEVAR(t):
     t.type = reserved.get(t.value,'INSTANCEVAR')
     return t
 
-def t_INT(t):
-    r'(((0[dD])|[1-9])[1-9]*\d*)|(0[xX][\da-fA-F]+)|(0[_oO][0-7]+)|(0b[01]+)|0'
+def t_FLOAT(t):
+    r'(((\d+\.\d*)|(\.\d+))([eE][\+-]?\d+)?[fF]?) | (((\d+\.\d*)|(\.\d+)|\d+)([eE][\+-]?\d+)[fF]?) | (((\d+\.\d*)|(\.\d+)|\d+)([eE][\+-]?\d+)?[fF])'
     return t
 
-def t_FLOAT(t):
-    r'((\d+\.\d*)|(\.\d+)|\d+)([eE][\+-]?\d+)?[fF]?'
+
+def t_INT(t):
+    r'(((0[dD]\d)|[1-9])[1-9]*\d*)|(0[xX][\da-fA-F]+)|(0[_oO][0-7]+)|(0b[01]+)|0'
     return t
 
 def t_CHAR(t):
