@@ -46,6 +46,7 @@ for line in open("treefile.txt"):
     lhsNum = nodeNum
     nodeNum += 1
     for i in range(2,len(columns)-1):
+        #i = len(columns) - i
         if columns[i] in nodes:
             print "node%d -> node%d;" %(lhsNum,nodes[columns[i]].pop(len(nodes[columns[i]])-1))
             if len(nodes[columns[i]]) == 0:

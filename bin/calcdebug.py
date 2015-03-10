@@ -7,7 +7,7 @@ import logging
 from calclex import tokens
 
 def p_expression_plus(p):
-    'expression : expression PLUS term'
+    '''expression : expression PLUS term'''
     
 def p_expression_minus(p):
     'expression : expression MINUS term'
