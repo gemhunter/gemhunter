@@ -15,11 +15,11 @@ tokens = (
 "MODEQ",
 "POWEQ",
 "POW",
-"PLUS",
-"MINUS",
-"STAR",
-"DIV",
-"MOD",
+#"PLUS",
+#"MINUS",
+#"STAR",
+#"DIV",
+#"MOD",
 "EQEQUAL",
 "NOTEQ",
 "GTEQUAL",
@@ -30,30 +30,30 @@ tokens = (
 "RSHIFT",
 "AND",
 "OR",
-"GT",
-"LT",
+#"GT",
+#"LT",
 "CHAR",
 "STRING",
 #"EQUAL",
-"BITAND",
-"VERBAR",
-"BITXOR",
-"BITCOMP",
-"NOT",
-"TER",
+#"BITAND",
+#"VERBAR",
+#"BITXOR",
+#"BITCOMP",
+#"NOT",
+#"TER",
 "SEQIN",
 "SEQEX",
-"DOT",
+#"DOT",
 "SCOPE",
-"COLON",
-"COMMA",
-"LPAREN",
-"RPAREN",
-"LBRACE",
-"RBRACE",
-"LSQB",
-"RSQB",
-"HASH",
+#"COLON",
+#"COMMA",
+#"LPAREN",
+#"RPAREN",
+#"LBRACE",
+#"RBRACE",
+#"LSQB",
+#"RSQB",
+#"HASH",
 "LOCALVAR",
 "GLOBALVAR",
 "CLASSVAR",
@@ -81,7 +81,7 @@ tokens = (
 )
 
 #Literals (single character tokens)
-literals = "="
+literals = "+-*/%><=&|^!~?.:,(){}[]"
 
 # tokens for reserved keywords of ruby
 reserved = {
@@ -126,16 +126,16 @@ reserved = {
 
 tokens = tokens + tuple(reserved.values())
 
-t_PLUS = r'\+'
-t_MINUS = r'-'
-t_STAR = r'\*'
-t_DIV = r'/'
-t_MOD = r'%'
+#t_PLUS = r'\+'
+#t_MINUS = r'-'
+#t_STAR = r'\*'
+#t_DIV = r'/'
+#t_MOD = r'%'
 t_POW = r'\*\*'
 t_EQEQUAL = r'=='
 t_NOTEQ = r'!='
-t_GT = r'>'
-t_LT = r'<'
+#t_GT = r'>'
+#t_LT = r'<'
 t_GTEQUAL = r'>='
 t_LTEQUAL = r'<='
 t_NOEQ = r'<=>'
@@ -147,29 +147,29 @@ t_STAREQ = r'\*='
 t_DIVEQ = r'/='
 t_MODEQ = r'%='
 t_POWEQ = r'\*\*='
-t_BITAND = r'\&'
-t_VERBAR = r'\|'
-t_BITXOR = r'\^'
-t_BITCOMP = r'\~'
+#t_BITAND = r'\&'
+#t_VERBAR = r'\|'
+#t_BITXOR = r'\^'
+#t_BITCOMP = r'\~'
 t_LSHIFT = r'<<'
 t_RSHIFT = r'>>'
 t_AND = r'\&\&'
 t_OR = r'\|\|'
-t_NOT = r'!'
-t_TER = r'\?'
+#t_NOT = r'!'
+#t_TER = r'\?'
 t_SEQIN = r'\.\.'
 t_SEQEX = r'\.\.\.'
-t_DOT = r'\.'
+#t_DOT = r'\.'
 t_SCOPE = r'::'
-t_COLON = r':'
-t_COMMA = r','
-t_LPAREN = r'\('
-t_RPAREN = r'\)'
-t_LBRACE = r'\{'
-t_RBRACE = r'\}'
-t_LSQB = r'\['
-t_RSQB = r'\]'
-t_HASH = r'\#'
+#t_COLON = r':'
+#t_COMMA = r','
+#t_LPAREN = r'\('
+#t_RPAREN = r'\)'
+#t_LBRACE = r'\{'
+#t_RBRACE = r'\}'
+#t_LSQB = r'\['
+#t_RSQB = r'\]'
+#t_HASH = r'\#'
 t_DOL0 = r'\$0'
 t_DOL1 = r'\$1'
 t_DOL2 = r'\$2'
