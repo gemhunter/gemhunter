@@ -1,14 +1,9 @@
-all : new
+all : dot
 	dot -Tps out.dot >out.ps
 	evince out.ps
 
-old :  calc.py in
-	python calc.py <in >out.dot
-	dot -Tps out.dot >out.ps
-	evince out.ps
-
-new: calcdebug.py in getdot.py
-	python calcdebug.py <in
+dot : calc.py in getdot.py
+	python calc.py <in
 	python getdot.py >out.dot
 
 clean : 

@@ -45,18 +45,23 @@ for line in open("treefile.txt"):
     print "node%d [ label = \"%s\" ]; " % (nodeNum,columns[0])
     lhsNum = nodeNum
     nodeNum += 1
+    edges = []
     for i in range(2,len(columns)-1):
-        #i = len(columns) - i
+        i = len(columns) - i
+        edge = ""
         if columns[i] in nodes:
-            print "node%d -> node%d;" %(lhsNum,nodes[columns[i]].pop(len(nodes[columns[i]])-1))
+            edge += "node" + str(lhsNum) + " -> node" + str(nodes[columns[i]].pop(len(nodes[columns[i]])-1)) + ";"
+            #print "node%d -> node%d;" %(lhsNum,nodes[columns[i]].pop(len(nodes[columns[i]])-1))
             if len(nodes[columns[i]]) == 0:
                    del nodes[columns[i]]
         else:
             print "node%d [ label = \"Token \\n %s\" ]; " % (nodeNum,columns[i])
-            print "node%d -> node%d;" %(lhsNum,nodeNum)
+            edge += "node" + str(lhsNum) + " -> node" + str(nodeNum) + ";"
+            #print "node%d -> node%d;" %(lhsNum,nodeNum)
             nodeNum += 1
-    
+        edges.append(edge)
     nodes[columns[0]].append(lhsNum)
-    print ""
+    while edges:
+        print edges.pop(len(edges)-1)
 
 print "}"
