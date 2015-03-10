@@ -1,7 +1,7 @@
 all : dot bnf
 	#dotty out.dot
 	dot -Tps out.dot >out.ps
-	#evince out.ps
+	evince out.ps
 
 dot : lexer.py in getdot.py
 	python newparser.py <in

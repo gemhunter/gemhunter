@@ -15,10 +15,10 @@ tokens = (
 "MODEQ",
 "POWEQ",
 "POW",
-"EQEQUAL",
+"EQEQ",
 "NOTEQ",
-"GTEQUAL",
-"LTEQUAL",
+"GEQ",
+"LEQ",
 "NOEQ",
 "CASEEQ",
 "LSHIFT",
@@ -27,8 +27,8 @@ tokens = (
 "OR",
 "CHAR",
 "STRING",
-"SEQIN",
-"SEQEX",
+"DOT3",
+"DOT2",
 "SCOPE",
 "LOCALVAR",
 "GLOBALVAR",
@@ -105,10 +105,10 @@ reserved = {
 tokens = tokens + tuple(reserved.values())
 
 t_POW = r'\*\*'
-t_EQEQUAL = r'=='
+t_EQEQ = r'=='
 t_NOTEQ = r'!='
-t_GTEQUAL = r'>='
-t_LTEQUAL = r'<='
+t_GEQ = r'>='
+t_LEQ = r'<='
 t_NOEQ = r'<=>'
 t_CASEEQ = r'==='
 t_PLUSEQ = r'\+='
@@ -121,8 +121,8 @@ t_LSHIFT = r'<<'
 t_RSHIFT = r'>>'
 t_AND = r'\&\&'
 t_OR = r'\|\|'
-t_SEQIN = r'\.\.'
-t_SEQEX = r'\.\.\.'
+t_DOT2 = r'\.\.'
+t_DOT3 = r'\.\.\.'
 t_SCOPE = r'::'
 t_DOL0 = r'\$0'
 t_DOL1 = r'\$1'
