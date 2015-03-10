@@ -5,18 +5,79 @@ import re
 import os
 import lex
 
-def t_MULTICOMMENT(t):
-    r'\n+=begin(.*\n)+=end\s'
-    t.lexer.lineno += t.value.count('\n')
-
-# List of token names.   This is always required
+# List of token names.
 tokens = (
-    "MULTICOMMENT","PLUSEQ","MINUSEQ","STAREQ","DIVEQ","MODEQ","POWEQ","POW","PLUS","MINUS","STAR","DIV","MOD",
-    "EQEQUAL","NOTEQ","GTEQUAL","LTEQUAL","NOEQ","CASEEQ","LSHIFT","RSHIFT","AND","OR","GT","LT","CHAR","STRING",
-    "EQUAL","BITAND","VERBAR","BITXOR","BITCOMP","NOT","TER","SEQIN","SEQEX","DOT","SCOPE","COLON","COMMA","LPAREN",
-    "RPAREN","LBRACE","RBRACE","LSQB","RSQB","HASH","IDENTIFIER","INT","FLOAT","COMMENT","CONST","DOL0","DOL1","DOL2",
-    "DOL3","DOL4","DOL5","DOL6","DOL7","DOL8","DOL9","KEYWORD_FILE","KEYWORD_LINE","KEYWORD_EQUAL","KEYWORD_DEFINED",
-    "UNDERSCORE"
+"MULTICOMMENT",
+"PLUSEQ",
+"MINUSEQ",
+"STAREQ",
+"DIVEQ",
+"MODEQ",
+"POWEQ",
+"POW",
+"PLUS",
+"MINUS",
+"STAR",
+"DIV",
+"MOD",
+"EQEQUAL",
+"NOTEQ",
+"GTEQUAL",
+"LTEQUAL",
+"NOEQ",
+"CASEEQ",
+"LSHIFT",
+"RSHIFT",
+"AND",
+"OR",
+"GT",
+"LT",
+"CHAR",
+"STRING",
+"EQUAL",
+"BITAND",
+"VERBAR",
+"BITXOR",
+"BITCOMP",
+"NOT",
+"TER",
+"SEQIN",
+"SEQEX",
+"DOT",
+"SCOPE",
+"COLON",
+"COMMA",
+"LPAREN",
+"RPAREN",
+"LBRACE",
+"RBRACE",
+"LSQB",
+"RSQB",
+"HASH",
+"LOCALVAR",
+"GLOBALVAR",
+"CLASSVAR",
+"INSTANCEVAR" ,
+"INT",
+"FLOAT",
+"COMMENT",
+"CONST",
+"DOL0",
+"DOL1",
+"DOL2",
+"DOL3",
+"DOL4",
+"DOL5",
+"DOL6",
+"DOL7",
+"DOL8",
+"DOL9",
+"KEYWORD_FILE",
+"KEYWORD_LINE",
+"KEYWORD_ENCODING",
+"KEYWORD_EQUAL",
+"KEYWORD_DEFINED",
+"UNDERSCORE"
 )
 
 # tokens for reserved keywords of ruby
@@ -62,7 +123,6 @@ reserved = {
 
 
 tokens = tokens + tuple(reserved.values())
-
 
 t_PLUS = r'\+'
 t_MINUS = r'-'
@@ -120,10 +180,30 @@ t_DOL8 = r'\$8'
 t_DOL9 = r'\$9'
 t_KEYWORD_FILE = r'__FILE__'
 t_KEYWORD_LINE = r'__LINE__'
+t_KEYWORD_ENCODING = r'__ENCODING__'
 t_KEYWORD_EQUAL = r'equal\?'
 t_KEYWORD_DEFINED = r'defined\?'
 
-def t_IDENTIFIER(t):
+def t_MULTICOMMENT(t):
+    r'\n+=begin(.*\n)+=end\s'
+    t.lexer.lineno += t.value.count('\n')
+
+def t_LOCALVAR(t):
+    r'([$@_]?|@@)[a-z]+[a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'IDENTIFIER')
+    return t
+
+def t_GLOBALVAR(t):
+    r'([$@_]?|@@)[a-z]+[a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'IDENTIFIER')
+    return t
+
+def t_CLASSVAR(t):
+    r'([$@_]?|@@)[a-z]+[a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'IDENTIFIER')
+    return t
+
+def t_INSTANCEVAR(t):
     r'([$@_]?|@@)[a-z]+[a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'IDENTIFIER')
     return t
@@ -156,7 +236,7 @@ def t_CONST(t):
     return t
 
 def t_UNDERSCORE(t):
-	'\_'
+	'_'
 	return t
 
 t_ignore = ' \t'
@@ -170,7 +250,6 @@ def t_error(t):
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
-
 
 # Build the lexer
 lexer = lex.lex()
@@ -207,5 +286,3 @@ for tok in lexer:
 print lines[currLineNo-1]+"\t"+"#",
 for item in buff:
 	print item,
-
-
