@@ -15,11 +15,6 @@ tokens = (
 "MODEQ",
 "POWEQ",
 "POW",
-#"PLUS",
-#"MINUS",
-#"STAR",
-#"DIV",
-#"MOD",
 "EQEQUAL",
 "NOTEQ",
 "GTEQUAL",
@@ -30,34 +25,17 @@ tokens = (
 "RSHIFT",
 "AND",
 "OR",
-#"GT",
-#"LT",
 "CHAR",
 "STRING",
-#"EQUAL",
-#"BITAND",
-#"VERBAR",
-#"BITXOR",
-#"BITCOMP",
-#"NOT",
-#"TER",
 "SEQIN",
 "SEQEX",
-#"DOT",
 "SCOPE",
-#"COLON",
-#"COMMA",
-#"LPAREN",
-#"RPAREN",
-#"LBRACE",
-#"RBRACE",
-#"LSQB",
-#"RSQB",
-#"HASH",
 "LOCALVAR",
 "GLOBALVAR",
 "CLASSVAR",
-"INSTANCEVAR" ,
+"INSTANCEVAR",
+"METHOD_ONLY_VAR",
+"METHOD_ASSGN_VAR",
 "INT",
 "FLOAT",
 "COMMENT",
@@ -126,50 +104,26 @@ reserved = {
 
 tokens = tokens + tuple(reserved.values())
 
-#t_PLUS = r'\+'
-#t_MINUS = r'-'
-#t_STAR = r'\*'
-#t_DIV = r'/'
-#t_MOD = r'%'
 t_POW = r'\*\*'
 t_EQEQUAL = r'=='
 t_NOTEQ = r'!='
-#t_GT = r'>'
-#t_LT = r'<'
 t_GTEQUAL = r'>='
 t_LTEQUAL = r'<='
 t_NOEQ = r'<=>'
 t_CASEEQ = r'==='
-#t_EQUAL = r'='
 t_PLUSEQ = r'\+='
 t_MINUSEQ = r'-='
 t_STAREQ = r'\*='
 t_DIVEQ = r'/='
 t_MODEQ = r'%='
 t_POWEQ = r'\*\*='
-#t_BITAND = r'\&'
-#t_VERBAR = r'\|'
-#t_BITXOR = r'\^'
-#t_BITCOMP = r'\~'
 t_LSHIFT = r'<<'
 t_RSHIFT = r'>>'
 t_AND = r'\&\&'
 t_OR = r'\|\|'
-#t_NOT = r'!'
-#t_TER = r'\?'
 t_SEQIN = r'\.\.'
 t_SEQEX = r'\.\.\.'
-#t_DOT = r'\.'
 t_SCOPE = r'::'
-#t_COLON = r':'
-#t_COMMA = r','
-#t_LPAREN = r'\('
-#t_RPAREN = r'\)'
-#t_LBRACE = r'\{'
-#t_RBRACE = r'\}'
-#t_LSQB = r'\['
-#t_RSQB = r'\]'
-#t_HASH = r'\#'
 t_DOL0 = r'\$0'
 t_DOL1 = r'\$1'
 t_DOL2 = r'\$2'
@@ -193,6 +147,16 @@ def t_MULTICOMMENT(t):
 def t_COMMENT(t):
     r'\#.*(?=\n)'
 
+def t_METHOD_ONLY_VAR(t):
+    r'(((_|[a-z])[a-zA-Z_0-9]*)|([A-Z][a-zA-Z_0-9]*))[\!\?]'
+    t.type = reserved.get(t.value,'METHOD_ONLY_VAR')
+    return t
+
+def t_METHOD_ASSGN_VAR(t):
+    r'(((_|[a-z])[a-zA-Z_0-9]*)|([A-Z][a-zA-Z_0-9]*))='
+    t.type = reserved.get(t.value,'METHOD_ASSGN_VAR')
+    return t
+
 def t_LOCALVAR(t):
     r'(_|[a-z])[a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'LOCALVAR')
@@ -208,13 +172,18 @@ def t_CLASSVAR(t):
     t.type = reserved.get(t.value,'CLASSVAR')
     return t
 
+def t_CONST(t):
+    r'[A-Z][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'CONST')
+    return t
+
 def t_INSTANCEVAR(t):
     r'@([a-zA-Z_])+[a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'INSTANCEVAR')
     return t
 
 def t_INT(t):
-    r'([1-9]+\d*)|(0[xX][\da-fA-F]+)|(0[0-7]+)|(0b[01]+)|0'
+    r'(((0[dD])|[1-9])[1-9]*\d*)|(0[xX][\da-fA-F]+)|(0[_oO][0-7]+)|(0b[01]+)|0'
     return t
 
 def t_FLOAT(t):
@@ -229,11 +198,6 @@ def t_CHAR(t):
 def t_STRING(t):
     r'("(?:\\.|[^"\\])*")|(\'(?:\\.|[^\'\\])*\')'
     t.lexer.lineno += t.value.count('\n')
-    return t
-
-def t_CONST(t):
-    r'[A-Z][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'CONST')
     return t
 
 def t_NEWLINE(t):
