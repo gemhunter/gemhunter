@@ -34,7 +34,7 @@ tokens = (
 "LT",
 "CHAR",
 "STRING",
-"EQUAL",
+#"EQUAL",
 "BITAND",
 "VERBAR",
 "BITXOR",
@@ -77,8 +77,11 @@ tokens = (
 "KEYWORD_ENCODING",
 "KEYWORD_EQUAL",
 "KEYWORD_DEFINED",
-"UNDERSCORE"
+"NEWLINE"
 )
+
+#Literals (single character tokens)
+literals = "="
 
 # tokens for reserved keywords of ruby
 reserved = {
@@ -121,7 +124,6 @@ reserved = {
     'yield' : "KEYWORD_YIELD",
 }
 
-
 tokens = tokens + tuple(reserved.values())
 
 t_PLUS = r'\+'
@@ -138,7 +140,7 @@ t_GTEQUAL = r'>='
 t_LTEQUAL = r'<='
 t_NOEQ = r'<=>'
 t_CASEEQ = r'==='
-t_EQUAL = r'='
+#t_EQUAL = r'='
 t_PLUSEQ = r'\+='
 t_MINUSEQ = r'-='
 t_STAREQ = r'\*='
@@ -185,27 +187,30 @@ t_KEYWORD_EQUAL = r'equal\?'
 t_KEYWORD_DEFINED = r'defined\?'
 
 def t_MULTICOMMENT(t):
-    r'\n+=begin(.*\n)+=end\s'
+    r'(?<=\n)=begin(.*\n)+=end(?=\s)'
     t.lexer.lineno += t.value.count('\n')
 
+def t_COMMENT(t):
+    r'\#.*(?=\n)'
+
 def t_LOCALVAR(t):
-    r'([$@_]?|@@)[a-z]+[a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'IDENTIFIER')
+    r'(_|[a-z])[a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'LOCALVAR')
     return t
 
 def t_GLOBALVAR(t):
-    r'([$@_]?|@@)[a-z]+[a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'IDENTIFIER')
+    r'\$([a-zA-Z_])+[a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'GLOBALVAR')
     return t
 
 def t_CLASSVAR(t):
-    r'([$@_]?|@@)[a-z]+[a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'IDENTIFIER')
+    r'@@([a-zA-Z_])+[a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'CLASSVAR')
     return t
 
 def t_INSTANCEVAR(t):
-    r'([$@_]?|@@)[a-z]+[a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'IDENTIFIER')
+    r'@([a-zA-Z_])+[a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'INSTANCEVAR')
     return t
 
 def t_INT(t):
@@ -215,10 +220,6 @@ def t_INT(t):
 def t_FLOAT(t):
     r'((\d+\.\d*)|(\.\d+)|\d+)([eE][\+-]?\d+)?[fF]?'
     return t
-
-def t_COMMENT(t):
-    r'\#.*\n'
-    t.lexer.lineno += 1
 
 def t_CHAR(t):
     r'\'\\?.{1}\''
@@ -235,9 +236,10 @@ def t_CONST(t):
     t.type = reserved.get(t.value,'CONST')
     return t
 
-def t_UNDERSCORE(t):
-	'_'
-	return t
+def t_NEWLINE(t):
+    r'\n+'
+    t.lexer.lineno+= len(t.value)
+    return t;
 
 t_ignore = ' \t'
 
@@ -245,11 +247,6 @@ t_ignore = ' \t'
 def t_error(t):
     print "Illegal character '%s'" % t.value[0]
     t.lexer.skip(1)
-
-# Define a rule so we can track line numbers
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
 
 # Build the lexer
 lexer = lex.lex()
@@ -267,9 +264,6 @@ lines = data.split('\n')
 buff = []
 
 for tok in lexer:
-	#tok = lexer.token()
-	#if not tok: break      # No more input
-	#print tok
 	if tok.lineno > currLineNo:
 		print lines[currLineNo-1]+"\t"+"#",
 		for item in buff:
@@ -281,7 +275,6 @@ for tok in lexer:
 		currLineNo = tok.lineno
     	buff.append(tok.type)
     	buffEmpty = 0
-	#buff.append(tok.value)
 
 print lines[currLineNo-1]+"\t"+"#",
 for item in buff:
