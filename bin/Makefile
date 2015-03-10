@@ -1,13 +1,11 @@
-all: dot ps
-	evince out.ps
-dot :  calc.py
+old :  calc.py in
 	python calc.py <in >out.dot
-
-ps : out.dot
 	dot -Tps out.dot >out.ps
+	evince out.ps
 
-extract: orig.py
-	python orig.py <in
+new: calcdebug.py in getdot.py
+	python calcdebug.py <in
+	python getdot.py
 
 clean : 
-	rm -rf *.ps *.dot
+	rm -rf *.ps *.dot *.txt parsetab.* *.out *~ *pyc
