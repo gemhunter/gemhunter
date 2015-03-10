@@ -1,0 +1,10 @@
+expression : expression PLUS term
+           | expression MINUS term
+           | term
+
+term : term TIMES factor
+     | term DIVIDE factor
+     | factor
+
+factor : NUMBER
+       | LPAREN expression RPAREN

@@ -62,6 +62,6 @@ for line in open("treefile.txt"):
         edges.append(edge)
     nodes[columns[0]].append(lhsNum)
     while edges:
-        print edges.pop(len(edges)-1)
+       print edges.pop(len(edges)-1)
 
 print "}"
