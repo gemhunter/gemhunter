@@ -43,20 +43,20 @@ first = 1
 for line in bnf:
     if line[0] == '#' or not line.rstrip():
         continue
-    if ':' in line:
+    if ' :' in line:
         if not first:
             parser.write("\t\'\'\'\n\n")
         else:
             first = 0
-        lhs,rhs = line.split(' :')
+        lhs = line.split(' :',1)[0]
         newrule = "def p_" + lhs + "(p):\n\t\'\'\'"
         parser.write(newrule)
         parser.write(line)
-    elif line.rstrip():
+    elif line.strip():
         parser.write("\t")
         parser.write(line)
 
-parser.write("\'\'\'\n\n")
+parser.write("\t\'\'\'\n\n")
 
 parser.write(afterword)
 
