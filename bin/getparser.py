@@ -41,6 +41,8 @@ parser.write(preamble)
 first = 1
 
 for line in bnf:
+    if line[0] == '#' or not line.rstrip():
+        continue
     if ':' in line:
         if not first:
             parser.write("\t\'\'\'\n\n")
