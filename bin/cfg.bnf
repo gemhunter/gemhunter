@@ -1,7 +1,5 @@
 program : compstmt
 
-lin_ter : ';' | NEWLINE
-
 bodystmt : compstmt
 			rescue_block
 			else_block
@@ -34,7 +32,12 @@ prime : literal | variable |
 			KEYWORD_DEFINED '(' expr ')' |
 
 
+class_def : 
 
+method_def : KEYWORD_END method_name 
+
+
+method_name : key_var | LOCALVAR | CONST | 
 
 singleton_class_def : KEYWORD_CLASS LSHIFT expr 
 
@@ -53,7 +56,7 @@ unless_expr : KEYWORD_UNLESS expr then compstmt opt_else KEYWORD_END
 
 case_expr : KEYWORD_CASE expr opt_terms case_body KEYWORD_END | KEYWORD_CASE opt_terms case_body KEYWORD_END
 
-opt_terms : none | lin_ters
+
 
 case_body : KEYWORD_WHEN args then compstmt cases
 
@@ -95,13 +98,18 @@ arg : lhs '=' arg |
 		arg AND arg | arg OR arg |
 		arg NOTEQ arg | arg NOEQ arg |
 		arg EQEQ arg | arg CASEEQ arg |
-		KEYWORD_DEFINED arg | prime
+		KEYWORD_DEFINED arg | prime |
+		arg '?' arg ':' arg
 
 
 
+opt_terms : none | lin_ters
+
+lin_ters : lin_ter | lin_terms ';'
+
+lin_ter : ';' | NEWLINE
 
 literal : numeric | CHAR | STRING
-
 
 numeric : INT | FLOAT
 
