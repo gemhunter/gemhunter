@@ -1,6 +1,4 @@
 lexer in BIN is final
-ignore comments in bnf to yacc
-convert makefile to python
 
 Options:
 
@@ -9,4 +7,4 @@ singleton classes
 self,super
 visibility
 iterators
-
+Hash dictionary

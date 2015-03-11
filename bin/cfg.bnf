@@ -59,12 +59,16 @@ l2_expr : '!' l1_expr
 	| '+' l1_expr
 	| l1_expr
 
-l1_expr : user_var
-	| key_var
-	| literal
+l1_expr : basic_expr
 	| '(' expr ')'
 
+basic_expr : user_var
+	| key_var
+	| literal
+	| method_call
 
+#The value of evaluating a method
+method_call : none
 
 #Pretty self explanatory names
 

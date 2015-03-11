@@ -98,10 +98,14 @@ def p_l2_expr(p):
 	'''
 
 def p_l1_expr(p):
-	'''l1_expr : user_var
+	'''l1_expr : basic_expr
+		| '(' expr ')'
+	'''
+
+def p_basic_expr(p):
+	'''basic_expr : user_var
 		| key_var
 		| literal
-		| '(' expr ')'
 	'''
 
 def p_opt_terms(p):
