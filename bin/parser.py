@@ -27,7 +27,38 @@ def p_stmt(p):
 	'''
 
 def p_expr(p):
-	'''expr : l7_expr
+	'''expr : l13_expr
+	'''
+
+def p_l13_expr(p):
+	'''l13_expr : l13_expr OR l12_expr
+		| l12_expr
+	'''
+
+def p_l12_expr(p):
+	'''l12_expr : l12_expr AND l11_expr
+		| l11_expr
+	'''
+
+def p_l11_expr(p):
+	'''l11_expr : l10_expr op_eq l10_expr
+		| l10_expr
+	'''
+
+def p_l10_expr(p):
+	'''l10_expr : l10_expr op_order l9_expr
+		| l9_expr
+	'''
+
+def p_l9_expr(p):
+	'''l9_expr : l9_expr '|' l8_expr
+		| l9_expr '^' l8_expr
+		| l8_expr
+	'''
+
+def p_l8_expr(p):
+	'''l8_expr : l8_expr '&' l7_expr
+		| l7_expr
 	'''
 
 def p_l7_expr(p):
@@ -106,6 +137,20 @@ def p_op_assign(p):
 		| DIVEQ
 		| MODEQ
 		| POWEQ
+	'''
+
+def p_op_eq(p):
+	'''op_eq : EQEQ
+		| CASEEQ
+		| NOTEQ
+		| NOEQ
+	'''
+
+def p_op_order(p):
+	'''op_order : '<'
+		| '>'
+		| GEQ
+		| LEQ
 	'''
 
 def p_numeric(p):

@@ -14,7 +14,26 @@ stmt : KEYWORD_END '{' compstmt '}'
 	| expr
 
 #Anything that evaluates
-expr : l7_expr
+expr : l13_expr
+
+l13_expr : l13_expr OR l12_expr
+	| l12_expr
+
+l12_expr : l12_expr AND l11_expr
+	| l11_expr
+
+l11_expr : l10_expr op_eq l10_expr
+	| l10_expr
+
+l10_expr : l10_expr op_order l9_expr
+	| l9_expr
+
+l9_expr : l9_expr '|' l8_expr
+	| l9_expr '^' l8_expr
+	| l8_expr
+
+l8_expr : l8_expr '&' l7_expr
+	| l7_expr
 
 l7_expr : l7_expr LSHIFT l6_expr
 	| l7_expr RSHIFT l6_expr
@@ -71,6 +90,16 @@ op_assign : PLUSEQ
 	| DIVEQ
 	| MODEQ
 	| POWEQ
+
+op_eq : EQEQUAL
+	| CASEEQ
+	| NOTEQ
+	| NOEQ
+
+op_order : '<'
+	| '>'
+	| GEQUAL
+	| LEQUAL
 
 numeric : INT 
 	| FLOAT
