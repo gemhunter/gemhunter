@@ -41,15 +41,6 @@ tokens = (
 "COMMENT",
 "CONST",
 "DOL0",
-"DOL1",
-"DOL2",
-"DOL3",
-"DOL4",
-"DOL5",
-"DOL6",
-"DOL7",
-"DOL8",
-"DOL9",
 "KEYWORD_EQUAL",
 "KEYWORD_DEFINED",
 "NEWLINE"
@@ -125,15 +116,6 @@ t_SEQIN = r'\.\.'
 t_SEQEX = r'\.\.\.'
 t_SCOPE = r'::'
 t_DOL0 = r'\$0'
-t_DOL1 = r'\$1'
-t_DOL2 = r'\$2'
-t_DOL3 = r'\$3'
-t_DOL4 = r'\$4'
-t_DOL5 = r'\$5'
-t_DOL6 = r'\$6'
-t_DOL7 = r'\$7'
-t_DOL8 = r'\$8'
-t_DOL9 = r'\$9'
 t_KEYWORD_EQUAL = r'equal\?'
 t_KEYWORD_DEFINED = r'defined\?'
 
