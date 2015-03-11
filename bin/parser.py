@@ -140,7 +140,7 @@ def p_op_assign(p):
 	'''
 
 def p_op_eq(p):
-	'''op_eq : EQEQ
+	'''op_eq : EQEQUAL
 		| CASEEQ
 		| NOTEQ
 		| NOEQ
@@ -149,8 +149,8 @@ def p_op_eq(p):
 def p_op_order(p):
 	'''op_order : '<'
 		| '>'
-		| GEQ
-		| LEQ
+		| GTEQUAL
+		| LTEQUAL
 	'''
 
 def p_numeric(p):

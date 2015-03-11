@@ -98,8 +98,8 @@ op_eq : EQEQUAL
 
 op_order : '<'
 	| '>'
-	| GEQUAL
-	| LEQUAL
+	| GTEQUAL
+	| LTEQUAL
 
 numeric : INT 
 	| FLOAT
