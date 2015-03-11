@@ -50,9 +50,6 @@ tokens = (
 "DOL7",
 "DOL8",
 "DOL9",
-"KEYWORD_FILE",
-"KEYWORD_LINE",
-"KEYWORD_ENCODING",
 "KEYWORD_EQUAL",
 "KEYWORD_DEFINED",
 "NEWLINE"
@@ -100,6 +97,9 @@ reserved = {
     'return' : "KEYWORD_RETURN",
     'undef' : "KEYWORD_UNDEF",
     'yield' : "KEYWORD_YIELD",
+    '__FILE__' : "KEYWORD_FILE",
+    '__LINE__' : "KEYWORD_LINE",
+    '__ENCODING__' : "KEYWORD_ENCODING",
 }
 
 tokens = tokens + tuple(reserved.values())
@@ -134,9 +134,6 @@ t_DOL6 = r'\$6'
 t_DOL7 = r'\$7'
 t_DOL8 = r'\$8'
 t_DOL9 = r'\$9'
-t_KEYWORD_FILE = r'__FILE__'
-t_KEYWORD_LINE = r'__LINE__'
-t_KEYWORD_ENCODING = r'__ENCODING__'
 t_KEYWORD_EQUAL = r'equal\?'
 t_KEYWORD_DEFINED = r'defined\?'
 
