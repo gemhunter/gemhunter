@@ -1,4 +1,3 @@
-Update lexer in bin
 ignore comments in bnf to yacc
 convert makefile to python
 

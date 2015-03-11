@@ -1,5 +1,4 @@
-all : dot bnf
-	#dotty out.dot
+all : bnf dot
 	dot -Tps out.dot >out.ps
 	evince out.ps
 

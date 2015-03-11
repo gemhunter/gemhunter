@@ -15,10 +15,10 @@ tokens = (
 "MODEQ",
 "POWEQ",
 "POW",
-"EQEQ",
+"EQEQUAL",
 "NOTEQ",
-"GEQ",
-"LEQ",
+"GTEQUAL",
+"LTEQUAL",
 "NOEQ",
 "CASEEQ",
 "LSHIFT",
@@ -27,8 +27,8 @@ tokens = (
 "OR",
 "CHAR",
 "STRING",
-"DOT3",
-"DOT2",
+"SEQIN",
+"SEQEX",
 "SCOPE",
 "LOCALVAR",
 "GLOBALVAR",
@@ -41,18 +41,6 @@ tokens = (
 "COMMENT",
 "CONST",
 "DOL0",
-"DOL1",
-"DOL2",
-"DOL3",
-"DOL4",
-"DOL5",
-"DOL6",
-"DOL7",
-"DOL8",
-"DOL9",
-"KEYWORD_FILE",
-"KEYWORD_LINE",
-"KEYWORD_ENCODING",
 "KEYWORD_EQUAL",
 "KEYWORD_DEFINED",
 "NEWLINE"
@@ -100,15 +88,18 @@ reserved = {
     'return' : "KEYWORD_RETURN",
     'undef' : "KEYWORD_UNDEF",
     'yield' : "KEYWORD_YIELD",
+    '__FILE__' : "KEYWORD_FILE",
+    '__LINE__' : "KEYWORD_LINE",
+    '__ENCODING__' : "KEYWORD_ENCODING",
 }
 
 tokens = tokens + tuple(reserved.values())
 
 t_POW = r'\*\*'
-t_EQEQ = r'=='
+t_EQEQUAL = r'=='
 t_NOTEQ = r'!='
-t_GEQ = r'>='
-t_LEQ = r'<='
+t_GTEQUAL = r'>='
+t_LTEQUAL = r'<='
 t_NOEQ = r'<=>'
 t_CASEEQ = r'==='
 t_PLUSEQ = r'\+='
@@ -121,22 +112,10 @@ t_LSHIFT = r'<<'
 t_RSHIFT = r'>>'
 t_AND = r'\&\&'
 t_OR = r'\|\|'
-t_DOT2 = r'\.\.'
-t_DOT3 = r'\.\.\.'
+t_SEQIN = r'\.\.'
+t_SEQEX = r'\.\.\.'
 t_SCOPE = r'::'
 t_DOL0 = r'\$0'
-t_DOL1 = r'\$1'
-t_DOL2 = r'\$2'
-t_DOL3 = r'\$3'
-t_DOL4 = r'\$4'
-t_DOL5 = r'\$5'
-t_DOL6 = r'\$6'
-t_DOL7 = r'\$7'
-t_DOL8 = r'\$8'
-t_DOL9 = r'\$9'
-t_KEYWORD_FILE = r'__FILE__'
-t_KEYWORD_LINE = r'__LINE__'
-t_KEYWORD_ENCODING = r'__ENCODING__'
 t_KEYWORD_EQUAL = r'equal\?'
 t_KEYWORD_DEFINED = r'defined\?'
 
@@ -214,32 +193,3 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
-
-# Test it out
-with open(sys.argv[1], 'r') as my_file:
-     data = my_file.read()
-
-# Give the lexer some input
-lexer.input(data)
-
-# Tokenize
-currLineNo = lexer.lineno
-lines = data.split('\n')
-buff = []
-
-for tok in lexer:
-	if tok.lineno > currLineNo:
-		print lines[currLineNo-1]+"\t"+"#",
-		for item in buff:
-			print item,
-		print "\n",
-		buff = []
-		for i in xrange(currLineNo,tok.lineno-1):
-			print lines[i],"\n",
-		currLineNo = tok.lineno
-    	buff.append(tok.type)
-    	buffEmpty = 0
-
-print lines[currLineNo-1]+"\t"+"#",
-for item in buff:
-	print item,

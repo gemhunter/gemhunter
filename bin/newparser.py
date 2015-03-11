@@ -5,21 +5,8 @@ import logging
 
 # Get the token map from the lexer.  This is required.
 from lexer import tokens
-def p_expression(p):
-	'''expression : expression PLUS term
-	           | expression MINUS term
-	           | term
-	'''
-
-def p_term(p):
-	'''term : term TIMES factor
-	     | term DIVIDE factor
-	     | factor
-	'''
-
-def p_factor(p):
-	'''factor : NUMBER
-	       | LPAREN expression RPAREN'''
+def p_program(p):
+	'''program : LOCALVAR'''
 
 
 # Error rule for syntax errors
