@@ -9,149 +9,41 @@ stmts : none
 	| stmts lin_terms stmt
 
 #Single statement
-#Note we use lhs op_assign which may be wrong for semantic
-#For semantic, divide into var_lhs and rest
 stmt : KEYWORD_END '{' compstmt '}'
 	| KEYWORD_BEGIN '{' compstmt '}'	
-	| command_assign
-	| lhs op_assign command_call
 	| expr
 
-#Assignment Command (lhs = lhs = ... = command_call)
-command_assign : lhs '=' command_call
-	| lhs '=' command_assign
+#Anything that evaluates
+expr : l7_expr
 
-#Expressions (Evaluate to a value)
-expr : command_call
-	| '!' command_call
-	| KEYWORD_NOT expr
-	| expr KEYWORD_AND expr
-	| expr KEYWORD_OR expr
-	| arg
+l7_expr : l7_expr LSHIFT l6_expr
+	| l7_expr RSHIFT l6_expr
+	| l6_expr
 
-#Method Call without parenthesis
-command_call : 
+l6_expr : l6_expr '+' l5_expr
+	| l6_expr '-' l5_expr
+	| l5_expr
 
-prime : literal 
-	| variable 
-	| if_expr 
-	| unless_expr 
-	| case_expr 
-	| while_expr 
-	| until_expr 
-	| for_expr 
-	| yield_expr 
-	| array_cons 
-	| KEYWORD_BREAK 
-	| KEYWORD_NEXT 
-	| KEYWORD_REDO 
-	| class_def 
-	| method_def 
-	| singleton_class_def 
-	| singleton_method_def 
-	| KEYWORD_BREAK 
-	| KEYWORD_RETRY 
-	| KEYWORD_REDO 
-	| KEYWORD_NEXT 
-	| KEYWORD_RETURN 
-	| '(' compstmt ')' 
-	| KEYWORD_DEFINED '(' expr ')' 
+l5_expr : l5_expr '*' l4_expr
+	| l5_expr '/' l4_expr
+	| l5_expr '%' l4_expr
+	| l4_expr
 
-class_def : 
+l4_expr : '-' l3_expr
+	| l3_expr
 
-method_def : KEYWORD_END method_name 
+l3_expr : l2_expr POW l3_expr
+	| l2_expr
 
+l2_expr : '!' l1_expr
+	| '~' l1_expr
+	| '+' l1_expr
+	| l1_expr
 
-method_name : key_var 
-	| LOCALVAR 
-	| CONST 
-
-
-singleton_class_def : KEYWORD_CLASS LSHIFT expr 
-
-
-if_expr : KEYWORD_IF expr then compstmt if_tail KEYWORD_END
-
-then : lin_ter 
-	| KEYWORD_THEN 
-	| term KEYWORD_THEN
-
-if_tail : opt_else 
-	| KEYWORD_ELSIF expr then compstmt if_tail
-
-opt_else : KEYWORD_ELSE compstmt 
-	| none
-
-
-unless_expr : KEYWORD_UNLESS expr then compstmt opt_else KEYWORD_END
-
-
-case_expr : KEYWORD_CASE expr opt_terms case_body KEYWORD_END 
-	| KEYWORD_CASE opt_terms case_body KEYWORD_END
-
-
-
-case_body : KEYWORD_WHEN args then compstmt cases
-
-cases : opt_else 
-	| case_body
-
-
-while_expr : KEYWORD_WHILE expr do compstmt KEYWORD_END
-
-do : lin_ter 
-	| KEYWORD_DO
-
-
-until_expr : KEYWORD_UNTIL expr do compstmt KEYWORD_END
-
-
-for_expr : KEYWORD_FOR for_var KEYWORD_IN expr do compstmt KEYWORD_END
-
-for_var : lhs 
-	| mlhs
-
-
-yield_expr : KEYWORD_YIELD opt_call_args
-
-opt_call_args : '(' ')' 
-	| '(' call_args ')' 
-	| none
-
-
-arg : lhs '=' arg 
-	| arg DOT2 arg 
-	| arg DOT3 arg 
-	| arg '+' arg 
-	| arg '-' arg 
-	| arg '*' arg 
-	| arg '/' arg 
-	|arg '%' arg 
-	| arg POW arg 
-	| '+' arg 
-	| '-' arg 
-	| arg '
-	|' arg 
-	| arg '^' arg 
-	| arg '&' arg 
-	| arg '>' arg 
-	| arg '<' arg 
-	| '!' arg 
-	| '~' arg 
-	| arg LEQ arg 
-	| arg GEQ arg 
-	| arg LSHIFT arg 
-	| arg RSHIFT arg 
-	| arg AND arg 
-	| arg OR arg 
-	| arg NOTEQ arg 
-	| arg NOEQ arg 
-	| arg EQEQ arg 
-	| arg CASEEQ arg 
-	| KEYWORD_DEFINED arg 
-	| prime 
-	| arg '?' arg ':' arg
-
+l1_expr : user_var
+	| key_var
+	| literal
+	| '(' expr ')'
 
 
 

@@ -47,15 +47,13 @@ tokens = (
 )
 
 #Literals (single character tokens)
-literals = "+-*/%><=&|^!~?.:,(){}[]"
+literals = "+-*/%><=&|^!~?.:,(){}[];"
 
 # tokens for reserved keywords of ruby
 reserved = {
-    'and' : "KEYWORD_AND",
     'def' : "KEYWORD_DEF",
     'end' : "KEYWORD_end",
     'in' : "KEYWORD_IN",
-    'or' : "KEYWORD_OR",
     'self' : "KEYWORD_SELF",
     'unless' : "KEYWORD_UNLESS",
     'begin' : "KEYWORD_begin",
@@ -84,7 +82,6 @@ reserved = {
     'class' : "KEYWORD_CLASS",
     'elsif' : "KEYWORD_ELSIF",
     'if' : "KEYWORD_IF",
-    'not' : "KEYWORD_NOT",
     'return' : "KEYWORD_RETURN",
     'undef' : "KEYWORD_UNDEF",
     'yield' : "KEYWORD_YIELD",

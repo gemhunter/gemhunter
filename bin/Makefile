@@ -1,12 +1,11 @@
 all : bnf dot
-	dot -Tps out.dot >out.ps
-	evince out.ps
+	dot -Tpdf out.dot > out.pdf
 
-dot : lexer.py in getdot.py
-	python newparser.py <in
-	python getdot.py >out.dot
+dot : bnf lexer.py getdot.py
+	python parser.py $1
+	python getdot.py > out.dot
 
-bnf: cfg.bnf getparser.py
-	python getparser.py
+bnf: cfg.bnf generate_parser.py
+	python generate_parser.py
 clean : 
-	rm -rf *.ps *.dot *.txt parsetab.* *.out *~ *pyc
+	rm -rf *.ps *.dot *.txt parsetab.* *.out *~ *pyc *.pdf
