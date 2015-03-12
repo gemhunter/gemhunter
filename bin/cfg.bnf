@@ -117,12 +117,9 @@ arg_list_tail : expr ',' arg_list_tail
 	| expr
 
 #IF Block
-if_block : KEYWORD_IF expr then_clause stmts if_tail KEYWORD_END
+if_block : KEYWORD_IF expr then_clause compstmt if_tail KEYWORD_end
 
-then_clause : KEYWORD_THEN
-#	| lin_terms
-#	| KEYWORD_THEN
-#	| lin_terms KEYWORD_THEN
+then_clause : opt_terms KEYWORD_THEN
 
 if_tail : optelse
 	| KEYWORD_ELSIF expr then_clause stmts if_tail
