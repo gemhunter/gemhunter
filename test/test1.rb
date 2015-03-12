@@ -1,18 +1,18 @@
-(0...10).class    # => Range
-(0..9).class      # => Range
-(0..2).first      # => 0
-(0..2).last       # => 2 
-(1..5).next       # invalid, Range class doesent have next method
+(0...10).class()    # => Range
+(0..9).class()      # => Range
+(0..2).first()     # => 0
+(0..2).last()       # => 2 
+(1..5).next()       # invalid, Range class doesent have next method
  
-(0..3).each { |x| print x }              # outputs, 0123
-(0...10).reverse_each { |x| print x }    # outputs, 9876543210
-(-3..3).each.abs { |x| print x }         # invalid
-(-3..3).each { |x| print x.abs }         # outputs, 3210123
+(0..3).each() { |x| print(x) }              # outputs, 0123
+(0...10).reverse_each() { |x| print(x) }    # outputs, 9876543210
+(-3..3).each().abs() { |x| print(x) }         # invalid
+(-3..3).each() { |x| print(x.abs) }         # outputs, 3210123
  
 # Enumerator dosent require 'each' to iterate
-5.upto(10).class                         # => Enumerator
+5.upto(10).class()                         # => Enumerator
 5.upto(10) { |x| print x }               # outputs, 5678910 
-(5..10).each { |x| print x }             # outputs, 5678910
+(5..10).each() { |x| print x }             # outputs, 5678910
 
 
 #!/usr/bin/ruby
@@ -32,13 +32,13 @@ class Customer
       @cust_addr=addr
    end
    def display_details()
-      puts "Customer id #@cust_id"
-      puts "Customer name #@cust_name"
-      puts "Customer address #@cust_addr"
+      puts("Customer id #@cust_id")
+      puts("Customer name #@cust_name")
+      puts("Customer address #@cust_addr")
     end
     def total_no_of_customers()
        @@no_of_customers += 1
-       puts "Total number of customers: #@@no_of_customers"
+       #puts "Total number of customers: #@@no_of_customers"
     end
 end
 
