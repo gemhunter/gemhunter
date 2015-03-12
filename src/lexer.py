@@ -163,7 +163,7 @@ def t_INSTANCEVAR(t):
     return t
 
 def t_FLOAT(t):
-    r'(((\d+\.\d+)|(\.\d+))([eE][\+-]?\d+)?[fF]?) | (((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)[fF]?) | (((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)?[fF])'
+    r'(((\d+\.\d+)|(\.\d+))([eE][\+-]?\d+)?[fF]?) |(((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)[fF]?) | (((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)?[fF])'
     return t
 
 def t_INT(t):
@@ -194,3 +194,38 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
+
+# Test it out
+with open(sys.argv[1], 'r') as my_file:
+     data = my_file.read()
+
+# Give the lexer some input
+lexer.input(data)
+
+# Tokenize
+currLineNo = lexer.lineno
+lines = data.split('\n')
+buff = []
+
+for tok in lexer:
+	#tok = lexer.token()
+	#if not tok: break      # No more input
+	#print tok
+	if tok.lineno > currLineNo:
+		print lines[currLineNo-1]+"\t"+"#",
+		for item in buff:
+			print item,
+		print "\n",
+		buff = []
+		for i in xrange(currLineNo,tok.lineno-1):
+			print lines[i],"\n",
+		currLineNo = tok.lineno
+    	buff.append(tok.type)
+    	buffEmpty = 0
+	#buff.append(tok.value)
+
+print lines[currLineNo-1]+"\t"+"#",
+for item in buff:
+	print item,
+
+

@@ -12,10 +12,11 @@ stmts : none
 stmt : KEYWORD_END '{' compstmt '}'
 	| KEYWORD_BEGIN '{' compstmt '}'
 	| if_block
-#	| until_block
-#	| unless_block
-#	| which_block
-#	| case_block
+	| until_block
+	| unless_block
+	| case_block
+#	| for_block
+	| while_block
 	| KEYWORD_RETURN arg_list
 	| expr
 
@@ -113,27 +114,44 @@ arg_list : none
 	| expr ',' arg_list_tail
 	| expr
 
+non_empty_arg_list : expr 	
+	| expr ',' arg_list_tail
+
 arg_list_tail : expr ',' arg_list_tail
 	| expr
 
 #IF Block
 if_block : KEYWORD_IF expr then_clause compstmt if_tail KEYWORD_end
 
-then_clause : opt_terms KEYWORD_THEN
+then_clause : KEYWORD_THEN
+	| lin_term 
+	| lin_term KEYWORD_THEN
 
-if_tail : optelse
+if_tail : opt_else
 	| KEYWORD_ELSIF expr then_clause stmts if_tail
 
-optelse : KEYWORD_ELSE compstmt
+opt_else : KEYWORD_ELSE compstmt
 	| none
 
-until_block : none
+#Until and Unless
+until_block : KEYWORD_UNTIL expr do_clause compstmt KEYWORD_end
 
-unless_block : none
+do_clause : lin_term
+	| lin_term KEYWORD_DO
+	| KEYWORD_DO
 
-which_block : none
+unless_block : KEYWORD_UNLESS expr then_clause compstmt opt_else KEYWORD_end
 
-case_block : none
+#While Block
+while_block : KEYWORD_WHILE expr do_clause compstmt KEYWORD_end
+
+#Case Block
+case_block : KEYWORD_CASE expr opt_terms case_body KEYWORD_end
+
+case_body : KEYWORD_WHEN non_empty_arg_list then_clause compstmt case_clause   
+
+case_clause : opt_else 
+	| case_body
 
 #Pretty self explanatory names
 
@@ -149,9 +167,6 @@ lin_term : ';'
 literal : numeric 
 	| CHAR 
 	| STRING
-
-opt_nl : none
-	| NEWLINE
 
 op_assign : PLUSEQ
 	| MINUSEQ
