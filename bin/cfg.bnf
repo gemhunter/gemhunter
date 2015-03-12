@@ -65,10 +65,8 @@ l1_expr : basic_expr
 basic_expr : user_var
 	| key_var
 	| literal
-	| method_call
 
 #The value of evaluating a method
-method_call : none
 
 #Pretty self explanatory names
 

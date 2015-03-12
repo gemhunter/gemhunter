@@ -83,7 +83,6 @@ reserved = {
     'elsif' : "KEYWORD_ELSIF",
     'if' : "KEYWORD_IF",
     'return' : "KEYWORD_RETURN",
-    'undef' : "KEYWORD_UNDEF",
     'yield' : "KEYWORD_YIELD",
     '__FILE__' : "KEYWORD_FILE",
     '__LINE__' : "KEYWORD_LINE",

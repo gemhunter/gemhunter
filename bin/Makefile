@@ -8,4 +8,4 @@ dot : bnf lexer.py getdot.py
 bnf: cfg.bnf generate_parser.py
 	python generate_parser.py
 clean : 
-	rm -rf *.ps *.dot *.txt parsetab.* *.out *~ *pyc *.pdf
+	rm -rf *.ps *.dot *.txt parsetab.* *.out *~ *pyc *.pdf parser.py
