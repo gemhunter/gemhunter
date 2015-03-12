@@ -18,7 +18,11 @@ stmt : KEYWORD_END '{' compstmt '}'
 	| for_block
 	| while_block
 	| KEYWORD_RETURN arg_list
+	| KEYWORD_BREAK
+	| KEYWORD_NEXT
+	| KEYWORD_REDO
 	| expr
+	| class_defn
 
 #Anything that evaluates
 expr : assign_expr4
@@ -154,6 +158,9 @@ case_clause : opt_else
 
 #For Block
 for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause compstmt KEYWORD_end
+
+#Class definition
+class_defn : KEYWORD_CLASS CONST opt_inheritance lin_term body_stmt KEYWORD_end
 
 #Pretty self explanatory names
 

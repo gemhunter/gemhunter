@@ -1,5 +1,7 @@
 Options:
 
+class defn
+method defn
 Inheritance	done
 singleton classes	done
 visibility	not doing

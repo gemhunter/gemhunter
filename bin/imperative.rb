@@ -6,7 +6,9 @@ end
 
 if a=3+4.d
 	then
-
+=begin
+boo
+=end
 
 	puts("ha")
 else
