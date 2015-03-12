@@ -1,44 +1,76 @@
-if a=3+4.d
-	puts("ha")
+x=1
+if x > 2
+   puts("x is greater than 2")
+elsif x <= 2 && x !=0
+   puts("x is 1")
 else
-	puts(4)
-end
-
-if a=3+4.d
-	then
+   puts("I can't guess the number")
 =begin
 boo
 =end
+end
 
-	puts("ha")
+
+
+x=4
+unless x>2
+   puts("x is less than 2")
+ else
+  puts("x is greater than 2")
+end
+
+
+
+$age =  5
+case $age
+when 0 .. 2
+    puts("baby")
+when 3 .. 6
+    puts("little child")
+when 7 .. 12
+    puts("child")
+when 13 .. 18
+    puts("youth")
 else
-
-	puts(4)
+    puts("adult")
 end
 
-unless 20>10&&a.met() 
-	puts
+
+
+$i = 0
+$num = 5
+until $i > $num  do
+   puts("Inside the loop i = #$i" )
+   $i +=1;
 end
 
-until a.b.c == 2.34 
-	do
-	
-		ughadkj
-	end
 
-case [((-a+!2)[4])].each.literal
-when lop**=45 
-	jobhlikhna-udba
-when another
-	anotherstmt
+
+
+$i = 0
+$num = 5
+
+while $i < $num  do
+   puts("Inside the while loop i = #$i" )
+   $i +=1
+end
+
+
+
+
+for i in 0..5
+   puts("Value of local variable is #{i}")
+end
+
+
+grade = A
+case grade
+when "A", "B"
+  puts('You pretty smart!')
+when "C", "D"
+  puts('You pretty dumb!!')
 else
-	laststmt
+  puts("You can't even use a computer!")
 end
 
-for a in [1,2,3,4,5] do
-	puts(a*10)
-end
 
-for a in (0..5)[4]
-	haha
-end
