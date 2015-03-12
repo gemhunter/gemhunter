@@ -24,7 +24,7 @@ stmt : KEYWORD_END '{' compstmt '}'
 	| KEYWORD_REDO
 	| method_defn
 	| class_defn
-#	| singleton_class_defn
+	| singleton_class_defn
 	| expr
 
 #Anything that evaluates
@@ -169,7 +169,7 @@ opt_inheritance : none
 	| '<' primary_expr
 
 #Singleton Class definition
-singleton_class_defn : none
+singleton_class_defn : KEYWORD_CLASS LSHIFT singleton_var lin_term compstmt KEYWORD_end
 
 #Method definition
 method_defn : KEYWORD_DEF method_var method_params lin_term compstmt KEYWORD_end
@@ -231,6 +231,10 @@ bool_assign : ANDEQ
 
 numeric : INT 
 	| FLOAT
+
+singleton_var : LOCALVAR
+	| CONST
+	| KEYWORD_SELF
 
 method_var : LOCALVAR
 	| METHOD_ONLY_VAR
