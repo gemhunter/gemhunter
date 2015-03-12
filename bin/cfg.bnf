@@ -16,14 +16,14 @@ stmt : KEYWORD_END '{' compstmt '}'
 #Anything that evaluates
 expr : assign_expr1
 
-#assign_expr4 : lhs bool_assign assign_expr4
-#	| assign_expr3
+assign_expr4 : lhs bool_assign assign_expr4
+	| assign_expr3
 
-#assign_expr3 : lhs shift_assign assign_expr3
-#	| assign_expr2
+assign_expr3 : lhs shift_assign assign_expr3
+	| assign_expr2
 
-#assign_expr2 : lhs op_assign assign_expr2
-#	| assign_expr1
+assign_expr2 : lhs op_assign assign_expr2
+	| assign_expr1
 
 assign_expr1 : lhs '=' assign_expr1
 	| range_expr
@@ -75,23 +75,23 @@ l2_expr : '!' l1_expr
 	| '+' l1_expr
 	| l1_expr
 
-l1_expr : basic_expr
-	| '(' expr ')'
-	| '[' expr ']'
+l1_expr : primary_expr
 
-basic_expr : user_var
+primary_expr : '(' expr ')'
+	| user_var
 	| key_var
 	| literal
 	| '[' ']'
+	| '[' expr ']'
 
 #The value of evaluating a method
 method_call : none
 
 #LHS of an assignment
 lhs : user_var
-	| expr '.' LOCALVAR
-	| expr '.' CONST
-	| expr '[' expr ']'
+	| primary_expr '.' LOCALVAR
+	| primary_expr '.' CONST
+	| primary_expr '[' expr ']'
 
 #Pretty self explanatory names
 
@@ -99,7 +99,7 @@ opt_terms : none
 	| lin_terms
 
 lin_terms : lin_term 
-	| lin_terms ';'
+	| lin_terms lin_term
 
 lin_term : ';' 
 	| NEWLINE
@@ -141,7 +141,6 @@ numeric : INT
 	| FLOAT
 
 method_var : LOCALVAR
-	| METHOD_ASSGN_VAR
 	| METHOD_ONLY_VAR
 	| CONST
 
@@ -149,7 +148,6 @@ user_var : LOCALVAR
 	| GLOBALVAR 
 	| CLASSVAR 
 	| INSTANCEVAR 
-	| METHOD_ASSGN_VAR 
 	| METHOD_ONLY_VAR 
 	| CONST
 

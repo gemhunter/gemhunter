@@ -42,7 +42,6 @@ tokens = (
 "CLASSVAR",
 "INSTANCEVAR",
 "METHOD_ONLY_VAR",
-"METHOD_ASSGN_VAR",
 "INT",
 "FLOAT",
 "COMMENT",
@@ -139,11 +138,6 @@ def t_COMMENT(t):
 def t_METHOD_ONLY_VAR(t):
     r'(((_|[a-z])[a-zA-Z_0-9]*)|([A-Z][a-zA-Z_0-9]*))[\!\?]'
     t.type = reserved.get(t.value,'METHOD_ONLY_VAR')
-    return t
-
-def t_METHOD_ASSGN_VAR(t):
-    r'(((_|[a-z])[a-zA-Z_0-9]*)|([A-Z][a-zA-Z_0-9]*))='
-    t.type = reserved.get(t.value,'METHOD_ASSGN_VAR')
     return t
 
 def t_LOCALVAR(t):
