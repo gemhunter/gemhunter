@@ -246,6 +246,7 @@ numeric : INT
 
 method : method_var
 	| KEYWORD_CLASS
+	| KEYWORD_NEXT
 
 singleton_var : LOCALVAR
 	| CONST
