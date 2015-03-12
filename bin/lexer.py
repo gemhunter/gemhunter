@@ -7,7 +7,7 @@ import lex
 
 # List of token names.
 tokens = (
-"MULTICOMMENT",
+#"MULTICOMMENT",
 "LSHIFTEQ",
 "RSHIFTEQ",
 "ANDEQ",
@@ -43,7 +43,7 @@ tokens = (
 "METHOD_ONLY_VAR",
 "INT",
 "FLOAT",
-"COMMENT",
+#"COMMENT",
 "CONST",
 "DOL0",
 "KEYWORD_EQUAL",
@@ -63,7 +63,6 @@ reserved = {
     'unless' : "KEYWORD_UNLESS",
     'begin' : "KEYWORD_begin",
     'ensure' : "KEYWORD_ENSURE",
-    'module' : "KEYWORD_MODULE",
     'redo' : "KEYWORD_REDO",
     'super' : "KEYWORD_SUPER",
     'until' : "KEYWORD_UNTIL",

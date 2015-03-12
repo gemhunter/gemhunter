@@ -15,7 +15,7 @@ stmt : KEYWORD_END '{' compstmt '}'
 	| until_block
 	| unless_block
 	| case_block
-#	| for_block
+	| for_block
 	| while_block
 	| KEYWORD_RETURN arg_list
 	| expr
@@ -88,8 +88,7 @@ primary_expr : '(' expr ')'
 	| user_var
 	| key_var
 	| literal
-	| '[' ']'
-	| '[' expr ']'
+	| '[' arg_list ']'
 	| primary_expr '[' expr ']'
 	| primary_expr '.' method_var
 	| method_call
@@ -152,6 +151,9 @@ case_body : KEYWORD_WHEN non_empty_arg_list then_clause compstmt case_clause
 
 case_clause : opt_else 
 	| case_body
+
+#For Block
+for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause compstmt KEYWORD_end
 
 #Pretty self explanatory names
 
