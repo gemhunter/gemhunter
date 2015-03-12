@@ -14,7 +14,7 @@ stmt : KEYWORD_END '{' compstmt '}'
 	| expr
 
 #Anything that evaluates
-expr : assign_expr1
+expr : assign_expr4
 
 assign_expr4 : lhs bool_assign assign_expr4
 	| assign_expr3
@@ -83,15 +83,24 @@ primary_expr : '(' expr ')'
 	| literal
 	| '[' ']'
 	| '[' expr ']'
+	| primary_expr '[' expr ']'
+	| primary_expr '.' method_var
+	| method_call
 
 #The value of evaluating a method
-method_call : none
+method_call : primary_expr '.'  method_var args
+	| method_var args
 
 #LHS of an assignment
 lhs : user_var
 	| primary_expr '.' LOCALVAR
 	| primary_expr '.' CONST
 	| primary_expr '[' expr ']'
+
+#Argument list
+args :  '(' arg_list ')'
+
+arg_list : none
 
 #Pretty self explanatory names
 

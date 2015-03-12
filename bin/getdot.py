@@ -13,17 +13,14 @@ with open("parselog.txt") as f:
 infile = "actions.txt"
 outfile = "treefile.txt"
 
-delete_list = ["INFO:root:Action : Reduce rule", "with","and goto state "]
 delete_list2 = ["rule [","] with"]
 
 fin = open(infile)
 fout = open(outfile, "w+")
 for line in fin:
-   for word in delete_list:
-       line = line.replace(word, "")
-   matches = re.findall('rule(.*)with', line)
-   for word in delete_list2:
-       matches[0] = matches[0].replace(word, "")
+   matches = re.findall('rule \[(.*)\] with', line)
+   #for word in delete_list2:
+   #    matches[0] = matches[0].replace(word, "")
    fout.write(matches[0])
    #line = line[1:len(line)-2]
    #fout.write(line)	
