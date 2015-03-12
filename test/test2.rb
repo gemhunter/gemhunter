@@ -1,5 +1,5 @@
 hex = [(0..9),('A'..'F')]
-hex.each { |x| x.each { |y| print y }}    # outputs, 0123456789ABCDEF
+hex.each { |x| x.each { |y| print(y) }}    # outputs, 0123456789ABCDEF
  
 # declare an array of arrays
 nums = [[0,1], [2,3,4,5,6,7], [8,9], ['A','B','C','D','E','F']]
@@ -11,3 +11,15 @@ octal = (binary + octal).uniq            # => [0, 1, 2, 3, 4, 5, 6, 7]
  
 a = [0, 1, 2, 3, 4, 5]    # array of 6 elements
 b = a.map { |x| 2**x }    # => [1, 2, 4, 8, 16, 32]
+
+class << single_ex
+	def new_func
+		puts "hi"
+	end
+end
+
+super("here")
+
+lhs_ex.var = 2*3+1-1
+lhs_ex.Var = 2*30
+lhs_ex[2343*abc] = "here"
