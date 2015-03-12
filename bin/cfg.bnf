@@ -134,7 +134,7 @@ then_clause : KEYWORD_THEN
 	| lin_term KEYWORD_THEN
 
 if_tail : opt_else
-	| KEYWORD_ELSIF expr then_clause stmts if_tail
+	| KEYWORD_ELSIF expr then_clause compstmt if_tail
 
 opt_else : KEYWORD_ELSE compstmt
 	| none
@@ -172,9 +172,21 @@ opt_inheritance : none
 singleton_class_defn : none
 
 #Method definition
-method_defn : KEYWORD_DEF method_var method_params compstmt KEYWORD_end
+method_defn : KEYWORD_DEF method_var method_params lin_term compstmt KEYWORD_end
 
-method_params : none
+method_params : none 
+	| '(' param_list  ')'
+
+param_list : none
+	| non_empty_param_list
+
+non_empty_param_list : LOCALVAR
+	| LOCALVAR '=' expr ',' optional_param_list_tail
+	| LOCALVAR '=' expr
+	| LOCALVAR ',' non_empty_param_list
+
+optional_param_list_tail : LOCALVAR '=' expr
+	| optional_param_list_tail ',' LOCALVAR '=' expr
 
 #Pretty self explanatory names
 

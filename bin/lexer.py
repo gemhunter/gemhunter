@@ -57,7 +57,6 @@ reserved = {
     'in' : "KEYWORD_IN",
     'self' : "KEYWORD_SELF",
     'unless' : "KEYWORD_UNLESS",
-    'begin' : "KEYWORD_begin",
     'redo' : "KEYWORD_REDO",
     'super' : "KEYWORD_SUPER",
     'until' : "KEYWORD_UNTIL",
@@ -123,7 +122,7 @@ def t_COMMENT(t):
     r'\#.*(?=\n)'
 
 def t_METHOD_ONLY_VAR(t):
-    r'(((_|[a-z])[a-zA-Z_0-9]*)|([A-Z][a-zA-Z_0-9]*))[\!\?]'
+    r'(((_|[a-z])[a-zA-Z_0-9]*)|([A-Z][a-zA-Z_0-9]*))[\?]'
     t.type = reserved.get(t.value,'METHOD_ONLY_VAR')
     return t
 
