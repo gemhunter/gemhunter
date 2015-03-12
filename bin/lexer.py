@@ -44,8 +44,6 @@ tokens = (
 "FLOAT",
 "CONST",
 "DOL0",
-"KEYWORD_EQUAL",
-"KEYWORD_DEFINED",
 "NEWLINE"
 )
 
@@ -60,7 +58,6 @@ reserved = {
     'self' : "KEYWORD_SELF",
     'unless' : "KEYWORD_UNLESS",
     'begin' : "KEYWORD_begin",
-    'ensure' : "KEYWORD_ENSURE",
     'redo' : "KEYWORD_REDO",
     'super' : "KEYWORD_SUPER",
     'until' : "KEYWORD_UNTIL",
@@ -117,8 +114,6 @@ t_OR = r'\|\|'
 t_SEQIN = r'\.\.'
 t_SEQEX = r'\.\.\.'
 t_DOL0 = r'\$0'
-t_KEYWORD_EQUAL = r'equal\?'
-t_KEYWORD_DEFINED = r'defined\?'
 
 def t_MULTICOMMENT(t):
     r'(?<=\n)=begin(.*\n)+=end(?=\s)'

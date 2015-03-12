@@ -17,12 +17,15 @@ stmt : KEYWORD_END '{' compstmt '}'
 	| case_block
 	| for_block
 	| while_block
-	| KEYWORD_RETURN arg_list
+	| KEYWORD_RETURN expr
+	| KEYWORD_RETURN
 	| KEYWORD_BREAK
 	| KEYWORD_NEXT
 	| KEYWORD_REDO
-	| expr
+	| method_defn
 	| class_defn
+#	| singleton_class_defn
+	| expr
 
 #Anything that evaluates
 expr : assign_expr4
@@ -160,7 +163,18 @@ case_clause : opt_else
 for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause compstmt KEYWORD_end
 
 #Class definition
-class_defn : KEYWORD_CLASS CONST opt_inheritance lin_term body_stmt KEYWORD_end
+class_defn : KEYWORD_CLASS CONST opt_inheritance lin_term compstmt KEYWORD_end
+
+opt_inheritance : none
+	| '<' primary_expr
+
+#Singleton Class definition
+singleton_class_defn : none
+
+#Method definition
+method_defn : KEYWORD_DEF method_var method_params compstmt KEYWORD_end
+
+method_params : none
 
 #Pretty self explanatory names
 

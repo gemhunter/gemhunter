@@ -20,5 +20,3 @@ BobTheBuilder
 super
 super()[al] **= @@oswald
 _adf?(a,10).Cons /= "ha" + "lk" * 23 >> 2
-
-
