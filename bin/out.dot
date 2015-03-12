@@ -1,4 +1,0 @@
-digraph G {
-graph [ordering="out"];
-
-}
