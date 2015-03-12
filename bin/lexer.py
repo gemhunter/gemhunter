@@ -8,6 +8,13 @@ import lex
 # List of token names.
 tokens = (
 "MULTICOMMENT",
+"LSHIFTEQ",
+"RSHIFTEQ",
+"ANDEQ",
+"OREQ",
+"BITANDEQ",
+"BITOREQ",
+"BITNOTEQ",
 "PLUSEQ",
 "MINUSEQ",
 "STAREQ",
@@ -91,6 +98,13 @@ reserved = {
 
 tokens = tokens + tuple(reserved.values())
 
+t_LSHIFTEQ = r'<<='
+t_RSHIFTEQ = r'>>='
+t_ANDEQ = r'\&\&='
+t_OREQ = r'\|\|=' 
+t_BITANDEQ = r'\&='
+t_BITOREQ = r'\|='
+t_BITNOTEQ = r'\^='
 t_POW = r'\*\*'
 t_EQEQUAL = r'=='
 t_NOTEQ = r'!='

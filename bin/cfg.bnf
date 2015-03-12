@@ -14,7 +14,23 @@ stmt : KEYWORD_END '{' compstmt '}'
 	| expr
 
 #Anything that evaluates
-expr : l13_expr
+expr : assign_expr1
+
+#assign_expr4 : lhs bool_assign assign_expr4
+#	| assign_expr3
+
+#assign_expr3 : lhs shift_assign assign_expr3
+#	| assign_expr2
+
+#assign_expr2 : lhs op_assign assign_expr2
+#	| assign_expr1
+
+assign_expr1 : lhs '=' assign_expr1
+	| range_expr
+
+range_expr : l13_expr SEQIN l13_expr
+	| l13_expr SEQEX l13_expr
+	| l13_expr
 
 l13_expr : l13_expr OR l12_expr
 	| l12_expr
@@ -61,12 +77,21 @@ l2_expr : '!' l1_expr
 
 l1_expr : basic_expr
 	| '(' expr ')'
+	| '[' expr ']'
 
 basic_expr : user_var
 	| key_var
 	| literal
+	| '[' ']'
 
 #The value of evaluating a method
+method_call : none
+
+#LHS of an assignment
+lhs : user_var
+	| expr '.' LOCALVAR
+	| expr '.' CONST
+	| expr '[' expr ']'
 
 #Pretty self explanatory names
 
@@ -103,8 +128,22 @@ op_order : '<'
 	| GTEQUAL
 	| LTEQUAL
 
+shift_assign : LSHIFTEQ
+	| RSHIFTEQ
+
+bool_assign : ANDEQ
+	| OREQ
+	| BITANDEQ
+	| BITOREQ
+	| BITNOTEQ
+
 numeric : INT 
 	| FLOAT
+
+method_var : LOCALVAR
+	| METHOD_ASSGN_VAR
+	| METHOD_ONLY_VAR
+	| CONST
 
 user_var : LOCALVAR 
 	| GLOBALVAR 
@@ -121,5 +160,6 @@ key_var : KEYWORD_NIL
 	| KEYWORD_FILE 
 	| KEYWORD_LINE 
 	| KEYWORD_ENCODING
+	| DOL0
 
 none : 

@@ -1,0 +1,956 @@
+INFO:root:PLY: PARSE DEBUG START
+DEBUG:root:
+DEBUG:root:State  : 0
+DEBUG:root:Stack  : . LexToken(-,'-',1,0)
+DEBUG:root:Action : Shift and goto state 5
+DEBUG:root:
+DEBUG:root:State  : 5
+DEBUG:root:Stack  : - . LexToken(INT,'12',1,1)
+DEBUG:root:Action : Shift and goto state 44
+DEBUG:root:
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : - INT . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [numeric -> INT] with ['12'] and goto state 90
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : - numeric . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [literal -> numeric] with [None] and goto state 66
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : - literal . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : - basic_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : - l1_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : - l2_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 59
+DEBUG:root:Stack  : - l3_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l4_expr -> - l3_expr] with ['-',None] and goto state 38
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : l4_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 24
+DEBUG:root:Stack  : l5_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l6_expr -> l5_expr] with [None] and goto state 33
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : l6_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l7_expr -> l6_expr] with [None] and goto state 30
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : l7_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l8_expr -> l7_expr] with [None] and goto state 27
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : l8_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l9_expr -> l8_expr] with [None] and goto state 25
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : l9_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l10_expr -> l9_expr] with [None] and goto state 22
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 13
+DEBUG:root:Stack  : l10_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l11_expr -> l10_expr] with [None] and goto state 20
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : l11_expr . LexToken(AND,'&&',1,4)
+INFO:root:Action : Reduce rule [l12_expr -> l11_expr] with [None] and goto state 18
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 12
+DEBUG:root:Stack  : l12_expr . LexToken(AND,'&&',1,4)
+DEBUG:root:Action : Shift and goto state 62
+DEBUG:root:
+DEBUG:root:State  : 62
+DEBUG:root:Stack  : l12_expr AND . LexToken((,'(',1,7)
+DEBUG:root:Action : Shift and goto state 23
+DEBUG:root:
+DEBUG:root:State  : 23
+DEBUG:root:Stack  : l12_expr AND ( . LexToken(FLOAT,'2.3',1,9)
+DEBUG:root:Action : Shift and goto state 46
+DEBUG:root:
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : l12_expr AND ( FLOAT . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [numeric -> FLOAT] with ['2.3'] and goto state 91
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : l12_expr AND ( numeric . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [literal -> numeric] with [None] and goto state 66
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : l12_expr AND ( literal . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : l12_expr AND ( basic_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : l12_expr AND ( l1_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : l12_expr AND ( l2_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : l12_expr AND ( l3_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : l12_expr AND ( l4_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 24
+DEBUG:root:Stack  : l12_expr AND ( l5_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l6_expr -> l5_expr] with [None] and goto state 33
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : l12_expr AND ( l6_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l7_expr -> l6_expr] with [None] and goto state 30
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : l12_expr AND ( l7_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l8_expr -> l7_expr] with [None] and goto state 27
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : l12_expr AND ( l8_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l9_expr -> l8_expr] with [None] and goto state 25
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : l12_expr AND ( l9_expr . LexToken(EQEQUAL,'==',1,13)
+INFO:root:Action : Reduce rule [l10_expr -> l9_expr] with [None] and goto state 22
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 13
+DEBUG:root:Stack  : l12_expr AND ( l10_expr . LexToken(EQEQUAL,'==',1,13)
+DEBUG:root:Action : Shift and goto state 71
+DEBUG:root:
+DEBUG:root:State  : 71
+DEBUG:root:Stack  : l12_expr AND ( l10_expr EQEQUAL . LexToken(!,'!',1,16)
+INFO:root:Action : Reduce rule [op_eq -> EQEQUAL] with ['=='] and goto state 75
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 63
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq . LexToken(!,'!',1,16)
+DEBUG:root:Action : Shift and goto state 14
+DEBUG:root:
+DEBUG:root:State  : 14
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq ! . LexToken(LOCALVAR,'a',1,17)
+DEBUG:root:Action : Shift and goto state 39
+DEBUG:root:
+DEBUG:root:State  : 39
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq ! LOCALVAR . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [user_var -> LOCALVAR] with ['a'] and goto state 96
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 60
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq ! user_var . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [basic_expr -> user_var] with [None] and goto state 49
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq ! basic_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 73
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq ! l1_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l2_expr -> ! l1_expr] with ['!',None] and goto state 42
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l2_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l3_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l4_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 24
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l5_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l6_expr -> l5_expr] with [None] and goto state 33
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l6_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l7_expr -> l6_expr] with [None] and goto state 30
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l7_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l8_expr -> l7_expr] with [None] and goto state 27
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l8_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l9_expr -> l8_expr] with [None] and goto state 25
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l9_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l10_expr -> l9_expr] with [None] and goto state 22
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 105
+DEBUG:root:Stack  : l12_expr AND ( l10_expr op_eq l10_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l11_expr -> l10_expr op_eq l10_expr] with [None,None,None] and goto state 19
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : l12_expr AND ( l11_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l12_expr -> l11_expr] with [None] and goto state 18
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 12
+DEBUG:root:Stack  : l12_expr AND ( l12_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [l13_expr -> l12_expr] with [None] and goto state 16
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 48
+DEBUG:root:Stack  : l12_expr AND ( l13_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [range_expr -> l13_expr] with [None] and goto state 14
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 34
+DEBUG:root:Stack  : l12_expr AND ( range_expr . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [assign_expr1 -> range_expr] with [None] and goto state 11
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 29
+DEBUG:root:Stack  : l12_expr AND ( assign_expr1 . LexToken(),')',1,19)
+INFO:root:Action : Reduce rule [expr -> assign_expr1] with [None] and goto state 9
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 82
+DEBUG:root:Stack  : l12_expr AND ( expr . LexToken(),')',1,19)
+DEBUG:root:Action : Shift and goto state 110
+DEBUG:root:
+DEBUG:root:State  : 110
+DEBUG:root:Stack  : l12_expr AND ( expr ) . LexToken(POW,'**',1,21)
+INFO:root:Action : Reduce rule [l1_expr -> ( expr )] with ['(',None,')'] and goto state 47
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : l12_expr AND l1_expr . LexToken(POW,'**',1,21)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : l12_expr AND l2_expr . LexToken(POW,'**',1,21)
+DEBUG:root:Action : Shift and goto state 81
+DEBUG:root:
+DEBUG:root:State  : 81
+DEBUG:root:Stack  : l12_expr AND l2_expr POW . LexToken((,'(',1,24)
+DEBUG:root:Action : Shift and goto state 23
+DEBUG:root:
+DEBUG:root:State  : 23
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( . LexToken(!,'!',1,26)
+DEBUG:root:Action : Shift and goto state 14
+DEBUG:root:
+DEBUG:root:State  : 14
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( ! . LexToken(LOCALVAR,'a',1,27)
+DEBUG:root:Action : Shift and goto state 39
+DEBUG:root:
+DEBUG:root:State  : 39
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( ! LOCALVAR . LexToken(+,'+',1,29)
+INFO:root:Action : Reduce rule [user_var -> LOCALVAR] with ['a'] and goto state 96
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 60
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( ! user_var . LexToken(+,'+',1,29)
+INFO:root:Action : Reduce rule [basic_expr -> user_var] with [None] and goto state 49
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( ! basic_expr . LexToken(+,'+',1,29)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 73
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( ! l1_expr . LexToken(+,'+',1,29)
+INFO:root:Action : Reduce rule [l2_expr -> ! l1_expr] with ['!',None] and goto state 42
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l2_expr . LexToken(+,'+',1,29)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l3_expr . LexToken(+,'+',1,29)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l4_expr . LexToken(+,'+',1,29)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 24
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l5_expr . LexToken(+,'+',1,29)
+INFO:root:Action : Reduce rule [l6_expr -> l5_expr] with [None] and goto state 33
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr . LexToken(+,'+',1,29)
+DEBUG:root:Action : Shift and goto state 87
+DEBUG:root:
+DEBUG:root:State  : 87
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + . LexToken(INT,'123',1,31)
+DEBUG:root:Action : Shift and goto state 44
+DEBUG:root:
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + INT . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [numeric -> INT] with ['123'] and goto state 90
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + numeric . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [literal -> numeric] with [None] and goto state 66
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + literal . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + basic_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + l1_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + l2_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + l3_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + l4_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 115
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr + l5_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l6_expr -> l6_expr + l5_expr] with [None,'+',None] and goto state 31
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l6_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l7_expr -> l6_expr] with [None] and goto state 30
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l7_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l8_expr -> l7_expr] with [None] and goto state 27
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l8_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l9_expr -> l8_expr] with [None] and goto state 25
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l9_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l10_expr -> l9_expr] with [None] and goto state 22
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 13
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l10_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l11_expr -> l10_expr] with [None] and goto state 20
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l11_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l12_expr -> l11_expr] with [None] and goto state 18
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 12
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l12_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [l13_expr -> l12_expr] with [None] and goto state 16
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 48
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( l13_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [range_expr -> l13_expr] with [None] and goto state 14
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 34
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( range_expr . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [assign_expr1 -> range_expr] with [None] and goto state 11
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 29
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( assign_expr1 . LexToken(),')',1,35)
+INFO:root:Action : Reduce rule [expr -> assign_expr1] with [None] and goto state 9
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 82
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( expr . LexToken(),')',1,35)
+DEBUG:root:Action : Shift and goto state 110
+DEBUG:root:
+DEBUG:root:State  : 110
+DEBUG:root:Stack  : l12_expr AND l2_expr POW ( expr ) . LexToken(-,'-',1,37)
+INFO:root:Action : Reduce rule [l1_expr -> ( expr )] with ['(',None,')'] and goto state 47
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : l12_expr AND l2_expr POW l1_expr . LexToken(-,'-',1,37)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : l12_expr AND l2_expr POW l2_expr . LexToken(-,'-',1,37)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 109
+DEBUG:root:Stack  : l12_expr AND l2_expr POW l3_expr . LexToken(-,'-',1,37)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr POW l3_expr] with [None,'**',None] and goto state 40
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : l12_expr AND l3_expr . LexToken(-,'-',1,37)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : l12_expr AND l4_expr . LexToken(-,'-',1,37)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 24
+DEBUG:root:Stack  : l12_expr AND l5_expr . LexToken(-,'-',1,37)
+INFO:root:Action : Reduce rule [l6_expr -> l5_expr] with [None] and goto state 33
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : l12_expr AND l6_expr . LexToken(-,'-',1,37)
+DEBUG:root:Action : Shift and goto state 88
+DEBUG:root:
+DEBUG:root:State  : 88
+DEBUG:root:Stack  : l12_expr AND l6_expr - . LexToken(-,'-',1,39)
+DEBUG:root:Action : Shift and goto state 5
+DEBUG:root:
+DEBUG:root:State  : 5
+DEBUG:root:Stack  : l12_expr AND l6_expr - - . LexToken(FLOAT,'123.32',1,40)
+DEBUG:root:Action : Shift and goto state 46
+DEBUG:root:
+DEBUG:root:State  : 46
+DEBUG:root:Stack  : l12_expr AND l6_expr - - FLOAT . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [numeric -> FLOAT] with ['123.32'] and goto state 91
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : l12_expr AND l6_expr - - numeric . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [literal -> numeric] with [None] and goto state 66
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : l12_expr AND l6_expr - - literal . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : l12_expr AND l6_expr - - basic_expr . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : l12_expr AND l6_expr - - l1_expr . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : l12_expr AND l6_expr - - l2_expr . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 59
+DEBUG:root:Stack  : l12_expr AND l6_expr - - l3_expr . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [l4_expr -> - l3_expr] with ['-',None] and goto state 38
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : l12_expr AND l6_expr - l4_expr . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 116
+DEBUG:root:Stack  : l12_expr AND l6_expr - l5_expr . LexToken(+,'+',1,47)
+INFO:root:Action : Reduce rule [l6_expr -> l6_expr - l5_expr] with [None,'-',None] and goto state 32
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : l12_expr AND l6_expr . LexToken(+,'+',1,47)
+DEBUG:root:Action : Shift and goto state 87
+DEBUG:root:
+DEBUG:root:State  : 87
+DEBUG:root:Stack  : l12_expr AND l6_expr + . LexToken(INT,'12',1,49)
+DEBUG:root:Action : Shift and goto state 44
+DEBUG:root:
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : l12_expr AND l6_expr + INT . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [numeric -> INT] with ['12'] and goto state 90
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : l12_expr AND l6_expr + numeric . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [literal -> numeric] with [None] and goto state 66
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : l12_expr AND l6_expr + literal . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : l12_expr AND l6_expr + basic_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : l12_expr AND l6_expr + l1_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : l12_expr AND l6_expr + l2_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : l12_expr AND l6_expr + l3_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : l12_expr AND l6_expr + l4_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 115
+DEBUG:root:Stack  : l12_expr AND l6_expr + l5_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l6_expr -> l6_expr + l5_expr] with [None,'+',None] and goto state 31
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : l12_expr AND l6_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l7_expr -> l6_expr] with [None] and goto state 30
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : l12_expr AND l7_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l8_expr -> l7_expr] with [None] and goto state 27
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : l12_expr AND l8_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l9_expr -> l8_expr] with [None] and goto state 25
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : l12_expr AND l9_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l10_expr -> l9_expr] with [None] and goto state 22
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 13
+DEBUG:root:Stack  : l12_expr AND l10_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l11_expr -> l10_expr] with [None] and goto state 20
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 104
+DEBUG:root:Stack  : l12_expr AND l11_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l12_expr -> l12_expr AND l11_expr] with [None,'&&',None] and goto state 17
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 12
+DEBUG:root:Stack  : l12_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [l13_expr -> l12_expr] with [None] and goto state 16
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 48
+DEBUG:root:Stack  : l13_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [range_expr -> l13_expr] with [None] and goto state 14
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 34
+DEBUG:root:Stack  : range_expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [assign_expr1 -> range_expr] with [None] and goto state 11
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 29
+DEBUG:root:Stack  : assign_expr1 . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [expr -> assign_expr1] with [None] and goto state 9
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 45
+DEBUG:root:Stack  : expr . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [stmt -> expr] with [None] and goto state 8
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 37
+DEBUG:root:Stack  : stmt . LexToken(NEWLINE,'\n',1,51)
+INFO:root:Action : Reduce rule [stmts -> stmt] with [None] and goto state 4
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : stmts . LexToken(NEWLINE,'\n',1,51)
+DEBUG:root:Action : Shift and goto state 75
+DEBUG:root:
+DEBUG:root:State  : 75
+DEBUG:root:Stack  : stmts NEWLINE . LexToken(STRING,'"ha"',2,52)
+INFO:root:Action : Reduce rule [lin_term -> NEWLINE] with ['\n'] and goto state 63
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : stmts lin_term . LexToken(STRING,'"ha"',2,52)
+INFO:root:Action : Reduce rule [lin_terms -> lin_term] with [None] and goto state 60
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 76
+DEBUG:root:Stack  : stmts lin_terms . LexToken(STRING,'"ha"',2,52)
+DEBUG:root:Action : Shift and goto state 32
+DEBUG:root:
+DEBUG:root:State  : 32
+DEBUG:root:Stack  : stmts lin_terms STRING . LexToken(+,'+',2,57)
+INFO:root:Action : Reduce rule [literal -> STRING] with ['"ha"'] and goto state 68
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : stmts lin_terms literal . LexToken(+,'+',2,57)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : stmts lin_terms basic_expr . LexToken(+,'+',2,57)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : stmts lin_terms l1_expr . LexToken(+,'+',2,57)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : stmts lin_terms l2_expr . LexToken(+,'+',2,57)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : stmts lin_terms l3_expr . LexToken(+,'+',2,57)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : stmts lin_terms l4_expr . LexToken(+,'+',2,57)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 24
+DEBUG:root:Stack  : stmts lin_terms l5_expr . LexToken(+,'+',2,57)
+INFO:root:Action : Reduce rule [l6_expr -> l5_expr] with [None] and goto state 33
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : stmts lin_terms l6_expr . LexToken(+,'+',2,57)
+DEBUG:root:Action : Shift and goto state 87
+DEBUG:root:
+DEBUG:root:State  : 87
+DEBUG:root:Stack  : stmts lin_terms l6_expr + . LexToken(STRING,'"lk"',2,59)
+DEBUG:root:Action : Shift and goto state 32
+DEBUG:root:
+DEBUG:root:State  : 32
+DEBUG:root:Stack  : stmts lin_terms l6_expr + STRING . LexToken(*,'*',2,64)
+INFO:root:Action : Reduce rule [literal -> STRING] with ['"lk"'] and goto state 68
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : stmts lin_terms l6_expr + literal . LexToken(*,'*',2,64)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : stmts lin_terms l6_expr + basic_expr . LexToken(*,'*',2,64)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l1_expr . LexToken(*,'*',2,64)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l2_expr . LexToken(*,'*',2,64)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l3_expr . LexToken(*,'*',2,64)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l4_expr . LexToken(*,'*',2,64)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 115
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr . LexToken(*,'*',2,64)
+DEBUG:root:Action : Shift and goto state 83
+DEBUG:root:
+DEBUG:root:State  : 83
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * . LexToken(INT,'23',2,66)
+DEBUG:root:Action : Shift and goto state 44
+DEBUG:root:
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * INT . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [numeric -> INT] with ['23'] and goto state 90
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * numeric . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [literal -> numeric] with [None] and goto state 66
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * literal . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * basic_expr . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * l1_expr . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * l2_expr . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * l3_expr . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 111
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr * l4_expr . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [l5_expr -> l5_expr * l4_expr] with [None,'*',None] and goto state 34
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 115
+DEBUG:root:Stack  : stmts lin_terms l6_expr + l5_expr . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [l6_expr -> l6_expr + l5_expr] with [None,'+',None] and goto state 31
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 38
+DEBUG:root:Stack  : stmts lin_terms l6_expr . LexToken(RSHIFT,'>>',2,69)
+INFO:root:Action : Reduce rule [l7_expr -> l6_expr] with [None] and goto state 30
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : stmts lin_terms l7_expr . LexToken(RSHIFT,'>>',2,69)
+DEBUG:root:Action : Shift and goto state 55
+DEBUG:root:
+DEBUG:root:State  : 55
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT . LexToken(INT,'2',2,72)
+DEBUG:root:Action : Shift and goto state 44
+DEBUG:root:
+DEBUG:root:State  : 44
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT INT . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [numeric -> INT] with ['2'] and goto state 90
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 6
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT numeric . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [literal -> numeric] with [None] and goto state 66
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 21
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT literal . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [basic_expr -> literal] with [None] and goto state 51
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 10
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT basic_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l1_expr -> basic_expr] with [None] and goto state 46
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 51
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT l1_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l2_expr -> l1_expr] with [None] and goto state 45
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 20
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT l2_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l3_expr -> l2_expr] with [None] and goto state 41
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 18
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT l3_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l4_expr -> l3_expr] with [None] and goto state 39
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 4
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT l4_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l5_expr -> l4_expr] with [None] and goto state 37
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 24
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT l5_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l6_expr -> l5_expr] with [None] and goto state 33
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 99
+DEBUG:root:Stack  : stmts lin_terms l7_expr RSHIFT l6_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l7_expr -> l7_expr RSHIFT l6_expr] with [None,'>>',None] and goto state 29
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 1
+DEBUG:root:Stack  : stmts lin_terms l7_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l8_expr -> l7_expr] with [None] and goto state 27
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 8
+DEBUG:root:Stack  : stmts lin_terms l8_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l9_expr -> l8_expr] with [None] and goto state 25
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 2
+DEBUG:root:Stack  : stmts lin_terms l9_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l10_expr -> l9_expr] with [None] and goto state 22
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 13
+DEBUG:root:Stack  : stmts lin_terms l10_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l11_expr -> l10_expr] with [None] and goto state 20
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 36
+DEBUG:root:Stack  : stmts lin_terms l11_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l12_expr -> l11_expr] with [None] and goto state 18
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 12
+DEBUG:root:Stack  : stmts lin_terms l12_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [l13_expr -> l12_expr] with [None] and goto state 16
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 48
+DEBUG:root:Stack  : stmts lin_terms l13_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [range_expr -> l13_expr] with [None] and goto state 14
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 34
+DEBUG:root:Stack  : stmts lin_terms range_expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [assign_expr1 -> range_expr] with [None] and goto state 11
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 29
+DEBUG:root:Stack  : stmts lin_terms assign_expr1 . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [expr -> assign_expr1] with [None] and goto state 9
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 45
+DEBUG:root:Stack  : stmts lin_terms expr . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [stmt -> expr] with [None] and goto state 8
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 108
+DEBUG:root:Stack  : stmts lin_terms stmt . LexToken(NEWLINE,'\n\n',2,73)
+INFO:root:Action : Reduce rule [stmts -> stmts lin_terms stmt] with [None,None,None] and goto state 5
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 15
+DEBUG:root:Stack  : stmts . LexToken(NEWLINE,'\n\n',2,73)
+DEBUG:root:Action : Shift and goto state 75
+DEBUG:root:
+DEBUG:root:State  : 75
+DEBUG:root:Stack  : stmts NEWLINE . $end
+INFO:root:Action : Reduce rule [lin_term -> NEWLINE] with ['\n\n'] and goto state 63
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 78
+DEBUG:root:Stack  : stmts lin_term . $end
+INFO:root:Action : Reduce rule [lin_terms -> lin_term] with [None] and goto state 60
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 76
+DEBUG:root:Stack  : stmts lin_terms . $end
+INFO:root:Action : Reduce rule [opt_terms -> lin_terms] with [None] and goto state 59
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 77
+DEBUG:root:Stack  : stmts opt_terms . $end
+INFO:root:Action : Reduce rule [compstmt -> stmts opt_terms] with [None,None] and goto state 2
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 43
+DEBUG:root:Stack  : compstmt . $end
+INFO:root:Action : Reduce rule [program -> compstmt] with [None] and goto state 1
+INFO:root:Result : <NoneType @ 0x10017ef80> (None)
+DEBUG:root:
+DEBUG:root:State  : 22
+DEBUG:root:Stack  : program . $end
+INFO:root:Done   : Returning <NoneType @ 0x10017ef80> (None)
+INFO:root:PLY: PARSE DEBUG END
