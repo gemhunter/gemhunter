@@ -6,7 +6,7 @@ gemhunter - a cross compiler for Ruby, written in Python
 To run the compiler, use the following command:
 bin/parser.py test/nameOfTestFile
 
-This generates a dot file in root folder of the same name os input file
+This generates a dot file in root folder of the same name of input file
 To make a pdf run ./scripts/makepdf nameOfDotFile
 
 We do not provide a makefile since running python is too easy.

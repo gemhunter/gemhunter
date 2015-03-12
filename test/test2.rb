@@ -14,7 +14,7 @@ b = a.map { |x| 2**x }    # => [1, 2, 4, 8, 16, 32]
 
 class << single_ex
 	def new_func
-		puts "hi"
+		puts("hi")
 	end
 end
 
