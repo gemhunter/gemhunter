@@ -98,13 +98,15 @@ primary_expr : '(' expr ')'
 	| literal
 	| '[' arg_list ']'
 	| primary_expr '[' expr ']'
-	| primary_expr '.' method_var
+	| primary_expr '.' LOCALVAR
+	| primary_expr '.' CONST
 	| method_call
 
 #The value of evaluating a method
 #Method invocation
-method_call : primary_expr '.'  method_var args
-	| method_var args
+method_call : primary_expr '.'  method args
+	| method args
+	| primary_expr '.' method_var '{' '|' block_param_list '|' compstmt '}' 
 	| method_var '{' '|' block_param_list '|' compstmt '}' 
 	| KEYWORD_SUPER
 	| KEYWORD_SUPER args
@@ -241,6 +243,9 @@ bool_assign : ANDEQ
 
 numeric : INT 
 	| FLOAT
+
+method : method_var
+	| KEYWORD_CLASS
 
 singleton_var : LOCALVAR
 	| CONST

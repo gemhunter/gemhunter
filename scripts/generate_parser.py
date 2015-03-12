@@ -1,13 +1,15 @@
 #python script to obtain the yacc parser file from bnf file
 
+import sys
+
 def generate():
 	parser = open("parser.py",'w')
-	bnf = open("cfg.bnf")
+	bnf = open(sys.argv[1])
 
 	preamble = '''#Generated parser
 
-import yacc as yacc
 import sys
+import yacc
 import logging
 
 # Get the token map from the lexer.  This is required.

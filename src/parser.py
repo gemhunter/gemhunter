@@ -1,7 +1,7 @@
 #Generated parser
 
-import yacc as yacc
 import sys
+import yacc
 import logging
 
 # Get the token map from the lexer.  This is required.
@@ -149,13 +149,15 @@ def p_primary_expr(p):
 		| literal
 		| '[' arg_list ']'
 		| primary_expr '[' expr ']'
-		| primary_expr '.' method_var
+		| primary_expr '.' LOCALVAR
+		| primary_expr '.' CONST
 		| method_call
 	'''
 
 def p_method_call(p):
-	'''method_call : primary_expr '.'  method_var args
-		| method_var args
+	'''method_call : primary_expr '.'  method args
+		| method args
+		| primary_expr '.' method_var '{' '|' block_param_list '|' compstmt '}' 
 		| method_var '{' '|' block_param_list '|' compstmt '}' 
 		| KEYWORD_SUPER
 		| KEYWORD_SUPER args
@@ -353,6 +355,11 @@ def p_bool_assign(p):
 def p_numeric(p):
 	'''numeric : INT 
 		| FLOAT
+	'''
+
+def p_method(p):
+	'''method : method_var
+		| KEYWORD_CLASS
 	'''
 
 def p_singleton_var(p):
