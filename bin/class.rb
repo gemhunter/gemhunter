@@ -4,4 +4,5 @@ class Customer
 	   @cust_id=id
 	   @cust_name=name
 	   @cust_addr=addr
+	end
 end

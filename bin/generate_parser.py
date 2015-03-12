@@ -17,7 +17,10 @@ from lexer import tokens
 	afterword = '''
 # Error rule for syntax errors
 def p_error(p):
-    print "Syntax error in input line %d!"%p.lineno
+    if p == None:
+    	print "You missed something at the end"
+    else:
+	print "Syntax error in input line %d!"%p.lineno
 
 # Build the parser
 logging.basicConfig(
