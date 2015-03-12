@@ -36,7 +36,6 @@ tokens = (
 "STRING",
 "SEQIN",
 "SEQEX",
-"SCOPE",
 "LOCALVAR",
 "GLOBALVAR",
 "CLASSVAR",
@@ -84,7 +83,6 @@ reserved = {
     'retry' : "KEYWORD_RETRY",
     'true' : "KEYWORD_TRUE",
     'while' : "KEYWORD_WHILE",
-    'alias' : "KEYWORD_ALIAS",
     'class' : "KEYWORD_CLASS",
     'elsif' : "KEYWORD_ELSIF",
     'if' : "KEYWORD_IF",
@@ -123,7 +121,6 @@ t_AND = r'\&\&'
 t_OR = r'\|\|'
 t_SEQIN = r'\.\.'
 t_SEQEX = r'\.\.\.'
-t_SCOPE = r'::'
 t_DOL0 = r'\$0'
 t_KEYWORD_EQUAL = r'equal\?'
 t_KEYWORD_DEFINED = r'defined\?'

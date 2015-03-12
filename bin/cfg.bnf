@@ -10,7 +10,13 @@ stmts : none
 
 #Single statement
 stmt : KEYWORD_END '{' compstmt '}'
-	| KEYWORD_BEGIN '{' compstmt '}'	
+	| KEYWORD_BEGIN '{' compstmt '}'
+	| if_block
+	| until_block
+	| unless_block
+	| which_block
+	| case_block
+	| KEYWORD_RETURN arg_list
 	| expr
 
 #Anything that evaluates
@@ -88,8 +94,11 @@ primary_expr : '(' expr ')'
 	| method_call
 
 #The value of evaluating a method
+#Method invocation
 method_call : primary_expr '.'  method_var args
 	| method_var args
+	| KEYWORD_SUPER
+	| KEYWORD_SUPER args
 
 #LHS of an assignment
 lhs : user_var
@@ -101,6 +110,15 @@ lhs : user_var
 args :  '(' arg_list ')'
 
 arg_list : none
+	| expr ',' arg_list_tail
+	| expr
+
+arg_list_tail : expr ',' arg_list_tail
+	| expr
+
+#If block
+
+
 
 #Pretty self explanatory names
 
@@ -111,9 +129,6 @@ lin_terms : lin_term
 	| lin_terms lin_term
 
 lin_term : ';' 
-	| NEWLINE
-
-opt_nl : none
 	| NEWLINE
 
 literal : numeric 

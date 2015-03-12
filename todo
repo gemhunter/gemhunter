@@ -1,10 +1,7 @@
-lexer in BIN is final
-
 Options:
 
-Inheritance
-singleton classes
-self,super
-visibility
-iterators
-Hash dictionary
+Inheritance	done
+singleton classes	done
+visibility	not doing
+iterators	yield, block, each
+Hash dictionary	maybe
