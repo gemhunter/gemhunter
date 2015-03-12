@@ -12,10 +12,10 @@ stmts : none
 stmt : KEYWORD_END '{' compstmt '}'
 	| KEYWORD_BEGIN '{' compstmt '}'
 	| if_block
-	| until_block
-	| unless_block
-	| which_block
-	| case_block
+#	| until_block
+#	| unless_block
+#	| which_block
+#	| case_block
 	| KEYWORD_RETURN arg_list
 	| expr
 
@@ -116,9 +116,27 @@ arg_list : none
 arg_list_tail : expr ',' arg_list_tail
 	| expr
 
-#If block
+#IF Block
+if_block : KEYWORD_IF expr then_clause stmts if_tail KEYWORD_END
 
+then_clause : KEYWORD_THEN
+#	| lin_terms
+#	| KEYWORD_THEN
+#	| lin_terms KEYWORD_THEN
 
+if_tail : optelse
+	| KEYWORD_ELSIF expr then_clause stmts if_tail
+
+optelse : KEYWORD_ELSE compstmt
+	| none
+
+until_block : none
+
+unless_block : none
+
+which_block : none
+
+case_block : none
 
 #Pretty self explanatory names
 
@@ -134,6 +152,9 @@ lin_term : ';'
 literal : numeric 
 	| CHAR 
 	| STRING
+
+opt_nl : none
+	| NEWLINE
 
 op_assign : PLUSEQ
 	| MINUSEQ
