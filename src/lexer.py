@@ -7,7 +7,6 @@ import lex
 
 # List of token names.
 tokens = (
-"MULTICOMMENT",
 "LSHIFTEQ",
 "RSHIFTEQ",
 "ANDEQ",
@@ -43,11 +42,8 @@ tokens = (
 "METHOD_ONLY_VAR",
 "INT",
 "FLOAT",
-"COMMENT",
 "CONST",
 "DOL0",
-"KEYWORD_EQUAL",
-"KEYWORD_DEFINED",
 "NEWLINE"
 )
 
@@ -61,9 +57,6 @@ reserved = {
     'in' : "KEYWORD_IN",
     'self' : "KEYWORD_SELF",
     'unless' : "KEYWORD_UNLESS",
-    'begin' : "KEYWORD_begin",
-    'ensure' : "KEYWORD_ENSURE",
-    'module' : "KEYWORD_MODULE",
     'redo' : "KEYWORD_REDO",
     'super' : "KEYWORD_SUPER",
     'until' : "KEYWORD_UNTIL",
@@ -72,7 +65,6 @@ reserved = {
     'do' : "KEYWORD_DO",
     'false' : "KEYWORD_FALSE",
     'next' : "KEYWORD_NEXT",
-    'rescue' : "KEYWORD_RESCUE",
     'then' : "KEYWORD_THEN",
     'when' : "KEYWORD_WHEN",
     'END' : "KEYWORD_END",
@@ -80,7 +72,6 @@ reserved = {
     'else' : "KEYWORD_ELSE",
     'for' : "KEYWORD_FOR",
     'nil' : "KEYWORD_NIL",
-    'retry' : "KEYWORD_RETRY",
     'true' : "KEYWORD_TRUE",
     'while' : "KEYWORD_WHILE",
     'class' : "KEYWORD_CLASS",
@@ -122,8 +113,6 @@ t_OR = r'\|\|'
 t_SEQIN = r'\.\.'
 t_SEQEX = r'\.\.\.'
 t_DOL0 = r'\$0'
-t_KEYWORD_EQUAL = r'equal\?'
-t_KEYWORD_DEFINED = r'defined\?'
 
 def t_MULTICOMMENT(t):
     r'(?<=\n)=begin(.*\n)+=end(?=\s)'
@@ -133,7 +122,7 @@ def t_COMMENT(t):
     r'\#.*(?=\n)'
 
 def t_METHOD_ONLY_VAR(t):
-    r'(((_|[a-z])[a-zA-Z_0-9]*)|([A-Z][a-zA-Z_0-9]*))[\!\?]'
+    r'(((_|[a-z])[a-zA-Z_0-9]*)|([A-Z][a-zA-Z_0-9]*))[\?]'
     t.type = reserved.get(t.value,'METHOD_ONLY_VAR')
     return t
 
@@ -163,7 +152,7 @@ def t_INSTANCEVAR(t):
     return t
 
 def t_FLOAT(t):
-    r'(((\d+\.\d+)|(\.\d+))([eE][\+-]?\d+)?[fF]?) |(((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)[fF]?) | (((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)?[fF])'
+    r'(((\d+\.\d+)|(\.\d+))([eE][\+-]?\d+)?[fF]?) | (((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)[fF]?) | (((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)?[fF])'
     return t
 
 def t_INT(t):

@@ -18,6 +18,7 @@ stmt : KEYWORD_END '{' compstmt '}'
 	| for_block
 	| while_block
 	| KEYWORD_RETURN expr
+	| KEYWORD_YIELD args
 	| KEYWORD_RETURN
 	| KEYWORD_BREAK
 	| KEYWORD_NEXT
@@ -104,6 +105,7 @@ primary_expr : '(' expr ')'
 #Method invocation
 method_call : primary_expr '.'  method_var args
 	| method_var args
+	| method_var '{' '|' block_param_list '|' compstmt '}' 
 	| KEYWORD_SUPER
 	| KEYWORD_SUPER args
 
@@ -187,6 +189,14 @@ non_empty_param_list : LOCALVAR
 
 optional_param_list_tail : LOCALVAR '=' expr
 	| optional_param_list_tail ',' LOCALVAR '=' expr
+
+#Block Parameter list (for yield)
+block_param_list : none
+	| LOCALVAR
+	| LOCALVAR ',' block_param_list_tail
+
+block_param_list_tail : LOCALVAR
+	| block_param_list_tail ',' LOCALVAR
 
 #Pretty self explanatory names
 
