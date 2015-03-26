@@ -5,5 +5,8 @@ class SymbolTable:
 				'main' : {
 					'name' : 'main'
 					'parent' : None
+					'identifiers' : {}
 					}
 				}
+
+	
