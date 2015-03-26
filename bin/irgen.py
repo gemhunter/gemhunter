@@ -407,7 +407,7 @@ def p_error(p):
 	print "Syntax error in input line %d!"%p.lineno
 
 # Build the parser
-parser = yacc.yacc()
+parser = yacc.yacc(debug=0)
 
 #Read the input file
 s = open(sys.argv[1],'r')
@@ -416,6 +416,6 @@ data+= "\n"
 s.close()
 
 #Parse it!
-parser.parse(data)
+print parser.parse(data)
 
 
