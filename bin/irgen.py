@@ -2,9 +2,10 @@
 
 import sys
 import yacc
-
-# Get the token map from the lexer.  This is required.
 from lexer import tokens
+import symbolTable
+import threeAddressCode
+
 def p_program(p):
 	'''program : compstmt
 	'''
@@ -141,20 +142,28 @@ def p_l1_expr(p):
 	'''l1_expr : primary_expr
 	'''
 
-def p_primary_expr(p):
-	'''primary_expr : '(' expr ')'
-		| user_var
+def p_primary_expr_primitive(p):
+	''' primary_expr : user_var
 		| key_var
 		| literal
+	'''
+
+
+def p_primary_expr(p):
+	''' primary_expr : '(' expr ')'
 		| '[' arg_list ']'
 		| primary_expr '[' expr ']'
 		| primary_expr '.' LOCALVAR
 		| primary_expr '.' CONST
-		| method_call
+	'''
+
+
+def p_primary_expr_method_call(p):
+	''' primary_expr : method_call
 	'''
 
 def p_method_call(p):
-	'''method_call : primary_expr '.'  method args
+	''' method_call : primary_expr '.'  method args
 		| method args
 		| primary_expr '.' method_var '{' '|' block_param_list '|' compstmt '}' 
 		| method_var '{' '|' block_param_list '|' compstmt '}' 
@@ -309,12 +318,6 @@ def p_lin_term(p):
 		| NEWLINE
 	'''
 
-def p_literal(p):
-	'''literal : numeric 
-		| CHAR 
-		| STRING
-	'''
-
 def p_op_assign(p):
 	'''op_assign : PLUSEQ
 		| MINUSEQ
@@ -351,11 +354,6 @@ def p_bool_assign(p):
 		| BITNOTEQ
 	'''
 
-def p_numeric(p):
-	'''numeric : INT 
-		| FLOAT
-	'''
-
 def p_method(p):
 	'''method : method_var
 		| KEYWORD_CLASS
@@ -382,6 +380,7 @@ def p_user_var(p):
 		| METHOD_ONLY_VAR 
 		| CONST
 	'''
+	p[0] = p[1]
 
 def p_key_var(p):
 	'''key_var : KEYWORD_NIL 
@@ -392,6 +391,25 @@ def p_key_var(p):
 		| KEYWORD_LINE 
 		| KEYWORD_ENCODING
 		| DOL0
+	'''
+	p[0] = p[1]
+
+def p_literal_numeric(p):
+	''' literal : numeric
+	'''
+
+def p_literal_char(p):
+	''' literal : CHAR 
+	'''
+
+
+def p_literal_string(p):
+	''' literal : STRING
+	'''
+
+def p_numeric(p):
+	'''numeric : INT 
+		| FLOAT
 	'''
 
 def p_none(p):
@@ -406,6 +424,10 @@ def p_error(p):
     else:
 	print "Syntax error in input line %d!"%p.lineno
 
+#Declare global Symbol Table and TAC
+ST = symbolTable.SymbolTable()
+TAC = threeAddressCode.ThreeAddressCode()
+
 # Build the parser
 parser = yacc.yacc(debug=0)
 
@@ -416,6 +438,6 @@ data+= "\n"
 s.close()
 
 #Parse it!
-print parser.parse(data)
-
+parser.parse(data)
+TAC.printCode()
 
