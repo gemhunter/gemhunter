@@ -26,21 +26,31 @@ class SymbolTable:
 			elif idenType in ['STRING']:
 				idenSize  = self.addressSize
 
-		if idenName not in self.symbolTable[self.currentScope].identifiers:
-			self.symbolTable[self.currentScope].identifiers[idenName] = {
+		if idenName not in self.symbolTable[self.currentScope]['identifiers']:
+			self.symbolTable[self.currentScope]['identifiers'][idenName] = {
 					'type' : idenType,
 					'size' : idenSize
 					}
 
 	#Returns a boolean indicating presence of identifier in current scope 
 	def lookupIdentifier(self, idenName):
-		return idenName in self.symbolTable[self.currentScope].identifiers
+		return idenName in self.symbolTable[self.currentScope]['identifiers']
 	
-	#Returns the attributes of idenName
+	#Returns all the attributes of idenName
 	def getIdentifier(self, idenName):
-		if idenName in self.symbolTable[self.currentScope].identifiers:
-			return self.symbolTable[self.currentScope].identifiers[idenName];
-		return None;
+		if idenName in self.symbolTable[self.currentScope]['identifiers']:
+			return self.symbolTable[self.currentScope]['identifiers'][idenName]
+		return None
+
+	#Returns the asked attribute od idenName
+	def getAttribute(self, idenName, attrName):
+		if idenName in self.symbolTable[self.currentScope]['identifiers']:
+			if attrName in self.symbolTable[self.currentScope]['identifiers'][idenName]:
+				return  self.symbolTable[self.currentScope]['identifiers'][idenName][attrName]
+			else:
+				return None
+		else:
+			return None
 
 	#Create a temporary variable
 	def createTemp(self):

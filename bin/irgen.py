@@ -45,6 +45,9 @@ def p_expr(p):
 	'''expr : assign_expr4
 	'''
 
+########################
+#Assignment Expressions#
+########################
 def p_assign_expr4(p):
 	'''assign_expr4 : lhs bool_assign assign_expr4
 	| assign_expr3
@@ -71,6 +74,9 @@ def p_range_expr(p):
 	| l13_expr
 	'''
 
+############################
+#Expressions with operators#
+############################
 def p_l13_expr(p):
 	'''l13_expr : l13_expr OR l12_expr
 	| l12_expr
@@ -135,19 +141,47 @@ def p_l2_expr(p):
 	'''l2_expr : '!' l1_expr
 	| '~' l1_expr
 	| '+' l1_expr
-	| l1_expr
 	'''
+
+def p_l2_expr_down(p):
+	'''l2_expr : l1_expr
+	'''
+	p[0]=p[1]
 
 def p_l1_expr(p):
 	'''l1_expr : primary_expr
 	'''
+	#Too Easy!
+	p[0] = p[1]
 
-def p_primary_expr_primitive(p):
+#####################
+#Primary expressions#
+#####################
+def p_primary_expr_primitive_variable(p):
 	''' primary_expr : user_var
-	| key_var
+	'''
+	p[0] = {
+		'place' : 'undefined',
+		'type' : 'TYPE_ERROR'
+	}
+	if ST.lookupIdentifier(p[1]['idenName']) :
+		p[0]['place'] = ST.getAttribute(p[1]['idenName'],'place')
+		p[0]['type'] = ST.getAttribute(p[1]['idenName'],'type')
+		assert(p[0]['place'] != None)
+		assert(p[0]['type'] != None)
+	else:
+		print "Use of undefined variable %s!"%p[1]['idenName']
+	
+def p_primary_expr_primitive_literals(p):
+	''' primary_expr : key_var
 	| literal
 	'''
-
+	newPlace = ST.createTemp()
+	TAC.emit(newPlace,p[1]['value'],'','=')
+	p[0] = {
+		'place' : newPlace,
+		'type' : p[1]['type']
+	}
 
 def p_primary_expr(p):
 	''' primary_expr : '(' expr ')'
@@ -162,6 +196,9 @@ def p_primary_expr_method_call(p):
 	''' primary_expr : method_call
 	'''
 
+###################
+#Method Invocation#
+###################
 def p_method_call(p):
 	''' method_call : primary_expr '.'  method args
 	| method args
@@ -171,6 +208,9 @@ def p_method_call(p):
 	| KEYWORD_SUPER args
 	'''
 
+###################
+#lhs of expression#
+###################
 def p_lhs(p):
 	'''lhs : user_var
 	| primary_expr '.' LOCALVAR
@@ -198,6 +238,10 @@ def p_arg_list_tail(p):
 	| expr
 	'''
 
+##############
+#If statement#
+##############
+
 def p_if_block(p):
 	'''if_block : KEYWORD_IF expr then_clause compstmt if_tail KEYWORD_end
 	'''
@@ -218,6 +262,9 @@ def p_opt_else(p):
 	| none
 	'''
 
+#############
+#Until block#
+#############
 def p_until_block(p):
 	'''until_block : KEYWORD_UNTIL expr do_clause compstmt KEYWORD_end
 	'''
@@ -390,6 +437,9 @@ def p_user_var(p):
 		'idenName' : p[1]
 	}
 
+##################
+#Keyword Literals#
+##################
 def p_key_var(p):
 	'''key_var : KEYWORD_SELF 
 	| KEYWORD_FILE 
@@ -419,7 +469,7 @@ def p_key_var_FALSE(p):
 	'''
 	p[0] = 	{
 		'type' : 'BOOL',
-		'value' : 'true'
+		'value' : 'false'
 	}
 
 ##########
