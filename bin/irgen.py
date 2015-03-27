@@ -1,15 +1,11 @@
 #!/usr/bin/python        
 
 import sys
+from termcolor import colored
 import yacc
 from lexer import tokens
 import symbolTable
 import threeAddressCode
-
-#Declare global Symbol Table and TAC
-ST = symbolTable.SymbolTable()
-TAC = threeAddressCode.ThreeAddressCode()
-currLine = 1
 
 #Parser instructions
 def p_program(p):
@@ -50,6 +46,7 @@ def p_stmt(p):
 def p_expr(p):
 	'''expr : assign_expr4
 	'''
+	p[0]=p[1]
 
 ########################
 #Assignment Expressions#
@@ -132,6 +129,40 @@ def p_l5_expr(p):
 	| l5_expr '%' l4_expr
 	| l4_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	if p[2] == '*':
+		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'INT'
+		elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'FLOAT'
+		else:
+			error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
+	elif p[2] == '/' :
+		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'INT'
+		elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'FLOAT'
+		else:
+			error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
+	elif p[2] == '%':
+		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'INT'
+		else:
+			error('Type Error (Expected integers) '+p[1]['place']+','+p[3]['place']+'!')
 
 def p_l4_expr(p):
 	'''l4_expr : '-' l3_expr
@@ -612,10 +643,15 @@ def p_error(p):
 
 #Error handler
 def error(e):
-	print "ERROR %d: "%currLine,e
+	print colored("ERROR %d: "%currLine,'red'),e
 
 def warning(w):
-	print "WARNING %d: "%currLine,w
+	print colored("WARNING %d: "%currLine,'blue'),w
+
+#Declare globals
+ST = symbolTable.SymbolTable()
+TAC = threeAddressCode.ThreeAddressCode()
+currLine = 1
 
 # Build the parser
 parser = yacc.yacc(debug=0)
