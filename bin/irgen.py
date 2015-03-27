@@ -116,12 +116,62 @@ def p_l7_expr(p):
 	| l7_expr RSHIFT l6_expr
 	| l6_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	if p[3]['type'] != 'INT' :
+		error('Type Error (Expected Integer) %s!'%p[3]['place'])
+		return
+	if p[1]['type'] == 'INT' :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'INT'
+	elif p[1]['type'] == 'FLOAT' :
+		warning('Are you sure you want to bit shift floating point? %s'%p[1]['place'])
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'FLOAT'
+	else:
+		error('Type Error (Expected Integer or Float) %s!'%p[1]['place'])
 
 def p_l6_expr(p):
 	'''l6_expr : l6_expr '+' l5_expr
 	| l6_expr '-' l5_expr
 	| l5_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	if p[2] == '+':
+		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'INT'
+		elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'FLOAT'
+		else:
+			error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
+	if p[2] == '-':
+		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'INT'
+		elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type'] = 'FLOAT'
+		else:
+			error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
 
 def p_l5_expr(p):
 	'''l5_expr : l5_expr '*' l4_expr
@@ -639,11 +689,13 @@ def p_error(p):
 	if p == None:
 		error("You missed something at the end")
 	else:
-		error("Syntax error in input line %d!"%p.lineno)
+		error("Syntax error!")
 
 #Error handler
 def error(e):
+	global success
 	print colored("ERROR %d: "%currLine,'red'),e
+	success = 0
 
 def warning(w):
 	print colored("WARNING %d: "%currLine,'blue'),w
@@ -652,6 +704,7 @@ def warning(w):
 ST = symbolTable.SymbolTable()
 TAC = threeAddressCode.ThreeAddressCode()
 currLine = 1
+success = 1
 
 # Build the parser
 parser = yacc.yacc(debug=0)
@@ -664,4 +717,16 @@ s.close()
 
 #Parse it!
 parser.parse(data)
+
+#Parsing success?
+if success == 1:
+	print colored("Successfully Compiled", 'green')
+
+#Output it to file for now
+infile = sys.argv[1]
+outfile = infile[0:len(infile)-3]
+outfile+=".tac"
+outfile = outfile.split("/")[-1]
+outfile = "output"
+sys.stdout = open(outfile,"w")
 TAC.printCode()
