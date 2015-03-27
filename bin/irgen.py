@@ -371,11 +371,13 @@ def p_method_var(p):
 	| METHOD_ONLY_VAR
 	| CONST
 	'''
-	p[0] = 
-	{
+	p[0] = {
 		'methodName' : p[1]
 	}
 
+##################
+#Base Expressions#
+##################
 def p_user_var(p):
 	'''user_var : LOCALVAR 
 	| GLOBALVAR 
@@ -384,8 +386,7 @@ def p_user_var(p):
 	| METHOD_ONLY_VAR 
 	| CONST
 	'''
-	p[0] = 
-	{
+	p[0] = {
 		'idenName' : p[1]
 	}
 
@@ -400,8 +401,7 @@ def p_key_var(p):
 def p_key_var_NIL(p):
 	'''key_var : KEYWORD_NIL 
 	'''
-	p[0] = 
-	{
+	p[0] = {
 		'type' : 'VOID',
 		'value' : 'nil'
 	}
@@ -409,8 +409,7 @@ def p_key_var_NIL(p):
 def p_key_var_TRUE(p):
 	'''key_var : KEYWORD_TRUE
 	'''
-	p[0] = 
-	{
+	p[0] = {
 		'type' : 'BOOL',
 		'value' : 'true'
 	}
@@ -418,12 +417,14 @@ def p_key_var_TRUE(p):
 def p_key_var_FALSE(p):
 	'''key_var : KEYWORD_FALSE
 	'''
-	p[0] = 
-	{
+	p[0] = 	{
 		'type' : 'BOOL',
 		'value' : 'true'
 	}
 
+##########
+#Literals#
+##########
 def p_literal_numeric(p):
 	''' literal : numeric
 	'''
@@ -432,8 +433,7 @@ def p_literal_numeric(p):
 def p_literal_char(p):
 	''' literal : CHAR 
 	'''
-	p[0] = 
-	{
+	p[0] = {
 		'type' : 'CHAR',
 		'value' : p[1]
 	}
@@ -441,8 +441,7 @@ def p_literal_char(p):
 def p_literal_string(p):
 	''' literal : STRING
 	'''
-	p[0] = 
-	{
+	p[0] = {
 		'type' : 'STRING',
 		'value' : p[1]
 	}
@@ -450,8 +449,7 @@ def p_literal_string(p):
 def p_numeric_int(p):
 	'''numeric : INT
 	'''
-	p[0] = 
-	{
+	p[0] = {
 		'type' : 'INT',
 		'value' : p[1]
 	}
@@ -459,8 +457,7 @@ def p_numeric_int(p):
 def p_numeric_float(p):
 	'''numeric : FLOAT
 	'''
-	p[0] = 
-	{
+	p[0] = {
 		'type' : 'FLOAT',
 		'value' : p[1]
 	}

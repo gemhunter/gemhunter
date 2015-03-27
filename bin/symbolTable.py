@@ -13,7 +13,7 @@ class SymbolTable:
 		self.currentScope = 'main'
 		#For temporaries
 		self.tempBase = "t"
-		self.tempno = -1
+		self.tempNo = -1
 		#Sizes
 		self.wordSize = 4
 		self.addressSize = 4
@@ -44,5 +44,5 @@ class SymbolTable:
 
 	#Create a temporary variable
 	def createTemp(self):
-		self.tempno += 1
-		return self.tempBase + str(self.tempno)
+		self.tempNo += 1
+		return self.tempBase + str(self.tempNo)
