@@ -44,38 +44,76 @@ def p_stmt(p):
 	'''
 
 def p_expr(p):
-	'''expr : assign_expr4
+	'''expr : assign_expr2
 	'''
 	p[0]=p[1]
 
 ########################
 #Assignment Expressions#
 ########################
-def p_assign_expr4(p):
-	'''assign_expr4 : lhs bool_assign assign_expr4
-	| assign_expr3
-	'''
-
-def p_assign_expr3(p):
-	'''assign_expr3 : lhs shift_assign assign_expr3
-	| assign_expr2
-	'''
 
 def p_assign_expr2(p):
 	'''assign_expr2 : lhs op_assign assign_expr2
 	| assign_expr1
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	p[0] = {
+		'place' : 'undefined',
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['place'] == None:
+		error('Use of undeclared variable %s!'%p[1]['idenName'])
+		return
+	#TODO
+	#Check if reverse map is in symbol table
+	#And do whatever happens in +,-,*,/
 
 def p_assign_expr1(p):
 	'''assign_expr1 : lhs '=' assign_expr1
 	| range_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	p[0] = {
+		'place' : 'undefined',
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['place'] == None:
+		ST.addIdentifier(p[1]['idenName'],p[3]['type'])
+		myPlace = ST.createTemp()
+		ST.addAttribute(p[1]['idenName'],'place',myPlace)
+		TAC.emit(myPlace, p[3]['place'], '', '=')
+		p[0] = p[3]
+		p[0]['place'] = myPlace
+	else:
+		#TODO
+		#Check if reverse map exists
+		#Check type
+		#Reassign
+		1==1
+		#FU
 
 def p_range_expr(p):
 	'''range_expr : l13_expr SEQIN l13_expr
-	| l13_expr SEQEX l13_expr
 	| l13_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+		p[0]['type'] = ('RANGE', p[1]['place'], p[3]['place'])
+	else:
+		error('Type Error (Expected Integers) '+p[1]['place']+','+p[3]['place']+'!')
 
 ############################
 #Expressions with operators#
@@ -369,7 +407,7 @@ def p_l4_expr(p):
 		p[0]['type'] = 'FLOAT'
 	else:
 		error('Type Error (Expected Integer or Float) %s!'%p[2]['place'])
-
+		
 def p_l3_expr(p):
 	'''l3_expr : l2_expr POW l3_expr
 	'''
@@ -511,11 +549,28 @@ def p_method_call(p):
 ###################
 #lhs of expression#
 ###################
-def p_lhs(p):
+def p_lhs_var(p):
 	'''lhs : user_var
-	| primary_expr '.' LOCALVAR
+	'''
+	myPlace = ST.getAttribute(p[1]['idenName'],'place')
+	if myPlace != None:
+		p[0] = {
+			'place' : myPlace
+		}
+	else:
+		p[0] = {
+			'place' : None,
+			'idenName' : p[1]['idenName']
+		}
+
+#TODO
+def p_lhs_dot(p):
+	'''lhs : primary_expr '.' LOCALVAR
 	| primary_expr '.' CONST
-	| primary_expr '[' expr ']'
+	'''
+#TODO	
+def p_lhs_array(p):
+	''' lhs : primary_expr '[' expr ']'
 	'''
 
 ###########
@@ -679,8 +734,6 @@ def p_op_assign(p):
 	| MINUSEQ
 	| STAREQ
 	| DIVEQ
-	| MODEQ
-	| POWEQ
 	'''
 	p[0]=p[1]
 
@@ -697,21 +750,6 @@ def p_op_order(p):
 	| LTEQUAL
 	'''
 	p[0]= p[1]
-
-def p_shift_assign(p):
-	'''shift_assign : LSHIFTEQ
-	| RSHIFTEQ
-	'''
-	p[0]= p[1]
-
-def p_bool_assign(p):
-	'''bool_assign : ANDEQ
-	| OREQ
-	| BITANDEQ
-	| BITOREQ
-	| BITNOTEQ
-	'''
-	p[0] = p[1]
 
 ##################
 #Method Variables#

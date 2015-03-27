@@ -19,12 +19,14 @@ class SymbolTable:
 		self.addressSize = 4
 
 	#Adds identifier to the current scope symbol table
-	def addIdentifier(self, idenName, idenType, idenSize = 0):
+	def addIdentifier(self, idenName, idenType = 'unknown', idenSize = 0):
 		if idenSize == 0:
 			if idenType in ['INT','FLOAT','CHAR','BOOL']:
 				idenSize = self.wordSize
 			elif idenType in ['STRING']:
 				idenSize  = self.addressSize
+			elif idenType in ['unknown']:
+				idenSize = 0 
 
 		if idenName not in self.symbolTable[self.currentScope]['identifiers']:
 			self.symbolTable[self.currentScope]['identifiers'][idenName] = {
@@ -42,7 +44,7 @@ class SymbolTable:
 			return self.symbolTable[self.currentScope]['identifiers'][idenName]
 		return None
 
-	#Returns the asked attribute od idenName
+	#Returns the asked attribute of idenName
 	def getAttribute(self, idenName, attrName):
 		if idenName in self.symbolTable[self.currentScope]['identifiers']:
 			if attrName in self.symbolTable[self.currentScope]['identifiers'][idenName]:
@@ -51,6 +53,14 @@ class SymbolTable:
 				return None
 		else:
 			return None
+
+	#Adds attribute to idenName in currentScope
+	def addAttribute(self, idenName, attrName, attrVal):
+		if idenName in self.symbolTable[self.currentScope]['identifiers']:
+			self.symbolTable[self.currentScope]['identifiers'][idenName][attrName] = attrVal
+			return 1
+		else:
+			return 0
 
 	#Create a temporary variable
 	def createTemp(self):

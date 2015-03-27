@@ -8,19 +8,10 @@ from termcolor import colored
 
 # List of token names.
 tokens = (
-"LSHIFTEQ",
-"RSHIFTEQ",
-"ANDEQ",
-"OREQ",
-"BITANDEQ",
-"BITOREQ",
-"BITNOTEQ",
 "PLUSEQ",
 "MINUSEQ",
 "STAREQ",
 "DIVEQ",
-"MODEQ",
-"POWEQ",
 "POW",
 "EQEQUAL",
 "NOTEQ",
@@ -33,7 +24,6 @@ tokens = (
 "CHAR",
 "STRING",
 "SEQIN",
-"SEQEX",
 "LOCALVAR",
 "GLOBALVAR",
 "CLASSVAR",
@@ -85,13 +75,6 @@ reserved = {
 
 tokens = tokens + tuple(reserved.values())
 
-t_LSHIFTEQ = r'<<='
-t_RSHIFTEQ = r'>>='
-t_ANDEQ = r'\&\&='
-t_OREQ = r'\|\|=' 
-t_BITANDEQ = r'\&='
-t_BITOREQ = r'\|='
-t_BITNOTEQ = r'\^='
 t_POW = r'\*\*'
 t_EQEQUAL = r'=='
 t_NOTEQ = r'!='
@@ -101,14 +84,11 @@ t_PLUSEQ = r'\+='
 t_MINUSEQ = r'-='
 t_STAREQ = r'\*='
 t_DIVEQ = r'/='
-t_MODEQ = r'%='
-t_POWEQ = r'\*\*='
 t_LSHIFT = r'<<'
 t_RSHIFT = r'>>'
 t_AND = r'\&\&'
 t_OR = r'\|\|'
 t_SEQIN = r'\.\.'
-t_SEQEX = r'\.\.\.'
 t_DOL0 = r'\$0'
 
 def t_MULTICOMMENT(t):
