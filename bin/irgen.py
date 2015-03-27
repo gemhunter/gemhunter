@@ -6,6 +6,12 @@ from lexer import tokens
 import symbolTable
 import threeAddressCode
 
+#Declare global Symbol Table and TAC
+ST = symbolTable.SymbolTable()
+TAC = threeAddressCode.ThreeAddressCode()
+currLine = 1
+
+#Parser instructions
 def p_program(p):
 	'''program : compstmt
 	'''
@@ -131,17 +137,95 @@ def p_l4_expr(p):
 	'''l4_expr : '-' l3_expr
 	| l3_expr
 	'''
+	if len(p) == 2:
+		p[0]= p[1]
+		return
+	#Unary minus
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[2]['type']=='TYPE_ERROR':
+		return
+	if p[2]['type'] == 'INT' :
+		TAC.emit(newPlace,p[2]['place'],'','-')
+		p[0]['type'] = 'INT'
+	elif p[2]['type'] == 'FLOAT' :
+		TAC.emit(newPlace,p[2]['place'],'','-')
+		p[0]['type'] = 'FLOAT'
+	else:
+		error('Type Error (Expected Integer or Float) %s!'%p[2]['place'])
 
 def p_l3_expr(p):
 	'''l3_expr : l2_expr POW l3_expr
-	| l2_expr
 	'''
+	#Exponentiation
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	if p[3]['type'] != 'INT' :
+		error('Type Error (Expected Integer) %s!'%p[3]['place'])
+		return
+
+	if p[1]['type'] == 'INT' :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],'**')
+		p[0]['type'] = 'INT'
+	elif p[1]['type'] == 'FLOAT' :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],'**')
+		p[0]['type'] = 'FLOAT'
+	else:
+		error('Type Error (Expected Integer or Float) %s!'%p[1]['place'])
+
+def p_le_expr_down(p):
+	'''l3_expr : l2_expr
+	'''
+	p[0]=p[1]
 
 def p_l2_expr(p):
 	'''l2_expr : '!' l1_expr
 	| '~' l1_expr
 	| '+' l1_expr
 	'''
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[2]['type']=='TYPE_ERROR':
+		return
+	if p[1] == '!' :
+		#Boolean not
+		if p[2]['type'] == 'BOOL' :
+			TAC.emit(newPlace,p[2]['place'], '', '!')
+			p[0]['type'] = 'BOOL'
+		else:
+			error('Type Error (Expected Boolean) %s!'%p[2]['place'])
+	elif p[1] == '~':
+		#Bitwise Complement
+		if p[2]['type'] == 'FLOAT':
+			warning('Bitwise complement of float usually doesn\'t make sense %s'%p[2]['place'])
+			TAC.emit(newPlace,p[2]['place'],'','~')
+			p[0]['type'] = 'FLOAT'
+		elif p[2]['type'] == 'INT' :
+			TAC.emit(newPlace,p[2]['place'],'','~')
+			p[0]['type'] = 'INT'
+		else:
+			error('Type Error (Expected Integer or float) %s!'%p[2]['place'])
+	elif p[1] == '+':
+		#Unary plus
+		if p[2]['type'] == 'FLOAT':
+			TAC.emit(newPlace,p[2]['place'],'','+')
+			p[0]['type'] = 'FLOAT'
+		elif p[2]['type'] == 'INT' :
+			TAC.emit(newPlace,p[2]['place'],'','+')
+			p[0]['type'] = 'INT'
+		else:
+			error('Type Error (Expected Integer or float) %s!'%p[2]['place'])
 
 def p_l2_expr_down(p):
 	'''l2_expr : l1_expr
@@ -170,7 +254,7 @@ def p_primary_expr_primitive_variable(p):
 		assert(p[0]['place'] != None)
 		assert(p[0]['type'] != None)
 	else:
-		print "Use of undefined variable %s!"%p[1]['idenName']
+		error("Use of undefined variable %s!"%p[1]['idenName'])
 	
 def p_primary_expr_primitive_literals(p):
 	''' primary_expr : key_var
@@ -364,6 +448,9 @@ def p_lin_term(p):
 	'''lin_term : ';' 
 	| NEWLINE
 	'''
+	global currLine
+	if p[1] != ';':
+		currLine+=1
 
 def p_op_assign(p):
 	'''op_assign : PLUSEQ
@@ -519,13 +606,16 @@ def p_none(p):
 # Error rule for syntax errors
 def p_error(p):
 	if p == None:
-		print "You missed something at the end"
+		error("You missed something at the end")
 	else:
-		print "Syntax error in input line %d!"%p.lineno
+		error("Syntax error in input line %d!"%p.lineno)
 
-#Declare global Symbol Table and TAC
-ST = symbolTable.SymbolTable()
-TAC = threeAddressCode.ThreeAddressCode()
+#Error handler
+def error(e):
+	print "ERROR %d: "%currLine,e
+
+def warning(w):
+	print "WARNING %d: "%currLine,w
 
 # Build the parser
 parser = yacc.yacc(debug=0)
