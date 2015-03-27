@@ -224,7 +224,6 @@ op_assign : PLUSEQ
 
 op_eq : EQEQUAL
 	| NOTEQ
-	| NOEQ
 
 op_order : '<'
 	| '>'

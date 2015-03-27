@@ -84,16 +84,90 @@ def p_l13_expr(p):
 	'''l13_expr : l13_expr OR l12_expr
 	| l12_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	if p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL' :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'BOOL'
+	else:
+		error('Type Error (Expected booleans) '+p[1]['place']+','+p[3]['place']+'!')
 
 def p_l12_expr(p):
 	'''l12_expr : l12_expr AND l11_expr
 	| l11_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	if p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL' :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'BOOL'
+	else:
+		error('Type Error (Expected booleans) '+p[1]['place']+','+p[3]['place']+'!')
 
 def p_l11_expr(p):
 	'''l11_expr : l10_expr op_eq l10_expr
 	| l10_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return	
+	if p[1]['type'] != p[3]['type']:
+		if p[2] == '==' :
+			warning('Did you intend to equate different types? '+p[1]['place'] + ',' + p[3]['place'])
+			TAC.emit(newPlace,'false','','=')
+			p[0]['type']='BOOL'
+		elif p[2] == '!=' :
+			warning('Did you intend to equate different types? '+p[1]['place'] + ',' + p[3]['place'])
+			TAC.emit(newPlace,'true','','=')
+			p[0]['type']='BOOL'
+	else:
+		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type']='BOOL'
+		elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+			warning('Equating floats might not be a good idea! ' + p[1]['place'] + ',' + p[3]['place'])
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type']='BOOL'
+		elif p[1]['type'] == 'CHAR' and p[3]['type'] == 'CHAR':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type']='BOOL'
+		elif p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type']='BOOL'
+		elif p[1]['type'] == 'STRING' and p[3]['type'] == 'STRING':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type']='BOOL'
+		elif p[1]['type'] == 'VOID' and p[3]['type'] == 'VOID':
+			if p[2] == '==' :
+				TAC.emit(newPlace,'true','','=')
+			else:
+				TAC.emit(newPlace,'false','','=')
+			p[0]['type']='BOOL'
+		else:
+			error('Cannot equate these two! ' + p[1]['place'] + ',' + p[3]['place'])
 
 def p_l10_expr(p):
 	'''l10_expr : l10_expr op_order l9_expr
@@ -444,6 +518,9 @@ def p_lhs(p):
 	| primary_expr '[' expr ']'
 	'''
 
+###########
+#Arguments#
+###########
 def p_args(p):
 	'''args :  '(' arg_list ')'
 	'''
@@ -610,7 +687,6 @@ def p_op_assign(p):
 def p_op_eq(p):
 	'''op_eq : EQEQUAL
 	| NOTEQ
-	| NOEQ
 	'''
 	p[0] = p[1]
 

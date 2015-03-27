@@ -26,7 +26,6 @@ tokens = (
 "NOTEQ",
 "GTEQUAL",
 "LTEQUAL",
-"NOEQ",
 "LSHIFT",
 "RSHIFT",
 "AND",
@@ -98,7 +97,6 @@ t_EQEQUAL = r'=='
 t_NOTEQ = r'!='
 t_GTEQUAL = r'>='
 t_LTEQUAL = r'<='
-t_NOEQ = r'<=>'
 t_PLUSEQ = r'\+='
 t_MINUSEQ = r'-='
 t_STAREQ = r'\*='

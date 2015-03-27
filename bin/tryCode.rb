@@ -22,3 +22,13 @@ b = 5  & 5
 a = 3 < 5
 b = (3 < 5)
 c= 3 < 5
+
+a = 3 == 3
+
+'h' == 'r'
+"itt" == "qe"
+nil == nil
+nil != nil
+true == false
+
+"ha" == "ha" && 1 < 2 || false && nil == nil
