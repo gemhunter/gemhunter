@@ -223,7 +223,6 @@ op_assign : PLUSEQ
 	| POWEQ
 
 op_eq : EQEQUAL
-	| CASEEQ
 	| NOTEQ
 	| NOEQ
 

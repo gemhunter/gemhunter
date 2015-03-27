@@ -27,7 +27,6 @@ tokens = (
 "GTEQUAL",
 "LTEQUAL",
 "NOEQ",
-"CASEEQ",
 "LSHIFT",
 "RSHIFT",
 "AND",
@@ -100,7 +99,6 @@ t_NOTEQ = r'!='
 t_GTEQUAL = r'>='
 t_LTEQUAL = r'<='
 t_NOEQ = r'<=>'
-t_CASEEQ = r'==='
 t_PLUSEQ = r'\+='
 t_MINUSEQ = r'-='
 t_STAREQ = r'\*='
@@ -173,7 +171,7 @@ def t_STRING(t):
     return t
 
 def t_NEWLINE(t):
-    r'\n+'
+    r'\n'
     t.lexer.lineno+= len(t.value)
     return t;
 

@@ -99,12 +99,50 @@ def p_l10_expr(p):
 	'''l10_expr : l10_expr op_order l9_expr
 	| l9_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return	
+	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'BOOL'
+	elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'BOOL'
+	else:
+		error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
 
 def p_l9_expr(p):
 	'''l9_expr : l9_expr '|' l8_expr
 	| l9_expr '^' l8_expr
 	| l8_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	
+	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'INT'
+	elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+		warning('Are you sure you want to use bitwise operator on floating points ' + p[1]['place'] + ',' + p[3]['place'] + '?')
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'FLOAT'
+	else:
+		error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
 
 def p_l8_expr(p):
 	'''l8_expr : l8_expr '&' l7_expr
@@ -125,11 +163,11 @@ def p_l8_expr(p):
 		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 		p[0]['type'] = 'INT'
 	elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
-		warning('Are you sure you want to use bitwise-and on floating points? ' + p[1]['place'] + ',' + p[3]['place'] + '?')
+		warning('Are you sure you want to use bitwise operator on floating points? ' + p[1]['place'] + ',' + p[3]['place'] + '?')
 		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 		p[0]['type'] = 'FLOAT'
 	else:
-		error('Type Error (Expected Integers or Floats) %s!'%p[1]['place'])
+		error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
 
 def p_l7_expr(p):
 	'''l7_expr : l7_expr LSHIFT l6_expr
@@ -368,6 +406,7 @@ def p_primary_expr_primitive_literals(p):
 		'type' : p[1]['type']
 	}
 
+#TODO
 def p_primary_expr(p):
 	''' primary_expr : '(' expr ')'
 	| '[' arg_list ']'
@@ -375,8 +414,10 @@ def p_primary_expr(p):
 	| primary_expr '.' LOCALVAR
 	| primary_expr '.' CONST
 	'''
+	if p[1] == '(':
+		p[0] = p[2]
 
-
+#TODO
 def p_primary_expr_method_call(p):
 	''' primary_expr : method_call
 	'''
@@ -553,6 +594,9 @@ def p_lin_term(p):
 	if p[1] != ';':
 		currLine+=1
 
+###########
+#Operators#
+###########
 def p_op_assign(p):
 	'''op_assign : PLUSEQ
 	| MINUSEQ
@@ -561,13 +605,14 @@ def p_op_assign(p):
 	| MODEQ
 	| POWEQ
 	'''
+	p[0]=p[1]
 
 def p_op_eq(p):
 	'''op_eq : EQEQUAL
-	| CASEEQ
 	| NOTEQ
 	| NOEQ
 	'''
+	p[0] = p[1]
 
 def p_op_order(p):
 	'''op_order : '<'
@@ -575,11 +620,13 @@ def p_op_order(p):
 	| GTEQUAL
 	| LTEQUAL
 	'''
+	p[0]= p[1]
 
 def p_shift_assign(p):
 	'''shift_assign : LSHIFTEQ
 	| RSHIFTEQ
 	'''
+	p[0]= p[1]
 
 def p_bool_assign(p):
 	'''bool_assign : ANDEQ
@@ -588,7 +635,11 @@ def p_bool_assign(p):
 	| BITOREQ
 	| BITNOTEQ
 	'''
+	p[0] = p[1]
 
+##################
+#Method Variables#
+##################
 def p_method(p):
 	'''method : method_var
 	| KEYWORD_CLASS
@@ -628,6 +679,7 @@ def p_user_var(p):
 ##################
 #Keyword Literals#
 ##################
+#TODO
 def p_key_var(p):
 	'''key_var : KEYWORD_SELF 
 	| KEYWORD_FILE 
@@ -714,11 +766,11 @@ def p_error(p):
 #Error handler
 def error(e):
 	global success
-	print colored("ERROR::%d: "%currLine,'red'),e
+	print colored("ERROR::%d : "%currLine,'red'),e
 	success = 0
 
 def warning(w):
-	print colored("WARNING::%d: "%currLine,'blue'),w
+	print colored("WARNING::%d : "%currLine,'blue'),w
 
 #Declare globals
 ST = symbolTable.SymbolTable()
