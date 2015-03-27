@@ -1,7 +1,7 @@
 gemhunter - a cross compiler for Ruby, written in Python
 =======================================================
 
-***Mah Ruby, Mah rulzz***
+**Mah Ruby, Mah rulzz**
 
 *The compiler is written in Python, hence no executable was created for it.*
 
