@@ -110,6 +110,26 @@ def p_l8_expr(p):
 	'''l8_expr : l8_expr '&' l7_expr
 	| l7_expr
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	newPlace = ST.createTemp()
+	p[0] = {
+		'place' : newPlace,
+		'type' : 'TYPE_ERROR'
+	}
+	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+		return
+	
+	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'INT'
+	elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+		warning('Are you sure you want to use bitwise-and on floating points? ' + p[1]['place'] + ',' + p[3]['place'] + '?')
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'FLOAT'
+	else:
+		error('Type Error (Expected Integers or Floats) %s!'%p[1]['place'])
 
 def p_l7_expr(p):
 	'''l7_expr : l7_expr LSHIFT l6_expr
@@ -694,11 +714,11 @@ def p_error(p):
 #Error handler
 def error(e):
 	global success
-	print colored("ERROR %d: "%currLine,'red'),e
+	print colored("ERROR::%d: "%currLine,'red'),e
 	success = 0
 
 def warning(w):
-	print colored("WARNING %d: "%currLine,'blue'),w
+	print colored("WARNING::%d: "%currLine,'blue'),w
 
 #Declare globals
 ST = symbolTable.SymbolTable()

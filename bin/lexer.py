@@ -4,6 +4,7 @@ import sys
 import re
 import os
 import lex
+from termcolor import colored
 
 # List of token names.
 tokens = (
@@ -180,8 +181,7 @@ t_ignore = ' \t'
 
 # Error handling rule
 def t_error(t):
-    print "Illegal character '%s'" % t.value[0]
-    print "Skipping it!"
+    print colored("Illegal character '%s'" % t.value[0],'yellow'), colored("Skipping it!",'yellow')
     t.lexer.skip(1)
 
 # Build the lexer
