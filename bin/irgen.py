@@ -11,38 +11,101 @@ import threeAddressCode
 def p_program(p):
 	'''program : compstmt
 	'''
+	p[0] = p[1]
+	if p[0].get('breakList') != None:
+		for i in p[0]['breakList']:
+			error('Cannot use break outside loop', i[0])
+	
+	if p[0].get('nextList') != None:
+		for i in p[0]['nextList']:
+			error('Cannot use next outside loop', i[0])
+	
+	if p[0].get('redoList') != None:
+		for i in p[0]['redoList']:
+			error('Cannot use redo outside loop', i[0])
 
 def p_compstmt(p):
 	'''compstmt : stmts opt_terms
 	'''
+	p[0] = p[1]
 
-def p_stmts(p):
+def p_stmts_none(p):
 	'''stmts : none
-	| stmt
+	'''
+	p[0] = {}
+	
+def p_stmts(p):
+	'''stmts : stmt
 	| stmts lin_terms stmt
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	p[0] = {}
+	list1 = p[1].get('breakList')
+	list2 = p[3].get('breakList')
+	if list1 == None and list2 != None:
+		p[0]['breakList'] = list2
+	elif list1 != None and list2 == None:
+		p[0]['breakList'] = list1
+	elif list1 != None and list2 != None:
+		p[0]['breakList'] = list1 + list2
+	
+	list1 = p[1].get('nextList')
+	list2 = p[3].get('nextList')
+	if list1 == None and list2 != None:
+		p[0]['nextList'] = list2
+	elif list1 != None and list2 == None:
+		p[0]['nextList'] = list1
+	elif list1 != None and list2 != None:
+		p[0]['nextList'] = list1 + list2
+		
+	list1 = p[1].get('redoList')
+	list2 = p[3].get('redoList')
+	if list1 == None and list2 != None:
+		p[0]['redoList'] = list2
+	elif list1 != None and list2 == None:
+		p[0]['redoList'] = list1
+	elif list1 != None and list2 != None:
+		p[0]['redoList'] = list1 + list2
 
 def p_stmt(p):
-	'''stmt : KEYWORD_END '{' compstmt '}'
-	| KEYWORD_BEGIN '{' compstmt '}'
-	| if_block
+	'''stmt : if_block
 	| until_block
-	| unless_block
 	| case_block
 	| for_block
 	| while_block
 	| KEYWORD_RETURN expr
 	| KEYWORD_YIELD args
 	| KEYWORD_RETURN
-	| KEYWORD_BREAK
-	| KEYWORD_NEXT
-	| KEYWORD_REDO
 	| method_defn
 	| class_defn
 	| singleton_class_defn
 	| expr
 	'''
+	p[0] = p[1]
 
+#########################
+#Statements inside loops#
+#########################
+def p_stmt_inside_loop(p):
+	'''stmt : KEYWORD_BREAK
+	| KEYWORD_NEXT
+	| KEYWORD_REDO
+	'''
+	global currLine
+	p[0] = {}
+	TAC.emit('goto', '', '', '')
+	if p[1] == 'break':
+		p[0]['breakList'] = [(currLine,TAC.getCurrQuad())] 
+	elif p[1] == 'next':
+		p[0]['nextList'] = [(currLine,TAC.getCurrQuad())] 
+	elif p[1] == 'redo':
+		p[0]['redoList'] = [(currLine,TAC.getCurrQuad())] 
+
+############
+#Expression#
+############
 def p_expr(p):
 	'''expr : assign_expr2
 	'''
@@ -652,7 +715,7 @@ def p_arg_list_tail(p):
 ##############
 
 def p_if_block(p):
-	'''if_block : KEYWORD_IF expr M_checkBool then_clause M_if1 compstmt M_if2 if_tail M_if3 KEYWORD_end
+	'''if_block : KEYWORD_IF expr M_checkBool then_clause M_if1 compstmt M_if2 if_tail M_if3 KEYWORD_END
 	'''
 
 def p_checkBool(p):
@@ -717,12 +780,27 @@ def p_opt_else(p):
 	| none
 	'''
 
-#############
-#Until block#
-#############
+#################
+#Until and While#
+#################
 def p_until_block(p):
-	'''until_block : KEYWORD_UNTIL expr do_clause compstmt KEYWORD_end
+	'''until_block : KEYWORD_UNTIL M_until1 expr M_checkBool M_until2 do_clause compstmt KEYWORD_END
 	'''
+	TAC.emit('goto', p[2][0], '', '')
+	TAC.emit('label', p[2][2], '', '')
+
+def p_makeUntilLabels(p):
+	''' M_until1 : '''
+	startLabel = TAC.makeLabel()
+	bodyLabel = TAC.makeLabel()
+	doneLabel = TAC.makeLabel()
+	p[0] = [startLabel, bodyLabel, doneLabel]
+	TAC.emit('label', startLabel, '', '')
+
+def p_outputUntilCondn(p):
+	''' M_until2 : '''
+	TAC.emit('if', p[-2]['place'], 'goto', p[-3][2])
+	TAC.emit('label', p[-3][1],'', '')
 
 def p_do_clause(p):
 	'''do_clause : lin_term
@@ -730,16 +808,30 @@ def p_do_clause(p):
 	| KEYWORD_DO
 	'''
 
-def p_unless_block(p):
-	'''unless_block : KEYWORD_UNLESS expr then_clause compstmt opt_else KEYWORD_end
-	'''
-
 def p_while_block(p):
-	'''while_block : KEYWORD_WHILE expr do_clause compstmt KEYWORD_end
+	'''while_block : KEYWORD_WHILE M_while1 expr M_checkBool M_while2 do_clause compstmt KEYWORD_END
 	'''
+	TAC.emit('goto', p[2][0], '', '')
+	TAC.emit('label', p[2][2], '', '')
 
+def p_makeWhileLabels(p):
+	''' M_while1 : '''
+	startLabel = TAC.makeLabel()
+	bodyLabel = TAC.makeLabel()
+	doneLabel = TAC.makeLabel()
+	p[0] = [startLabel, bodyLabel, doneLabel]
+	TAC.emit('label', startLabel, '', '')
+
+def p_outputWhileCondn(p):
+	''' M_while2 : '''
+	TAC.emit('ifnot', p[-2]['place'], 'goto', p[-3][2])
+	TAC.emit('label', p[-3][1],'', '')
+
+################
+#Case statement#
+################
 def p_case_block(p):
-	'''case_block : KEYWORD_CASE expr opt_terms case_body KEYWORD_end
+	'''case_block : KEYWORD_CASE expr opt_terms case_body KEYWORD_END
 	'''
 
 def p_case_body(p):
@@ -752,11 +844,14 @@ def p_case_clause(p):
 	'''
 
 def p_for_block(p):
-	'''for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause compstmt KEYWORD_end
+	'''for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause compstmt KEYWORD_END
 	'''
 
+##################
+#Class Definition#
+##################
 def p_class_defn(p):
-	'''class_defn : KEYWORD_CLASS CONST opt_inheritance lin_term compstmt KEYWORD_end
+	'''class_defn : KEYWORD_CLASS CONST opt_inheritance lin_term compstmt KEYWORD_END
 	'''
 
 def p_opt_inheritance(p):
@@ -765,11 +860,11 @@ def p_opt_inheritance(p):
 	'''
 
 def p_singleton_class_defn(p):
-	'''singleton_class_defn : KEYWORD_CLASS LSHIFT singleton_var lin_term compstmt KEYWORD_end
+	'''singleton_class_defn : KEYWORD_CLASS LSHIFT singleton_var lin_term compstmt KEYWORD_END
 	'''
 
 def p_method_defn(p):
-	'''method_defn : KEYWORD_DEF method_var method_params lin_term compstmt KEYWORD_end
+	'''method_defn : KEYWORD_DEF method_var method_params lin_term compstmt KEYWORD_END
 	'''
 
 def p_method_params(p):
@@ -805,6 +900,9 @@ def p_block_param_list_tail(p):
 	| block_param_list_tail ',' LOCALVAR
 	'''
 
+#############
+#Blank Lines#
+#############
 def p_opt_terms(p):
 	'''opt_terms : none 
 	| lin_terms
@@ -974,13 +1072,17 @@ def p_error(p):
 		error("Syntax error!")
 
 #Error handler
-def error(e):
+def error(e, lineNo=-1):
 	global success
-	print colored("ERROR::%d : "%currLine,'red'),e
+	if lineNo == -1:
+		lineNo = currLine
+	print colored("ERROR::%d : "%lineNo,'red'),e
 	success = 0
 
 def warning(w):
-	print colored("WARNING::%d : "%currLine,'blue'),w
+	if lineNo == -1:
+		lineNo = currLine
+	print colored("WARNING::%d : "%lineNo,'blue'),w
 
 #Declare globals
 ST = symbolTable.SymbolTable()
