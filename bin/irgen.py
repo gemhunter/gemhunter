@@ -11,85 +11,103 @@ import threeAddressCode
 def p_program(p):
 	'''program : compstmt
 	'''
-	p[0] = p[1]
-	if p[0].get('breakList') != None:
-		for i in p[0]['breakList']:
-			error('Cannot use break outside loop', i[0])
-	
-	if p[0].get('nextList') != None:
-		for i in p[0]['nextList']:
-			error('Cannot use next outside loop', i[0])
-	
-	if p[0].get('redoList') != None:
-		for i in p[0]['redoList']:
-			error('Cannot use redo outside loop', i[0])
+
+##################################
+#compstmts for different contexts#
+##################################
 
 def p_compstmt(p):
 	'''compstmt : stmts opt_terms
 	'''
-	p[0] = p[1]
-
-def p_stmts_none(p):
-	'''stmts : none
-	'''
-	p[0] = {}
 	
 def p_stmts(p):
 	'''stmts : stmt
 	| stmts lin_terms stmt
+	| none
 	'''
-	if len(p) == 2:
-		p[0] = p[1]
-		return
-	p[0] = {}
-	list1 = p[1].get('breakList')
-	list2 = p[3].get('breakList')
-	if list1 == None and list2 != None:
-		p[0]['breakList'] = list2
-	elif list1 != None and list2 == None:
-		p[0]['breakList'] = list1
-	elif list1 != None and list2 != None:
-		p[0]['breakList'] = list1 + list2
-	
-	list1 = p[1].get('nextList')
-	list2 = p[3].get('nextList')
-	if list1 == None and list2 != None:
-		p[0]['nextList'] = list2
-	elif list1 != None and list2 == None:
-		p[0]['nextList'] = list1
-	elif list1 != None and list2 != None:
-		p[0]['nextList'] = list1 + list2
-		
-	list1 = p[1].get('redoList')
-	list2 = p[3].get('redoList')
-	if list1 == None and list2 != None:
-		p[0]['redoList'] = list2
-	elif list1 != None and list2 == None:
-		p[0]['redoList'] = list1
-	elif list1 != None and list2 != None:
-		p[0]['redoList'] = list1 + list2
 
+def p_method_defn_compstmt(p):
+	'''method_defn_compstmt : method_defn_stmts opt_terms
+	'''
+
+def p_method_defn_stmts(p):
+	'''method_defn_stmts : method_defn_stmt
+	| method_defn_stmts lin_terms method_defn_stmt
+	| none
+	'''
+
+def p_class_defn_compstmt(p):
+	'''class_defn_compstmt : class_defn_stmts opt_terms
+	'''
+
+def p_class_defn_stmts(p):
+	'''class_defn_stmts : class_defn_stmt
+	| class_defn_stmts lin_terms class_defn_stmt
+	| none
+	'''
+
+def p_imp_body_compstmt(p):
+	'''imp_body_compstmt : imp_body_stmts opt_terms
+	'''
+
+def p_imp_body_stmts(p):
+	'''imp_body_stmts : imp_body_stmt
+	| imp_body_stmts lin_terms imp_body_stmt
+	| none
+	'''
+
+####################
+#Combined Statments#
+####################
 def p_stmt(p):
-	'''stmt : if_block
-	| until_block
-	| case_block
-	| for_block
-	| while_block
-	| KEYWORD_RETURN expr
-	| KEYWORD_YIELD args
-	| KEYWORD_RETURN
-	| method_defn
+	'''stmt : method_defn
 	| class_defn
-	| singleton_class_defn
+	| expr
+	| stmt_imp
+	'''
+	p[0] = p[1]
+
+def p_method_defn_stmt(p):
+	'''method_defn_stmt : expr
+	| stmt_imp
+	| stmt_method
+	'''
+	p[0] = p[1]
+
+def p_class_defn_stmt(p):
+	'''class_defn_stmt : method_defn
 	| expr
 	'''
 	p[0] = p[1]
 
+def p_imp_body_stmt(p):
+	'''imp_body_stmt : stmt_loop
+	| expr
+	| stmt_imp
+	| stmt_method
+	'''
+	p[0] = p[1]
 
-#########################
-#Statements inside loops#
-#########################
-def p_stmt_inside_loop(p):
+###############################
+#Different types of statements#
+###############################
+
+def p_stmt_imp(p):
+    '''stmt_imp :  if_block
+	| until_block
+	| case_block
+	| for_block
+	| while_block
+        '''
+    p[0] = p[1]
+
+def p_stmt_method(p):
+	'''stmt_method : KEYWORD_RETURN expr
+	| KEYWORD_YIELD args
+	| KEYWORD_RETURN
+	'''
+
+def p_stmt_loop(p):
 	'''stmt_loop : KEYWORD_BREAK
 	| KEYWORD_NEXT
 	| KEYWORD_REDO
@@ -651,6 +669,7 @@ def p_primary_expr_method_call(p):
 ###################
 #Method Invocation#
 ###################
+#TODO - compstmt
 def p_method_call(p):
 	''' method_call : primary_expr '.'  method args
 	| method args
@@ -659,6 +678,7 @@ def p_method_call(p):
 	| KEYWORD_SUPER
 	| KEYWORD_SUPER args
 	'''
+	#TODO - compstmt
 
 ###################
 #lhs of expression#
@@ -716,7 +736,7 @@ def p_arg_list_tail(p):
 ##############
 
 def p_if_block(p):
-	'''if_block : KEYWORD_IF expr M_checkBool then_clause M_if1 compstmt M_if2 if_tail M_if3 KEYWORD_END
+	'''if_block : KEYWORD_IF expr M_checkBool then_clause M_if1 imp_body_compstmt M_if2 if_tail M_if3 KEYWORD_END
 	'''
 
 
@@ -755,7 +775,7 @@ def p_if_tail(p):
 	'''
 
 def p_if_tail_eslif(p):
-	'''if_tail : KEYWORD_ELSIF expr M_checkBool then_clause M_elsif1 compstmt M_elsif2 if_tail M_elsif3
+	'''if_tail : KEYWORD_ELSIF expr M_checkBool then_clause M_elsif1 imp_body_compstmt M_elsif2 if_tail M_elsif3
 	'''
 
 def p_makeElsifLabels(p):
@@ -778,7 +798,7 @@ def p_endElsif(p):
 	TAC.emit('label', p[-4][2], '', '')
 
 def p_opt_else(p):
-	'''opt_else : KEYWORD_ELSE compstmt
+	'''opt_else : KEYWORD_ELSE imp_body_compstmt
 	| none
 	'''
 
@@ -786,7 +806,7 @@ def p_opt_else(p):
 #Until and While#
 #################
 def p_until_block(p):
-	'''until_block : KEYWORD_UNTIL M_until1 expr M_checkBool M_until2 do_clause compstmt KEYWORD_END
+	'''until_block : KEYWORD_UNTIL M_until1 expr M_checkBool M_until2 do_clause imp_body_compstmt KEYWORD_END
 	'''
 	TAC.emit('goto', p[2][0], '', '')
 	TAC.emit('label', p[2][2], '', '')
@@ -811,7 +831,7 @@ def p_do_clause(p):
 	'''
 
 def p_while_block(p):
-	'''while_block : KEYWORD_WHILE M_while1 expr M_checkBool M_while2 do_clause compstmt KEYWORD_END
+	'''while_block : KEYWORD_WHILE M_while1 expr M_checkBool M_while2 do_clause imp_body_compstmt KEYWORD_END
 	'''
 	TAC.emit('goto', p[2][0], '', '')
 	TAC.emit('label', p[2][2], '', '')
@@ -837,7 +857,7 @@ def p_case_block(p):
 	'''
 
 def p_case_body(p):
-	'''case_body : KEYWORD_WHEN non_empty_arg_list then_clause compstmt case_clause   
+	'''case_body : KEYWORD_WHEN non_empty_arg_list then_clause imp_body_compstmt case_clause   
 	'''
 
 def p_case_clause(p):
@@ -846,14 +866,14 @@ def p_case_clause(p):
 	'''
 
 def p_for_block(p):
-	'''for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause compstmt KEYWORD_END
+	'''for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause imp_body_compstmt KEYWORD_END
 	'''
 
 ##################
 #Class Definition#
 ##################
 def p_class_defn(p):
-	'''class_defn : KEYWORD_CLASS CONST opt_inheritance lin_term compstmt KEYWORD_END
+	'''class_defn : KEYWORD_CLASS CONST opt_inheritance lin_term class_defn_compstmt KEYWORD_END
 	'''
 
 def p_opt_inheritance(p):
@@ -861,12 +881,8 @@ def p_opt_inheritance(p):
 	| '<' primary_expr
 	'''
 
-def p_singleton_class_defn(p):
-	'''singleton_class_defn : KEYWORD_CLASS LSHIFT singleton_var lin_term compstmt KEYWORD_END
-	'''
-
 def p_method_defn(p):
-	'''method_defn : KEYWORD_DEF method_var method_params lin_term compstmt KEYWORD_END
+	'''method_defn : KEYWORD_DEF method_var method_params lin_term method_defn_compstmt KEYWORD_END
 	'''
 
 def p_method_params(p):
@@ -955,12 +971,6 @@ def p_method(p):
 	'''method : method_var
 	| KEYWORD_CLASS
 	| KEYWORD_NEXT
-	'''
-
-def p_singleton_var(p):
-	'''singleton_var : LOCALVAR
-	| CONST
-	| KEYWORD_SELF
 	'''
 
 def p_method_var(p):
