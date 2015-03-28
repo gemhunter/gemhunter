@@ -81,10 +81,10 @@ def p_assign_expr1(p):
 		'place' : 'undefined',
 		'type' : 'TYPE_ERROR'
 	}
+	#Check type error in assign_expr
 	if p[1]['place'] == None:
-		ST.addIdentifier(p[1]['idenName'],p[3]['type'])
 		myPlace = ST.createTemp()
-		ST.addAttribute(p[1]['idenName'],'place',myPlace)
+		ST.addIdentifier(p[1]['idenName'],myPlace,p[3]['type'])
 		TAC.emit(myPlace, p[3]['place'], '', '=')
 		p[0] = p[3]
 		p[0]['place'] = myPlace
@@ -177,7 +177,7 @@ def p_l11_expr(p):
 			warning('Did you intend to equate different types? '+p[1]['place'] + ',' + p[3]['place'])
 			TAC.emit(newPlace,'false','','=')
 			p[0]['type']='BOOL'
-		elif p[2] == '!=' :
+		else:
 			warning('Did you intend to equate different types? '+p[1]['place'] + ',' + p[3]['place'])
 			TAC.emit(newPlace,'true','','=')
 			p[0]['type']='BOOL'
@@ -203,7 +203,7 @@ def p_l11_expr(p):
 				TAC.emit(newPlace,'true','','=')
 			else:
 				TAC.emit(newPlace,'false','','=')
-			p[0]['type']='BOOL'
+				p[0]['type']='BOOL'
 		else:
 			error('Cannot equate these two! ' + p[1]['place'] + ',' + p[3]['place'])
 
@@ -245,7 +245,7 @@ def p_l9_expr(p):
 	}
 	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
 		return
-	
+
 	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
 		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 		p[0]['type'] = 'INT'
@@ -270,7 +270,7 @@ def p_l8_expr(p):
 	}
 	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
 		return
-	
+
 	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
 		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 		p[0]['type'] = 'INT'
@@ -333,7 +333,7 @@ def p_l6_expr(p):
 			p[0]['type'] = 'FLOAT'
 		else:
 			error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
-	if p[2] == '-':
+	elif p[2] == '-':
 		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
 			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 			p[0]['type'] = 'INT'
@@ -407,7 +407,7 @@ def p_l4_expr(p):
 		p[0]['type'] = 'FLOAT'
 	else:
 		error('Type Error (Expected Integer or Float) %s!'%p[2]['place'])
-		
+
 def p_l3_expr(p):
 	'''l3_expr : l2_expr POW l3_expr
 	'''
@@ -506,7 +506,7 @@ def p_primary_expr_primitive_variable(p):
 		assert(p[0]['type'] != None)
 	else:
 		error("Use of undefined variable %s!"%p[1]['idenName'])
-	
+
 def p_primary_expr_primitive_literals(p):
 	''' primary_expr : key_var
 	| literal
@@ -568,6 +568,7 @@ def p_lhs_dot(p):
 	'''lhs : primary_expr '.' LOCALVAR
 	| primary_expr '.' CONST
 	'''
+
 #TODO	
 def p_lhs_array(p):
 	''' lhs : primary_expr '[' expr ']'
@@ -868,7 +869,7 @@ def p_numeric_float(p):
 
 def p_none(p):
 	'''none : 
-	'''
+		'''
 
 # Error rule for syntax errors
 def p_error(p):

@@ -3,13 +3,19 @@ class SymbolTable:
 	#Initializing
 	def __init__(self):
 		self.symbolTable = {
-				'main' : {
-					'name' : 'main',
-					'parent' : None,
-					'identifiers' : {}
-					}
-				}
-
+			'main' : {
+				'name' : 'main',
+				'parent' : None,
+				'identifiers' : {}
+			}
+		}
+		self.storedPlaces = {
+			'main' : {
+				'name' : 'main',
+				'parent' : None,
+				'places' : {}
+			}
+		}
 		self.currentScope = 'main'
 		#For temporaries
 		self.tempBase = "t"
@@ -19,7 +25,7 @@ class SymbolTable:
 		self.addressSize = 4
 
 	#Adds identifier to the current scope symbol table
-	def addIdentifier(self, idenName, idenType = 'unknown', idenSize = 0):
+	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
 		if idenSize == 0:
 			if idenType in ['INT','FLOAT','CHAR','BOOL']:
 				idenSize = self.wordSize
@@ -30,14 +36,23 @@ class SymbolTable:
 
 		if idenName not in self.symbolTable[self.currentScope]['identifiers']:
 			self.symbolTable[self.currentScope]['identifiers'][idenName] = {
-					'type' : idenType,
-					'size' : idenSize
-					}
+				'place' : place,
+				'type' : idenType,
+				'size' : idenSize
+			}
+			self.storedPlaces[self.currentScope]['places'][place] = idenName
+	
+	#Return the identifier corresponding to place
+	def getIdentifier(self, place):
+		if place in self.storedPlaces[self.currentScope]['places']:
+			return self.storedPlaces[self.currentScope]['places'][place]
+		else:
+			return None
 
 	#Returns a boolean indicating presence of identifier in current scope 
 	def lookupIdentifier(self, idenName):
 		return idenName in self.symbolTable[self.currentScope]['identifiers']
-	
+
 	#Returns all the attributes of idenName
 	def getIdentifier(self, idenName):
 		if idenName in self.symbolTable[self.currentScope]['identifiers']:
