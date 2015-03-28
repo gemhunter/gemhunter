@@ -54,7 +54,7 @@ class SymbolTable:
 		return idenName in self.symbolTable[self.currentScope]['identifiers']
 
 	#Returns all the attributes of idenName
-	def getIdentifier(self, idenName):
+	def getIdentifierAttributes(self, idenName):
 		if idenName in self.symbolTable[self.currentScope]['identifiers']:
 			return self.symbolTable[self.currentScope]['identifiers'][idenName]
 		return None
