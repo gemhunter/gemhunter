@@ -85,11 +85,12 @@ def p_stmt(p):
 	'''
 	p[0] = p[1]
 
+
 #########################
 #Statements inside loops#
 #########################
 def p_stmt_inside_loop(p):
-	'''stmt : KEYWORD_BREAK
+	'''stmt_loop : KEYWORD_BREAK
 	| KEYWORD_NEXT
 	| KEYWORD_REDO
 	'''
@@ -717,6 +718,7 @@ def p_arg_list_tail(p):
 def p_if_block(p):
 	'''if_block : KEYWORD_IF expr M_checkBool then_clause M_if1 compstmt M_if2 if_tail M_if3 KEYWORD_END
 	'''
+
 
 def p_checkBool(p):
 	''' M_checkBool : '''
