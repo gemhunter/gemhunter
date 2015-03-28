@@ -146,27 +146,39 @@ def p_range_expr(p):
 #Expressions with operators#
 ############################
 def p_l13_expr(p):
-	'''l13_expr : l13_expr OR l12_expr
+	'''l13_expr : l13_expr M_or1 OR l12_expr
 	| l12_expr
 	'''
 	if len(p) == 2:
 		p[0] = p[1]
 		return
+	#Boolean OR (Short Circuited)
 	newPlace = ST.createTemp()
 	p[0] = {
 		'place' : newPlace,
 		'type' : 'TYPE_ERROR'
 	}
-	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+	if p[1]['type']=='TYPE_ERROR' or p[4]['type']=='TYPE_ERROR':
 		return
-	if p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL' :
-		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+	if p[1]['type'] == 'BOOL' and p[4]['type'] == 'BOOL' :
+		TAC.emit(newPlace, p[4]['place'], '', '=')
+		labelDone = TAC.makeLabel()
+		TAC.emit('goto', labelDone, '', '')
+		TAC.emit('label', p[2], '', '')
+		TAC.emit(newPlace, 'true', '', '=')
+		TAC.emit('label', labelDone, '', '')
 		p[0]['type'] = 'BOOL'
 	else:
-		error('Type Error (Expected booleans) '+p[1]['place']+','+p[3]['place']+'!')
+		error('Type Error (Expected booleans) '+p[1]['place']+','+p[4]['place']+'!')
+
+def p_makeOrLabels(p):
+	''' M_or1 : '''
+	labelTrue = TAC.makeLabel()
+	p[0] = labelTrue
+	TAC.emit('if', p[-1]['place'], 'goto', labelTrue)
 
 def p_l12_expr(p):
-	'''l12_expr : l12_expr AND l11_expr
+	'''l12_expr : l12_expr M_and1 AND l11_expr
 	| l11_expr
 	'''
 	if len(p) == 2:
@@ -177,13 +189,24 @@ def p_l12_expr(p):
 		'place' : newPlace,
 		'type' : 'TYPE_ERROR'
 	}
-	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+	if p[1]['type']=='TYPE_ERROR' or p[4]['type']=='TYPE_ERROR':
 		return
-	if p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL' :
-		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+	if p[1]['type'] == 'BOOL' and p[4]['type'] == 'BOOL' :
+		TAC.emit(newPlace, p[4]['place'], '', '=' )
+		labelDone = TAC.makeLabel()
+		TAC.emit('goto', labelDone, '', '')
+		TAC.emit('label', p[2], '', '')
+		TAC.emit(newPlace, 'false', '', '=')
+		TAC.emit('label', labelDone, '', '')
 		p[0]['type'] = 'BOOL'
 	else:
-		error('Type Error (Expected booleans) '+p[1]['place']+','+p[3]['place']+'!')
+		error('Type Error (Expected booleans) '+p[1]['place']+','+p[4]['place']+'!')
+
+def p_makeAndLabels(p):
+	''' M_and1 : '''
+	labelFalse = TAC.makeLabel()
+	p[0] = labelFalse
+	TAC.emit('ifnot',p[-1]['place'], 'goto', labelFalse) 
 
 def p_l11_expr(p):
 	'''l11_expr : l10_expr op_eq l10_expr
@@ -629,8 +652,13 @@ def p_arg_list_tail(p):
 ##############
 
 def p_if_block(p):
-	'''if_block : KEYWORD_IF expr then_clause M_if1 compstmt M_if2 if_tail M_if3 KEYWORD_end
+	'''if_block : KEYWORD_IF expr M_checkBool then_clause M_if1 compstmt M_if2 if_tail M_if3 KEYWORD_end
 	'''
+
+def p_checkBool(p):
+	''' M_checkBool : '''
+	if p[-1]['type'] != 'BOOL' and p[-1]['type'] != 'TYPE_ERROR':
+		error('Conditional Expression (%s) should be a Boolean!'%p[-1]['place'])
 
 def p_makeIfLabels(p):
 	''' M_if1 :
@@ -639,7 +667,7 @@ def p_makeIfLabels(p):
 	label2 = TAC.makeLabel()
 	label3 = TAC.makeLabel()
 	p[0]=[label1,label2,label3]
-	TAC.emit('if', p[-2]['place'], 'goto', label1)
+	TAC.emit('if', p[-3]['place'], 'goto', label1)
 	TAC.emit('goto', label2, '', '')
 	TAC.emit('label', label1, '', '')
 
@@ -663,7 +691,7 @@ def p_if_tail(p):
 	'''
 
 def p_if_tail_eslif(p):
-	'''if_tail : KEYWORD_ELSIF expr then_clause M_elsif1 compstmt M_elsif2 if_tail M_elsif3
+	'''if_tail : KEYWORD_ELSIF expr M_checkBool then_clause M_elsif1 compstmt M_elsif2 if_tail M_elsif3
 	'''
 
 def p_makeElsifLabels(p):
@@ -672,7 +700,7 @@ def p_makeElsifLabels(p):
 	label2 = TAC.makeLabel()
 	label3 = TAC.makeLabel()
 	p[0] = [label1, label2, label3]
-	TAC.emit('if', p[-2]['place'], 'goto', label1)
+	TAC.emit('if', p[-3]['place'], 'goto', label1)
 	TAC.emit('goto', label2, '', '')
 	TAC.emit('label', label1, '', '')
 
