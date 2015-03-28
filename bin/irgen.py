@@ -963,6 +963,6 @@ infile = sys.argv[1]
 outfile = infile[0:len(infile)-3]
 outfile+=".tac"
 outfile = outfile.split("/")[-1]
-outfile = "output"
+outfile = "output.out"
 sys.stdout = open(outfile,"w")
 TAC.printCode()
