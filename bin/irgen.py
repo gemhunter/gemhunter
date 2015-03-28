@@ -81,7 +81,8 @@ def p_assign_expr1(p):
 		'place' : 'undefined',
 		'type' : 'TYPE_ERROR'
 	}
-	#Check type error in assign_expr
+        if p[3]['type'] == 'TYPE_ERROR':
+                return
 	if p[1]['place'] == None:
 		myPlace = ST.createTemp()
 		ST.addIdentifier(p[1]['idenName'],myPlace,p[3]['type'])
@@ -89,12 +90,16 @@ def p_assign_expr1(p):
 		p[0] = p[3]
 		p[0]['place'] = myPlace
 	else:
-		#TODO
-		#Check if reverse map exists
-		#Check type
-		#Reassign
-		1==1
-		#FU
+                lhsIdentifier = ST.getIdentifier(p[1]['place'])
+                if lhsIdentifier == None:
+                        error('Can not use ' + p[1]['place'] + ' as lhs of an assignment')
+                else:
+                        if ST.getAttribute(lhsIdentifier,'type') != p[3]['type']:
+                                error('Type mismatch in assignment to ' + p[1]['place'] + ' from ' + p[3]['place'])
+                        else:
+                                TAC.emit(p[1]['place'], p[3]['place'], '', '=')
+                                p[0] = p[3]
+                                p[0]['place'] = p[1]['place']
 
 def p_range_expr(p):
 	'''range_expr : l13_expr SEQIN l13_expr
