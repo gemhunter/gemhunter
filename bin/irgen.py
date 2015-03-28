@@ -602,8 +602,30 @@ def p_arg_list_tail(p):
 ##############
 
 def p_if_block(p):
-	'''if_block : KEYWORD_IF expr then_clause compstmt if_tail KEYWORD_end
+	'''if_block : KEYWORD_IF expr then_clause M_if1 compstmt M_if2 if_tail M_if3 KEYWORD_end
 	'''
+
+def p_makeIfLabels(p):
+	''' M_if1 :
+	'''
+	label1 = TAC.makeLabel()
+	label2 = TAC.makeLabel()
+	label3 = TAC.makeLabel()
+	p[0]=[label1,label2,label3]
+	TAC.emit('if', p[-2]['place'], 'goto', label1)
+	TAC.emit('goto', label2, '', '')
+	TAC.emit('label', label1, '', '')
+
+def p_startIfTail(p):
+	''' M_if2 : 
+	'''
+	TAC.emit('goto', p[-2][2], '', '')
+	TAC.emit('label', p[-2][1], '', '')
+
+def p_endIf(p):
+	''' M_if3 :
+	'''
+	TAC.emit('label', p[-4][2], '', '')
 
 def p_then_clause(p):
 	'''then_clause : KEYWORD_THEN
