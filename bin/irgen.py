@@ -644,14 +644,12 @@ def p_makeIfLabels(p):
 	TAC.emit('label', label1, '', '')
 
 def p_startIfTail(p):
-	''' M_if2 : 
-	'''
+	''' M_if2 : '''
 	TAC.emit('goto', p[-2][2], '', '')
 	TAC.emit('label', p[-2][1], '', '')
 
 def p_endIf(p):
-	''' M_if3 :
-	'''
+	''' M_if3 : '''
 	TAC.emit('label', p[-4][2], '', '')
 
 def p_then_clause(p):
@@ -661,9 +659,31 @@ def p_then_clause(p):
 	'''
 
 def p_if_tail(p):
-	'''if_tail : opt_else
-	| KEYWORD_ELSIF expr then_clause compstmt if_tail
+	'''if_tail : opt_else 
 	'''
+
+def p_if_tail_eslif(p):
+	'''if_tail : KEYWORD_ELSIF expr then_clause M_elsif1 compstmt M_elsif2 if_tail M_elsif3
+	'''
+
+def p_makeElsifLabels(p):
+	''' M_elsif1 : '''
+	label1 = TAC.makeLabel()
+	label2 = TAC.makeLabel()
+	label3 = TAC.makeLabel()
+	p[0] = [label1, label2, label3]
+	TAC.emit('if', p[-2]['place'], 'goto', label1)
+	TAC.emit('goto', label2, '', '')
+	TAC.emit('label', label1, '', '')
+
+def p_startElsifTail(p):
+	''' M_elsif2 : '''
+	TAC.emit('goto', p[-2][2], '', '')
+	TAC.emit('label', p[-2][1], '', '')
+
+def p_endElsif(p):
+	''' M_elsif3 : '''
+	TAC.emit('label', p[-4][2], '', '')
 
 def p_opt_else(p):
 	'''opt_else : KEYWORD_ELSE compstmt
@@ -917,8 +937,7 @@ def p_numeric_float(p):
 	}
 
 def p_none(p):
-	'''none : 
-		'''
+	'''none : '''
 
 # Error rule for syntax errors
 def p_error(p):
