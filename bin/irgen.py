@@ -63,12 +63,34 @@ def p_assign_expr2(p):
 		'place' : 'undefined',
 		'type' : 'TYPE_ERROR'
 	}
+        if p[3]['type'] == 'TYPE_ERROR':
+                return
 	if p[1]['place'] == None:
 		error('Use of undeclared variable %s!'%p[1]['idenName'])
 		return
-	#TODO
-	#Check if reverse map is in symbol table
-	#And do whatever happens in +,-,*,/
+        else:
+                lhsIdentifier = ST.getIdentifier(p[1]['place'])
+                if lhsIdentifier == None:
+                        error('Can not use ' + p[1]['place'] + ' as lhs of an assignment')
+                else:
+                        lhsType = ST.getAttribute(lhsIdentifier,'type')
+                        if lhsType != p[3]['type']:
+                                error('Type mismatch in assignment and update to ' + p[1]['place'] + ' from ' + p[3]['place'])
+                        else:
+                                newPlace = ST.createTemp()
+                                if lhsType == 'INT' and p[3]['type'] == 'INT' :
+                                        TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2][0])
+                                        TAC.emit(p[1]['place'], newPlace, '', '=')
+                                        p[0] = p[1]
+                                        p[0]['type'] = 'INT'
+                                elif lhsType == 'FLOAT' and p[3]['type'] == 'FLOAT':
+                                        TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2][0])
+                                        TAC.emit(p[1]['place'], newPlace, '', '=')
+                                        p[0] = p[1]
+                                        p[0]['type'] = 'FLOAT'
+                                else:
+                                        error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
+                                
 
 def p_assign_expr1(p):
 	'''assign_expr1 : lhs '=' assign_expr1
