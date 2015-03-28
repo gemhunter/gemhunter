@@ -10,7 +10,7 @@ class ThreeAddressCode:
 
 	#Add instruction to code list
 	def emit(self,dest, src1, src2, op):
-		self.code.append((dest,src1,src2,op))
+		self.code.append([dest,src1,src2,op])
 		self.quad += 1
 		self.nextQuad += 1
 	

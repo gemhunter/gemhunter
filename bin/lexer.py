@@ -32,7 +32,6 @@ tokens = (
 "INT",
 "FLOAT",
 "CONST",
-"DOL0",
 "NEWLINE"
 )
 
@@ -44,7 +43,6 @@ reserved = {
     'def' : "KEYWORD_DEF",
     'end' : "KEYWORD_END",
     'in' : "KEYWORD_IN",
-    'self' : "KEYWORD_SELF",
     'redo' : "KEYWORD_REDO",
     'super' : "KEYWORD_SUPER",
     'until' : "KEYWORD_UNTIL",
@@ -65,9 +63,6 @@ reserved = {
     'if' : "KEYWORD_IF",
     'return' : "KEYWORD_RETURN",
     'yield' : "KEYWORD_YIELD",
-    '__FILE__' : "KEYWORD_FILE",
-    '__LINE__' : "KEYWORD_LINE",
-    '__ENCODING__' : "KEYWORD_ENCODING",
 }
 
 tokens = tokens + tuple(reserved.values())
@@ -86,7 +81,6 @@ t_RSHIFT = r'>>'
 t_AND = r'\&\&'
 t_OR = r'\|\|'
 t_SEQIN = r'\.\.'
-t_DOL0 = r'\$0'
 
 def t_MULTICOMMENT(t):
     r'(?<=\n)=begin(.*\n)+=end(?=\s)'

@@ -49,12 +49,17 @@ def p_class_defn_stmts(p):
 def p_imp_body_compstmt(p):
 	'''imp_body_compstmt : imp_body_stmts opt_terms
 	'''
+	p[0] = p[1]
 
 def p_imp_body_stmts(p):
 	'''imp_body_stmts : imp_body_stmt
 	| imp_body_stmts lin_terms imp_body_stmt
 	| none
 	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	p[0] = merge_patches(p[1],p[3])
 
 ####################
 #Combined Statments#
@@ -65,12 +70,38 @@ def p_stmt(p):
 	| expr
 	| stmt_imp
 	'''
+	#Check for wrong breaks etc.
+	p[0] = p[1]
+	if p[0].get('breakList') != None:
+		for i in p[0]['breakList']:
+			error('Cannot use break outside loop', i[0])
+	
+	if p[0].get('nextList') != None:
+		for i in p[0]['nextList']:
+			error('Cannot use next outside loop', i[0])
+	
+	if p[0].get('redoList') != None:
+		for i in p[0]['redoList']:
+			error('Cannot use redo outside loop', i[0])
 
 def p_method_defn_stmt(p):
 	'''method_defn_stmt : expr
 	| stmt_imp
 	| stmt_method
 	'''
+	#Check for wrong breaks etc.
+	p[0] = p[1]
+	if p[0].get('breakList') != None:
+		for i in p[0]['breakList']:
+			error('Cannot use break outside loop', i[0])
+	
+	if p[0].get('nextList') != None:
+		for i in p[0]['nextList']:
+			error('Cannot use next outside loop', i[0])
+	
+	if p[0].get('redoList') != None:
+		for i in p[0]['redoList']:
+			error('Cannot use redo outside loop', i[0])
 
 def p_class_defn_stmt(p):
 	'''class_defn_stmt : method_defn
@@ -83,6 +114,7 @@ def p_imp_body_stmt(p):
 	| stmt_imp
 	| stmt_method
 	'''
+	p[0] = p[1]
 
 ###############################
 #Different types of statements#
@@ -95,12 +127,14 @@ def p_stmt_imp(p):
 	| for_block
 	| while_block
 	'''
+	p[0] = p[1]
 
 def p_stmt_method(p):
 	'''stmt_method : KEYWORD_RETURN expr
 	| KEYWORD_YIELD args
 	| KEYWORD_RETURN
 	'''
+	p[0] = {}
 
 def p_stmt_loop(p):
 	'''stmt_loop : KEYWORD_BREAK
@@ -732,7 +766,7 @@ def p_arg_list_tail(p):
 def p_if_block(p):
 	'''if_block : KEYWORD_IF expr M_checkBool then_clause M_if1 imp_body_compstmt M_if2 if_tail M_if3 KEYWORD_END
 	'''
-
+	p[0] = merge_patches(p[6],p[8])
 
 def p_checkBool(p):
 	''' M_checkBool : '''
@@ -766,11 +800,12 @@ def p_then_clause(p):
 
 def p_if_tail(p):
 	'''if_tail : opt_else 
+	|  KEYWORD_ELSIF expr M_checkBool then_clause M_elsif1 imp_body_compstmt M_elsif2 if_tail M_elsif3
 	'''
-
-def p_if_tail_eslif(p):
-	'''if_tail : KEYWORD_ELSIF expr M_checkBool then_clause M_elsif1 imp_body_compstmt M_elsif2 if_tail M_elsif3
-	'''
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	p[0] = merge(p[6],p[8])
 
 def p_makeElsifLabels(p):
 	''' M_elsif1 : '''
@@ -795,6 +830,9 @@ def p_opt_else(p):
 	'''opt_else : KEYWORD_ELSE imp_body_compstmt
 	| none
 	'''
+	p[0] = {}
+	if len(p) > 2:
+		p[0] = p[2]
 
 #################
 #Until and While#
@@ -804,6 +842,26 @@ def p_until_block(p):
 	'''
 	TAC.emit('goto', p[2][0], '', '')
 	TAC.emit('label', p[2][2], '', '')
+	#PatchItBaby
+	p[0] = {}
+	if p[7].get('breakList') != None:
+		instr = []
+		for i in p[7]['breakList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][2])
+	if p[7].get('nextList') != None:
+		instr = []
+		for i in p[7]['nextList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][0])
+	if p[7].get('redoList') != None:
+		instr = []
+		for i in p[7]['redoList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][1])
 
 def p_makeUntilLabels(p):
 	''' M_until1 : '''
@@ -829,6 +887,26 @@ def p_while_block(p):
 	'''
 	TAC.emit('goto', p[2][0], '', '')
 	TAC.emit('label', p[2][2], '', '')
+	#PatchItBaby
+	p[0] = {}
+	if p[7].get('breakList') != None:
+		instr = []
+		for i in p[7]['breakList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][2])
+	if p[7].get('nextList') != None:
+		instr = []
+		for i in p[7]['nextList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][0])
+	if p[7].get('redoList') != None:
+		instr = []
+		for i in p[7]['redoList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][1])
 
 def p_makeWhileLabels(p):
 	''' M_while1 : '''
@@ -846,6 +924,7 @@ def p_outputWhileCondn(p):
 ################
 #Case statement#
 ################
+#TODO pass patchlist
 def p_case_block(p):
 	'''case_block : KEYWORD_CASE expr opt_terms case_body KEYWORD_END
 	'''
@@ -859,6 +938,10 @@ def p_case_clause(p):
 	| case_body
 	'''
 
+###########
+#For Block#
+###########
+#TODO pass patchlist
 def p_for_block(p):
 	'''for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause imp_body_compstmt KEYWORD_END
 	'''
@@ -1064,6 +1147,7 @@ def p_numeric_float(p):
 
 def p_none(p):
 	'''none : '''
+	p[0] = {}
 
 # Error rule for syntax errors
 def p_error(p):
@@ -1086,6 +1170,38 @@ def warning(w):
 		lineNo = currLine
 
 	print colored("WARNING::%d : "%lineNo,'blue'),w
+
+#Merge break, next, redo Patchlists
+def merge_patches(a,b):
+	list1 = a.get('breakList')
+	list2 = b.get('breakList')
+	p = {}
+	if list1 == None and list2 != None:
+		p['breakList'] = list2
+	elif list1 != None and list2 == None:
+		p['breakList'] = list1
+	elif list1 != None and list2 != None:
+		p['breakList'] = list1 + list2
+	
+	list1 = a.get('nextList')
+	list2 = b.get('nextList')
+	if list1 == None and list2 != None:
+		p['nextList'] = list2
+	elif list1 != None and list2 == None:
+		p['nextList'] = list1
+	elif list1 != None and list2 != None:
+		p['nextList'] = list1 + list2
+		
+	list1 = a.get('redoList')
+	list2 = b.get('redoList')
+	if list1 == None and list2 != None:
+		p['redoList'] = list2
+	elif list1 != None and list2 == None:
+		p['redoList'] = list1
+	elif list1 != None and list2 != None:
+		p['redoList'] = list1 + list2
+	
+	return p
 
 #Declare globals
 ST = symbolTable.SymbolTable()
