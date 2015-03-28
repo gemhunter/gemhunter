@@ -65,20 +65,17 @@ def p_stmt(p):
 	| expr
 	| stmt_imp
 	'''
-	p[0] = p[1]
 
 def p_method_defn_stmt(p):
 	'''method_defn_stmt : expr
 	| stmt_imp
 	| stmt_method
 	'''
-	p[0] = p[1]
 
 def p_class_defn_stmt(p):
 	'''class_defn_stmt : method_defn
 	| expr
 	'''
-	p[0] = p[1]
 
 def p_imp_body_stmt(p):
 	'''imp_body_stmt : stmt_loop
@@ -86,7 +83,6 @@ def p_imp_body_stmt(p):
 	| stmt_imp
 	| stmt_method
 	'''
-	p[0] = p[1]
 
 ###############################
 #Different types of statements#
@@ -99,7 +95,6 @@ def p_stmt_imp(p):
 	| for_block
 	| while_block
         '''
-    p[0] = p[1]
 
 def p_stmt_method(p):
 	'''stmt_method : KEYWORD_RETURN expr
@@ -678,7 +673,6 @@ def p_method_call(p):
 	| KEYWORD_SUPER
 	| KEYWORD_SUPER args
 	'''
-	#TODO - compstmt
 
 ###################
 #lhs of expression#
@@ -881,6 +875,9 @@ def p_opt_inheritance(p):
 	| '<' primary_expr
 	'''
 
+###################
+#Method Definition#
+###################
 def p_method_defn(p):
 	'''method_defn : KEYWORD_DEF method_var method_params lin_term method_defn_compstmt KEYWORD_END
 	'''
@@ -1000,14 +997,6 @@ def p_user_var(p):
 ##################
 #Keyword Literals#
 ##################
-#TODO
-def p_key_var(p):
-	'''key_var : KEYWORD_SELF 
-	| KEYWORD_FILE 
-	| KEYWORD_LINE 
-	| KEYWORD_ENCODING
-	| DOL0
-	'''
 
 def p_key_var_NIL(p):
 	'''key_var : KEYWORD_NIL 
