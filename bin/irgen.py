@@ -19,7 +19,7 @@ def p_program(p):
 def p_compstmt(p):
 	'''compstmt : stmts opt_terms
 	'''
-	
+
 def p_stmts(p):
 	'''stmts : stmt
 	| stmts lin_terms stmt
@@ -89,12 +89,12 @@ def p_imp_body_stmt(p):
 ###############################
 
 def p_stmt_imp(p):
-    '''stmt_imp :  if_block
+	'''stmt_imp :  if_block
 	| until_block
 	| case_block
 	| for_block
 	| while_block
-        '''
+	'''
 
 def p_stmt_method(p):
 	'''stmt_method : KEYWORD_RETURN expr
@@ -1077,12 +1077,14 @@ def error(e, lineNo=-1):
 	global success
 	if lineNo == -1:
 		lineNo = currLine
+
 	print colored("ERROR::%d : "%lineNo,'red'),e
 	success = 0
 
 def warning(w):
 	if lineNo == -1:
 		lineNo = currLine
+
 	print colored("WARNING::%d : "%lineNo,'blue'),w
 
 #Declare globals
