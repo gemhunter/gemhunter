@@ -5,14 +5,9 @@ class SymbolTable:
 		self.symbolTable = {
 			'main' : {
 				'name' : 'main',
+				'type' : 'main',
 				'parent' : None,
-				'identifiers' : {}
-			}
-		}
-		self.storedPlaces = {
-			'main' : {
-				'name' : 'main',
-				'parent' : None,
+				'identifiers' : {},
 				'places' : {}
 			}
 		}
@@ -20,6 +15,10 @@ class SymbolTable:
 		#For temporaries
 		self.tempBase = "t"
 		self.tempNo = -1
+		self.blockBase = "b"
+		self.blockNo = -1
+		self.funcBase = "f"
+		self.funcNo = -1
 		#Sizes
 		self.wordSize = 4
 		self.addressSize = 4
@@ -40,32 +39,24 @@ class SymbolTable:
 				'type' : idenType,
 				'size' : idenSize
 			}
-			self.storedPlaces[self.currentScope]['places'][place] = idenName
+			self.symbolTable[self.currentScope]['places'][place] = idenName
 	
-	#Return the identifier corresponding to place
+	#Return the identifier corresponding to place (None if it doesn't exist)
 	def getIdentifier(self, place):
-		if place in self.storedPlaces[self.currentScope]['places']:
-			return self.storedPlaces[self.currentScope]['places'][place]
-		else:
-			return None
+		return self.symbolTable[self.currentScope]['places'].get(place)
 
 	#Returns a boolean indicating presence of identifier in current scope 
 	def lookupIdentifier(self, idenName):
 		return idenName in self.symbolTable[self.currentScope]['identifiers']
 
-	#Returns all the attributes of idenName
+	#Returns all the attributes of idenName ( None if they don't exist)
 	def getIdentifierAttributes(self, idenName):
-		if idenName in self.symbolTable[self.currentScope]['identifiers']:
-			return self.symbolTable[self.currentScope]['identifiers'][idenName]
-		return None
+		return self.symbolTable[self.currentScope]['identifiers'].get(idenName)
 
-	#Returns the asked attribute of idenName
+	#Returns the asked attribute of idenName (None if idenName doesn't exist or attr doesn't exist)
 	def getAttribute(self, idenName, attrName):
 		if idenName in self.symbolTable[self.currentScope]['identifiers']:
-			if attrName in self.symbolTable[self.currentScope]['identifiers'][idenName]:
-				return  self.symbolTable[self.currentScope]['identifiers'][idenName][attrName]
-			else:
-				return None
+			return  self.symbolTable[self.currentScope]['identifiers'][idenName].get(attrName)
 		else:
 			return None
 

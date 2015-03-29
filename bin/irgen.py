@@ -805,7 +805,7 @@ def p_if_tail(p):
 	if len(p) == 2:
 		p[0] = p[1]
 		return
-	p[0] = merge(p[6],p[8])
+	p[0] = merge_patches(p[6],p[8])
 
 def p_makeElsifLabels(p):
 	''' M_elsif1 : '''
