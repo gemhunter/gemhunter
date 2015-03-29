@@ -45,7 +45,8 @@ class SymbolTable:
 
 		if idenName[0] == '$':
 			#Global Scope. Add in main
-			if idenName not in self.symbolTable['main']['identifiers']:
+			scope = self.lookUpScope(idenName)
+			if scope == None:
 				self.symbolTable['main']['identifiers'][idenName] = {
 						'place' : place,
 						'type' : idenType,
@@ -53,17 +54,9 @@ class SymbolTable:
 						}
 				self.symbolTable['main']['places'][place] = idenName
 		else :
-			#Local Scope! Search till parent is method or main
-			exists = False
-			scope = self.currentScope
-			while self.symbolTable[scope]['type'] not in ['main', 'method']:
-				if idenName in self.symbolTable[scope]['identifiers']:
-					exists = True
-
-			if idenName in self.symbolTable[scope]['identifiers']:
-				exists = True
-
-			if exists == False:
+			#Local Scope! Add in current scope
+			scope = self.lookUpScope(idenName)
+			if scope == None:
 				self.symbolTable[self.currentScope]['identifiers'][idenName] = {
 						'place' : place,
 						'type' : idenType,
@@ -120,3 +113,25 @@ class SymbolTable:
 	def createBlockName(self):
 		self.blockNo += 1
 		return self.blockBase + str(self.blockNo)
+
+	#Tells the scope according to variable type
+	#If it doesn't exist, returns None
+	def lookUpScope(self, idenName):
+		if idenName[0] == '$' :
+			#Search for global variable in main
+			if idenName in self.symbolTable['main']['identifiers'] :
+				return 'main'
+			else:
+				return None
+		elif idenName[0] != '@' and not idenName[0].isupper():
+			#Local variable
+			#Search till you find method/main
+			scope = self.currentScope
+			while self.symbolTable[scope]['type'] not in ['main', 'method']:
+				if idenName in self.symbolTable[scope]['identifiers']:
+					return scope
+
+			if idenName in self.symbolTable[scope]['identifiers']:
+				return scope
+
+			return None
