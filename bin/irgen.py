@@ -177,7 +177,7 @@ def p_assign_expr2(p):
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
         if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
-                error('Can\'t use non-class variables in a class')
+                error('Can\'t assign to non-class variables in a class')
                 return
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
                 error('Can\'t use class variables outside a class')
@@ -222,7 +222,7 @@ def p_assign_expr1(p):
 		return
 
         if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
-                error('Can\'t use non-class variables in a class')
+                error('Can\'t assign to non-class variables in a class')
                 return
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
                 error('Can\'t use class variables outside a class')
