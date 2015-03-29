@@ -40,6 +40,8 @@ literals = "+-*/%><=&|^!~?.:,(){}[];"
 
 # tokens for reserved keywords of ruby
 reserved = {
+    'Array' : "KEYWORD_ARRAY", 
+    'Range' : "KEYWORD_RANGE",
     'def' : "KEYWORD_DEF",
     'end' : "KEYWORD_END",
     'in' : "KEYWORD_IN",

@@ -1000,29 +1000,28 @@ def p_opt_inheritance(p):
 def p_method_defn(p):
 	'''method_defn : KEYWORD_DEF method_var method_params lin_term method_defn_compstmt KEYWORD_END
 	'''
+        p[0]={}
 
 def p_method_params(p):
 	'''method_params : none 
-	| '(' param_list  ')'
-	'''
-
-def p_param_list(p):
-	'''param_list : none
-	| non_empty_param_list
+        | '(' ')'
+	| '(' non_empty_param_list  ')'
 	'''
 
 def p_non_empty_param_list(p):
-	'''non_empty_param_list : LOCALVAR
-	| LOCALVAR '=' expr ',' optional_param_list_tail
-	| LOCALVAR '=' expr
-	| LOCALVAR ',' non_empty_param_list
+	'''non_empty_param_list : type_param LOCALVAR
+	| type_param LOCALVAR ',' non_empty_param_list
 	'''
 
-def p_optional_param_list_tail(p):
-	'''optional_param_list_tail : LOCALVAR '=' expr
-	| optional_param_list_tail ',' LOCALVAR '=' expr
-	'''
+def p_type_param(p):
+        '''type_param : CONST
+        | KEYWORD_ARRAY  '(' type_param ',' INT ')'
+        | KEYWORD_RANGE '(' INT ',' INT ')'
+        '''
 
+##################
+#Block parameters#
+##################
 def p_block_param_list(p):
 	'''block_param_list : none
 	| LOCALVAR
