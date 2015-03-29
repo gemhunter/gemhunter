@@ -5,3 +5,4 @@
 ./irgen.py ifCode.rb
 ./irgen.py tryCode.rb
 ./irgen.py classCode.rb
+./irgen.py methodCode.rb
