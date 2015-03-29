@@ -9,6 +9,7 @@ until a >= 20
                 c = 'h'
 		break
 	end
+        c=0.7
 end
 a = $a
 c = 2
