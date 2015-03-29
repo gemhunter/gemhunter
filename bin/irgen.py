@@ -182,6 +182,7 @@ def p_assign_expr2(p):
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
                 error('Can\'t use class variables outside a class')
                 return
+
         if not ST.lookupIdentifier(p[1]['idenName']):
                 error('Use of undeclared variable %s!'%p[1]['idenName'])
 		return
@@ -670,6 +671,10 @@ def p_primary_expr_primitive_variable(p):
 		'place' : 'undefined',
 		'type' : 'TYPE_ERROR'
 	}
+        if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
+                error('Can\'t use class variables outside a class')
+                return
+
 	if ST.lookupIdentifier(p[1]['idenName']) :
 		p[0]['place'] = ST.getAttribute(p[1]['idenName'],'place')
 		p[0]['type'] = ST.getAttribute(p[1]['idenName'],'type')
