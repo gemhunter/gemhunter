@@ -841,7 +841,6 @@ def p_until_block(p):
 	'''
 	TAC.emit('goto', p[2][0], '', '')
 	TAC.emit('label', p[2][2], '', '')
-	#PatchItBaby
 	p[0] = {}
 	if p[7].get('breakList') != None:
 		instr = []
@@ -869,11 +868,13 @@ def p_makeUntilLabels(p):
 	doneLabel = TAC.makeLabel()
 	p[0] = [startLabel, bodyLabel, doneLabel]
 	TAC.emit('label', startLabel, '', '')
+        ST.addBlock()
 
 def p_outputUntilCondn(p):
 	''' M_until2 : '''
 	TAC.emit('if', p[-2]['place'], 'goto', p[-3][2])
 	TAC.emit('label', p[-3][1],'', '')
+        ST.endBlock()
 
 def p_do_clause(p):
 	'''do_clause : lin_term
@@ -886,7 +887,6 @@ def p_while_block(p):
 	'''
 	TAC.emit('goto', p[2][0], '', '')
 	TAC.emit('label', p[2][2], '', '')
-	#PatchItBaby
 	p[0] = {}
 	if p[7].get('breakList') != None:
 		instr = []
@@ -914,11 +914,13 @@ def p_makeWhileLabels(p):
 	doneLabel = TAC.makeLabel()
 	p[0] = [startLabel, bodyLabel, doneLabel]
 	TAC.emit('label', startLabel, '', '')
+        ST.addBlock()
 
 def p_outputWhileCondn(p):
 	''' M_while2 : '''
 	TAC.emit('ifnot', p[-2]['place'], 'goto', p[-3][2])
 	TAC.emit('label', p[-3][1],'', '')
+        ST.endBlock()
 
 ################
 #Case statement#
