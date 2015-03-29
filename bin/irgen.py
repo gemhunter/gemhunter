@@ -176,6 +176,12 @@ def p_assign_expr2(p):
 	}
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
+        if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
+                error('Can\'t use non-class variables in a class')
+                return
+        if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
+                error('Can\'t use class variables outside a class')
+                return
         if not ST.lookupIdentifier(p[1]['idenName']):
                 error('Use of undeclared variable %s!'%p[1]['idenName'])
 		return
@@ -213,6 +219,14 @@ def p_assign_expr1(p):
 	}
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
+
+        if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
+                error('Can\'t use non-class variables in a class')
+                return
+        if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
+                error('Can\'t use class variables outside a class')
+                return
+                        
         if not ST.lookupIdentifier(p[1]['idenName']):
                 myPlace = ST.createTemp()
 		ST.addIdentifier(p[1]['idenName'],myPlace,p[3]['type'])
@@ -953,14 +967,28 @@ def p_for_block(p):
 #Class Definition#
 ##################
 def p_class_defn(p):
-	'''class_defn : KEYWORD_CLASS CONST opt_inheritance lin_term class_defn_compstmt KEYWORD_END
+	'''class_defn : KEYWORD_CLASS CONST opt_inheritance M_class1 lin_term class_defn_compstmt KEYWORD_END
 	'''
+        p[0] = {}
+        ST.endClass(p[2])
+
+def p_startClass(p):
+        ''' M_class1 : '''
+        if p[-1]==None:
+                ST.addClass(p[-2])
+        else:
+                if not ST.classExists(p[-1]):
+                        error('Class ' + p[-1] + ' does not exist')
+                        return
+                ST.addClass(p[-2],p[-1])
 
 def p_opt_inheritance(p):
 	'''opt_inheritance : none
-	| '<' primary_expr
+	| '<' CONST
 	'''
-
+        if len(p)>2:
+                p[0] = p[2]
+        
 ###################
 #Method Definition#
 ###################

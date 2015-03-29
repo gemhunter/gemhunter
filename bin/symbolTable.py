@@ -23,6 +23,7 @@ class SymbolTable:
 		self.wordSize = 4
 		self.addressSize = 4
 
+        #Functions to manipulate (add/end) scope blocks
 	def addBlock(self):
 		bName = self.createBlockName()
 		self.symbolTable[bName] = {
@@ -36,6 +37,29 @@ class SymbolTable:
 
 	def endBlock(self):
 		self.currentScope = self.symbolTable[self.currentScope]['parent']
+
+        #Functions to work with classes
+        def addClass(self,className,parent = 'main'):
+		self.symbolTable[className] = {
+				'name' : className,
+				'type' : 'class',
+				'parent' : parent,
+				'identifiers' : {},
+				'places' : {}
+				}
+		self.currentScope = className
+        
+        def endClass(self,className):
+                self.currentScope = 'main'
+
+        def currentlyInAClass(self):
+                return self.symbolTable[self.currentScope]['type']=='class'
+
+        def classExists(self,className):
+                for block in self.symbolTable:
+                        if self.symbolTable[block]['type']=='class' and self.symbolTable[block]['name']==className:
+                                return True
+                return False
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
@@ -53,8 +77,9 @@ class SymbolTable:
 						'size' : idenSize
 						}
 				self.symbolTable['main']['places'][place] = idenName
-		else : #DS - update else condition to match that of lookUpScope
-			#Local Scope! Add in current scope
+		else: 
+                        #idenName[0] != '@' and not idenName[0].isupper()  -> Local Scope! Add in current scope
+                        #idenName[:2] == '@@' -> Can be a class variable too
 			scope = self.lookUpScope(idenName)
 			if scope == None:
 				self.symbolTable[self.currentScope]['identifiers'][idenName] = {
@@ -139,3 +164,11 @@ class SymbolTable:
 				return scope
 
 			return None
+                
+                elif idenName[:2] == '@@':
+                        assert(self.currentlyInAClass())
+                        if idenName in self.symbolTable[self.currentScope]['identifiers']:
+                                return self.currentScope
+                        else:
+                                return None
+
