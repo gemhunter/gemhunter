@@ -70,18 +70,24 @@ class SymbolTable:
 
 	#Returns all the attributes of idenName ( None if they don't exist)
 	def getIdentifierAttributes(self, idenName):
-		return self.symbolTable[self.lookUpScope(idenName)]['identifiers'].get(idenName)
+                idenScope = self.lookUpScope(idenName)
+		if idenScope == None:
+                        return None
+                else:
+                        return self.symbolTable[idenScope]['identifiers'].get(idenName)
 
 	#Returns the asked attribute of idenName (None if idenName doesn't exist or attr doesn't exist)
 	def getAttribute(self, idenName, attrName):
-		if idenName in self.symbolTable[self.lookUpScope(idenName)]['identifiers']:
-			return  self.symbolTable[self.lookUpScope(idenName)]['identifiers'][idenName].get(attrName)
+                idenScope = self.lookUpScope(idenName)
+                if idenScope != None:
+			return  self.symbolTable[idenScope]['identifiers'][idenName].get(attrName)
 		else:
 			return None
 
 	#Adds attribute to the identifier idenName in the symbol table
 	def addAttribute(self, idenName, attrName, attrVal):
-		if idenName in self.symbolTable[self.lookUpScope(idenName)]['identifiers']:
+                idenScope = self.lookUpScope(idenName)
+		if idenScope != None:
 			self.symbolTable[self.lookUpScope(idenName)]['identifiers'][idenName][attrName] = attrVal
 			return 1
 		else:
