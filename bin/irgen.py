@@ -769,11 +769,13 @@ def p_makeIfLabels(p):
 	TAC.emit('if', p[-3]['place'], 'goto', label1)
 	TAC.emit('goto', label2, '', '')
 	TAC.emit('label', label1, '', '')
+        ST.addBlock()
 
 def p_startIfTail(p):
 	''' M_if2 : '''
 	TAC.emit('goto', p[-2][2], '', '')
 	TAC.emit('label', p[-2][1], '', '')
+        ST.endBlock()
 
 def p_endIf(p):
 	''' M_if3 : '''
@@ -803,23 +805,33 @@ def p_makeElsifLabels(p):
 	TAC.emit('if', p[-3]['place'], 'goto', label1)
 	TAC.emit('goto', label2, '', '')
 	TAC.emit('label', label1, '', '')
+        ST.addBlock()
 
 def p_startElsifTail(p):
 	''' M_elsif2 : '''
 	TAC.emit('goto', p[-2][2], '', '')
 	TAC.emit('label', p[-2][1], '', '')
+        ST.endBlock()
 
 def p_endElsif(p):
 	''' M_elsif3 : '''
 	TAC.emit('label', p[-4][2], '', '')
 
 def p_opt_else(p):
-	'''opt_else : KEYWORD_ELSE imp_body_compstmt
+	'''opt_else : KEYWORD_ELSE M_else1 imp_body_compstmt M_else2
 	| none
 	'''
 	p[0] = {}
 	if len(p) > 2:
-		p[0] = p[2]
+		p[0] = p[3]
+
+def p_startElse(p):
+        ''' M_else1 : '''
+        ST.addBlock()
+
+def p_endElse(p):
+        ''' M_else2 : '''
+        ST.endBlock()
 
 #################
 #Until and While#

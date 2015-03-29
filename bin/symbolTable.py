@@ -28,14 +28,14 @@ class SymbolTable:
 		self.symbolTable[bName] = {
 				'name' : bName,
 				'type' : 'block',
-				'parent' : currentScope,
+				'parent' : self.currentScope,
 				'identifiers' : {},
 				'places' : {}
 				}
-		currentScope = bName
+		self.currentScope = bName
 
 	def endBlock(self):
-		currentScope = self.symbolTable[currentScope]['parent']
+		self.currentScope = self.symbolTable[self.currentScope]['parent']
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
