@@ -839,6 +839,8 @@ def p_endElse(p):
 def p_until_block(p):
 	'''until_block : KEYWORD_UNTIL M_until1 expr M_checkBool M_until2 do_clause imp_body_compstmt KEYWORD_END
 	'''
+        #Ending the scope of the until body
+        ST.endBlock()
 	TAC.emit('goto', p[2][0], '', '')
 	TAC.emit('label', p[2][2], '', '')
 	p[0] = {}
@@ -868,13 +870,12 @@ def p_makeUntilLabels(p):
 	doneLabel = TAC.makeLabel()
 	p[0] = [startLabel, bodyLabel, doneLabel]
 	TAC.emit('label', startLabel, '', '')
-        ST.addBlock()
 
 def p_outputUntilCondn(p):
 	''' M_until2 : '''
 	TAC.emit('if', p[-2]['place'], 'goto', p[-3][2])
 	TAC.emit('label', p[-3][1],'', '')
-        ST.endBlock()
+        ST.addBlock()
 
 def p_do_clause(p):
 	'''do_clause : lin_term
@@ -885,6 +886,8 @@ def p_do_clause(p):
 def p_while_block(p):
 	'''while_block : KEYWORD_WHILE M_while1 expr M_checkBool M_while2 do_clause imp_body_compstmt KEYWORD_END
 	'''
+        #Ending the block of while body
+        ST.endBlock()
 	TAC.emit('goto', p[2][0], '', '')
 	TAC.emit('label', p[2][2], '', '')
 	p[0] = {}
@@ -914,13 +917,12 @@ def p_makeWhileLabels(p):
 	doneLabel = TAC.makeLabel()
 	p[0] = [startLabel, bodyLabel, doneLabel]
 	TAC.emit('label', startLabel, '', '')
-        ST.addBlock()
 
 def p_outputWhileCondn(p):
 	''' M_while2 : '''
 	TAC.emit('ifnot', p[-2]['place'], 'goto', p[-3][2])
 	TAC.emit('label', p[-3][1],'', '')
-        ST.endBlock()
+        ST.addBlock()
 
 ################
 #Case statement#
