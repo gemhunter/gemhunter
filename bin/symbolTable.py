@@ -123,6 +123,7 @@ class SymbolTable:
 				return 'main'
 			else:
 				return None
+		
 		elif idenName[0] != '@' and not idenName[0].isupper():
 			#Local variable
 			#Search till you find method/main
@@ -130,6 +131,7 @@ class SymbolTable:
 			while self.symbolTable[scope]['type'] not in ['main', 'method']:
 				if idenName in self.symbolTable[scope]['identifiers']:
 					return scope
+				scope = self.symbolTable[scope]['parent']
 
 			if idenName in self.symbolTable[scope]['identifiers']:
 				return scope
