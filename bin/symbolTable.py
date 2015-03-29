@@ -53,7 +53,7 @@ class SymbolTable:
 						'size' : idenSize
 						}
 				self.symbolTable['main']['places'][place] = idenName
-		else :
+		else : #DS - update else condition to match that of lookUpScope
 			#Local Scope! Add in current scope
 			scope = self.lookUpScope(idenName)
 			if scope == None:
@@ -64,29 +64,25 @@ class SymbolTable:
 						}
 				self.symbolTable[self.currentScope]['places'][place] = idenName
 
-	#Return the identifier corresponding to place (None if it doesn't exist)
-	def getIdentifier(self, place):
-		return self.symbolTable[self.currentScope]['places'].get(place)
-
-	#Returns a boolean indicating presence of identifier in current scope 
+	#Returns a boolean indicating presence of identifier 
 	def lookupIdentifier(self, idenName):
-		return idenName in self.symbolTable[self.currentScope]['identifiers']
+                return self.lookUpScope(idenName) != None
 
 	#Returns all the attributes of idenName ( None if they don't exist)
 	def getIdentifierAttributes(self, idenName):
-		return self.symbolTable[self.currentScope]['identifiers'].get(idenName)
+		return self.symbolTable[self.lookUpScope(idenName)]['identifiers'].get(idenName)
 
 	#Returns the asked attribute of idenName (None if idenName doesn't exist or attr doesn't exist)
 	def getAttribute(self, idenName, attrName):
-		if idenName in self.symbolTable[self.currentScope]['identifiers']:
-			return  self.symbolTable[self.currentScope]['identifiers'][idenName].get(attrName)
+		if idenName in self.symbolTable[self.lookUpScope(idenName)]['identifiers']:
+			return  self.symbolTable[self.lookUpScope(idenName)]['identifiers'][idenName].get(attrName)
 		else:
 			return None
 
-	#Adds attribute to idenName in currentScope
+	#Adds attribute to the identifier idenName in the symbol table
 	def addAttribute(self, idenName, attrName, attrVal):
-		if idenName in self.symbolTable[self.currentScope]['identifiers']:
-			self.symbolTable[self.currentScope]['identifiers'][idenName][attrName] = attrVal
+		if idenName in self.symbolTable[self.lookUpScope(idenName)]['identifiers']:
+			self.symbolTable[self.lookUpScope(idenName)]['identifiers'][idenName][attrName] = attrVal
 			return 1
 		else:
 			return 0

@@ -176,32 +176,29 @@ def p_assign_expr2(p):
 	}
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
-	if p[1]['place'] == None:
-		error('Use of undeclared variable %s!'%p[1]['idenName'])
+        if not ST.lookupIdentifier(p[1]['idenName']):
+                error('Use of undeclared variable %s!'%p[1]['idenName'])
 		return
 	else:
-		lhsIdentifier = ST.getIdentifier(p[1]['place'])
-		if lhsIdentifier == None:
-			error('Can not use ' + p[1]['place'] + ' as lhs of an assignment')
+		lhsIdentifier = p[1]['idenName']
+                lhsType = ST.getAttribute(lhsIdentifier,'type')
+                lhsPlace = ST.getAttribute(lhsIdentifier,'place')
+                if lhsType != p[3]['type']:
+			error('Type mismatch in assignment and update to ' + p[1]['place'] + ' from ' + p[3]['place'])
 		else:
-			lhsType = ST.getAttribute(lhsIdentifier,'type')
-			if lhsType != p[3]['type']:
-				error('Type mismatch in assignment and update to ' + p[1]['place'] + ' from ' + p[3]['place'])
+			newPlace = ST.createTemp()
+			if lhsType == 'INT' and p[3]['type'] == 'INT' :
+				TAC.emit(newPlace,lhsPlace,p[3]['place'],p[2][0])
+				TAC.emit(lhsPlace, newPlace, '', '=')
+				p[0] = p[1]
+				p[0]['type'] = 'INT'
+			elif lhsType == 'FLOAT' and p[3]['type'] == 'FLOAT':
+				TAC.emit(newPlace,lhsPlace,p[3]['place'],p[2][0])
+				TAC.emit(lhsPlace, newPlace, '', '=')
+				p[0] = p[1]
+				p[0]['type'] = 'FLOAT'
 			else:
-				newPlace = ST.createTemp()
-				if lhsType == 'INT' and p[3]['type'] == 'INT' :
-					TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2][0])
-					TAC.emit(p[1]['place'], newPlace, '', '=')
-					p[0] = p[1]
-					p[0]['type'] = 'INT'
-				elif lhsType == 'FLOAT' and p[3]['type'] == 'FLOAT':
-					TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2][0])
-					TAC.emit(p[1]['place'], newPlace, '', '=')
-					p[0] = p[1]
-					p[0]['type'] = 'FLOAT'
-				else:
-					error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
-
+				error('Type Error (Expected floats or integers) '+lhsPlace+','+p[3]['place']+'!')
 
 def p_assign_expr1(p):
 	'''assign_expr1 : lhs '=' assign_expr1
@@ -216,23 +213,22 @@ def p_assign_expr1(p):
 	}
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
-	if p[1]['place'] == None:
-		myPlace = ST.createTemp()
+        if not ST.lookupIdentifier(p[1]['idenName']):
+                myPlace = ST.createTemp()
 		ST.addIdentifier(p[1]['idenName'],myPlace,p[3]['type'])
 		TAC.emit(myPlace, p[3]['place'], '', '=')
 		p[0] = p[3]
 		p[0]['place'] = myPlace
-	else:
-		lhsIdentifier = ST.getIdentifier(p[1]['place'])
-		if lhsIdentifier == None:
-			error('Can not use ' + p[1]['place'] + ' as lhs of an assignment')
+        else:
+                lhsIdentifier = p[1]['idenName']
+                lhsPlace = ST.getAttribute(lhsIdentifier,'place')
+		if ST.getAttribute(lhsIdentifier,'type') != p[3]['type']:
+			error('Type mismatch in assignment to ' + lhsPlace + ' from ' + p[3]['place'])
 		else:
-			if ST.getAttribute(lhsIdentifier,'type') != p[3]['type']:
-				error('Type mismatch in assignment to ' + p[1]['place'] + ' from ' + p[3]['place'])
-			else:
-				TAC.emit(p[1]['place'], p[3]['place'], '', '=')
-				p[0] = p[3]
-				p[0]['place'] = p[1]['place']
+			TAC.emit(lhsPlace, p[3]['place'], '', '=')
+			p[0] = p[3]
+			p[0]['place'] = lhsPlace
+
 
 def p_range_expr(p):
 	'''range_expr : l13_expr SEQIN l13_expr
@@ -714,16 +710,7 @@ def p_method_call(p):
 def p_lhs_var(p):
 	'''lhs : user_var
 	'''
-	myPlace = ST.getAttribute(p[1]['idenName'],'place')
-	if myPlace != None:
-		p[0] = {
-			'place' : myPlace
-		}
-	else:
-		p[0] = {
-			'place' : None,
-			'idenName' : p[1]['idenName']
-		}
+        p[0]=p[1]
 
 #TODO
 def p_lhs_dot(p):
