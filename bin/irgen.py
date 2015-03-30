@@ -710,32 +710,41 @@ def p_primary_expr_primitive_literals(p):
 		'type' : p[1]['type']
 	}
 
-#TODO
+def p_primary_expr_bracket(p):
+	''' primary_expr : '(' expr ')' '''
+	p[0] = p[2]
+
+#TODO Arrays, object-var lookup
 def p_primary_expr(p):
-	''' primary_expr : '(' expr ')'
-	| '[' arg_list ']'
+	''' primary_expr : '[' arg_list ']'
 	| primary_expr '[' expr ']'
 	| primary_expr '.' LOCALVAR
-	| primary_expr '.' CONST
 	'''
-	if p[1] == '(':
-		p[0] = p[2]
 
-#TODO
 def p_primary_expr_method_call(p):
-	''' primary_expr : method_call
-	'''
+	''' primary_expr : method_call'''
+	p[0] = p[1]
 
 ###################
 #Method Invocation#
 ###################
-#TODO - compstmt
 def p_method_call(p):
+	#Should return type, place
 	''' method_call : primary_expr '.'  method args
 	| method args
-	| primary_expr '.' method_var '{' '|' block_param_list '|' compstmt '}' 
+	'''
+
+#TODO - figure out what compstmt should be
+#TODO - implement yield
+def p_method_callBlock(p):
+	''' method_call : primary_expr '.' method_var '{' '|' block_param_list '|' compstmt '}' 
 	| method_var '{' '|' block_param_list '|' compstmt '}' 
-	| KEYWORD_SUPER
+	'''
+
+#TODO
+def p_method_super(p):
+	#Should return type, place
+	'''method_call : KEYWORD_SUPER
 	| KEYWORD_SUPER args
 	'''
 
@@ -767,12 +776,12 @@ def p_args(p):
 
 def p_arg_list(p):
 	'''arg_list : none
-	| expr ',' arg_list_tail
 	| expr
+	| expr ',' arg_list_tail
 	'''
 
 def p_non_empty_arg_list(p):
-	'''non_empty_arg_list : expr 	
+	'''non_empty_arg_list : expr    
 	| expr ',' arg_list_tail
 	'''
 
@@ -1176,10 +1185,8 @@ def p_op_order(p):
 #Method Variables#
 ##################
 def p_method(p):
-	'''method : method_var
-	| KEYWORD_CLASS
-	| KEYWORD_NEXT
-	'''
+	'''method : method_var'''
+	p[0] = p[1]
 
 def p_method_var(p):
 	'''method_var : LOCALVAR
