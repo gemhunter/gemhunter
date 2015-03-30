@@ -6,3 +6,6 @@ objects
 constants
 yield / blocks
 super
+putint/ getint
+optimizations
+type casting
