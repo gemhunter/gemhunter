@@ -139,7 +139,7 @@ def p_stmt_imp(p):
 
 def p_stmt_method(p):
 	'''stmt_method : KEYWORD_RETURN expr
-	| KEYWORD_YIELD args
+	| KEYWORD_YIELD '(' arg_list ')'
 	| KEYWORD_RETURN
 	'''
 	#Pass the return argument above
@@ -730,8 +730,8 @@ def p_primary_expr_method_call(p):
 ###################
 def p_method_call(p):
 	#Should return type, place
-	''' method_call : primary_expr '.'  method args
-	| method args
+	''' method_call : primary_expr '.'  method '(' arg_list ')'
+	| method '(' arg_list ')'
 	'''
 
 #TODO - figure out what compstmt should be
@@ -745,7 +745,7 @@ def p_method_callBlock(p):
 def p_method_super(p):
 	#Should return type, place
 	'''method_call : KEYWORD_SUPER
-	| KEYWORD_SUPER args
+	| KEYWORD_SUPER '(' arg_list ')'
 	'''
 
 ###################
@@ -770,9 +770,6 @@ def p_lhs_array(p):
 ###########
 #Arguments#
 ###########
-def p_args(p):
-	'''args :  '(' arg_list ')'
-	'''
 
 def p_arg_list(p):
 	'''arg_list : none
