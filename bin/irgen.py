@@ -1034,6 +1034,10 @@ def p_method_defn(p):
 		error('Function (%s) should have a return statement!'%p[2])
 	else:
 		ST.setRetType(p[6]['retType'])
+	#Add a default return statement ( For security )
+	newPlace = ST.createTemp()
+	TAC.emit(newPlace, 'nil', '', '=')
+	TAC.emit('return', newPlace, '', '')
 	ST.endMethod()
 	TAC.emit('label', p[4], '', '')
 
