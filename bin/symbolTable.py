@@ -56,10 +56,17 @@ class SymbolTable:
                 return self.symbolTable[self.currentScope]['type']=='class'
 
         def classExists(self,className):
-                for block in self.symbolTable:
-                        if self.symbolTable[block]['type']=='class' and self.symbolTable[block]['name']==className:
-                                return True
-                return False
+		if self.symbolTable.get(className) == None:
+			return False
+		else:
+			return self.symbolTable[className]['type'] == 'class'
+
+	#Functions to work with functions
+	def addFunction(self, fnName):
+		fnName = self.currentScope + '_' + fnName
+		self.symbolTable[fnName] = {
+				}
+		self.currentScope = fnName
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
@@ -93,7 +100,7 @@ class SymbolTable:
 	def lookupIdentifier(self, idenName):
                 return self.lookUpScope(idenName) != None
 
-	#Returns all the attributes of idenName ( None if they don't exist)
+	#Returns all the attributes of idenName ( None if they don't exist )
 	def getIdentifierAttributes(self, idenName):
                 idenScope = self.lookUpScope(idenName)
 		if idenScope == None:
@@ -153,9 +160,11 @@ class SymbolTable:
 		
 		elif idenName[0] != '@' and not idenName[0].isupper():
 			#Local variable
-			#Search till you find method/main
+			#Can be a variable or a method
+			#Note that for method currentScope is either main or class
+			#Search till you find method/main/class
 			scope = self.currentScope
-			while self.symbolTable[scope]['type'] not in ['main', 'method']:
+			while self.symbolTable[scope]['type'] not in ['main', 'method', 'class']:
 				if idenName in self.symbolTable[scope]['identifiers']:
 					return scope
 				scope = self.symbolTable[scope]['parent']

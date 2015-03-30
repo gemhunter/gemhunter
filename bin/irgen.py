@@ -979,6 +979,9 @@ def p_class_defn(p):
 
 def p_startClass(p):
         ''' M_class1 : '''
+	if ST.classExists(p[-2]):
+		error('Cannot redeclare a class! (' + p[-2] + ')')
+		return
         if p[-1]==None:
                 ST.addClass(p[-2])
         else:
@@ -998,24 +1001,41 @@ def p_opt_inheritance(p):
 #Method Definition#
 ###################
 def p_method_defn(p):
-	'''method_defn : KEYWORD_DEF method_var method_params lin_term method_defn_compstmt KEYWORD_END
+	'''method_defn : KEYWORD_DEF method_var method_params M_met1 lin_term method_defn_compstmt KEYWORD_END
 	'''
         p[0]={}
+	print p[3]
+
+def p_start_method(p):
+	''' M_met1 : none '''
 
 def p_method_params(p):
 	'''method_params : none 
         | '(' ')'
 	| '(' non_empty_param_list  ')'
 	'''
+	if len(p) == 4:
+		p[0] = p[2]
+	else:
+		p[0] = []
 
 def p_non_empty_param_list(p):
 	'''non_empty_param_list : type_param LOCALVAR
 	| type_param LOCALVAR ',' non_empty_param_list
 	'''
+	#Return the parameter list in an array
 	if len(p) == 3:
 		p[0] = [(p[1], p[2])]
 	else:
-		p[0] = [(p[1], p[2])] + p[4]
+		#Merge and check if variable is redeclared
+		usedVars = []
+		for i in p[4]:
+			usedVars += i[1]
+		if p[2] in usedVars:
+			error('Cannot reuse local variable %s in parameter'%p[2])
+			p[0] = p[4]
+		else:
+			p[0] = [(p[1], p[2])] + p[4]
 
 def p_type_param(p):
         '''type_param : CONST
@@ -1023,7 +1043,12 @@ def p_type_param(p):
         | KEYWORD_ARRAY  '(' type_param ',' INT ')'
         | KEYWORD_RANGE '(' INT ',' INT ')'
         '''
+	#Return the type (as string)
 	if len(p) == 2:
+		if p[1] not in ['Int', 'Bool', 'Void', 'Char']:
+			error(p[1] + ' is not a valid type!')
+			p[0] = 'TYPE_ERROR'
+			return
 		p[0] = p[1]
 	elif p[1] == 'Array' :
 		p[0] = ('Array', p[3], p[5] )
