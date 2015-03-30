@@ -32,3 +32,4 @@ true == false
 "ha" == "ha" && 1 < 2 || false && nil == nil
 aw = a == c && true
 a+=0o45
+a > 5 &&  "la" == "po"

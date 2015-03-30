@@ -42,6 +42,7 @@ literals = "+-*/%><=&|^!~?.:,(){}[];"
 reserved = {
     'Array' : "KEYWORD_ARRAY", 
     'Range' : "KEYWORD_RANGE",
+    'String' : "KEYWORD_STRING",
     'def' : "KEYWORD_DEF",
     'end' : "KEYWORD_END",
     'in' : "KEYWORD_IN",

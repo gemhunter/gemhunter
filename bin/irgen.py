@@ -344,7 +344,7 @@ def p_l11_expr(p):
 	}
 	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
 		return	
-	if p[1]['type'] != p[3]['type']:
+	if baseType(p[1]['type']) != baseType(p[3]['type']):
 		if p[2] == '==' :
 			warning('Did you intend to equate different types? '+p[1]['place'] + ',' + p[3]['place'])
 			TAC.emit(newPlace,'false','','=')
@@ -367,7 +367,7 @@ def p_l11_expr(p):
 		elif p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL':
 			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 			p[0]['type']='BOOL'
-		elif p[1]['type'] == 'STRING' and p[3]['type'] == 'STRING':
+		elif baseType(p[1]['type'][0]) == 'STRING' and baseType(p[3]['type'][0]) == 'STRING':
 			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 			p[0]['type']='BOOL'
 		elif p[1]['type'] == 'VOID' and p[3]['type'] == 'VOID':
@@ -1012,12 +1012,25 @@ def p_non_empty_param_list(p):
 	'''non_empty_param_list : type_param LOCALVAR
 	| type_param LOCALVAR ',' non_empty_param_list
 	'''
+	if len(p) == 3:
+		p[0] = [(p[1], p[2])]
+	else:
+		p[0] = [(p[1], p[2])] + p[4]
 
 def p_type_param(p):
         '''type_param : CONST
+	| KEYWORD_STRING '(' INT ')'
         | KEYWORD_ARRAY  '(' type_param ',' INT ')'
         | KEYWORD_RANGE '(' INT ',' INT ')'
         '''
+	if len(p) == 2:
+		p[0] = p[1]
+	elif p[1] == 'Array' :
+		p[0] = ('Array', p[3], p[5] )
+	elif p[1] == 'String' :
+		p[0] = ('String', p[3] )
+	else:
+		p[0] = ('Range', p[3], p[5] )
 
 ##################
 #Block parameters#
@@ -1160,7 +1173,7 @@ def p_literal_string(p):
 	''' literal : STRING
 	'''
 	p[0] = {
-		'type' : 'STRING',
+		'type' : ('STRING', len(p[1])),
 		'value' : p[1]
 	}
 
@@ -1200,7 +1213,7 @@ def error(e, lineNo=-1):
 	print colored("ERROR::%d : "%lineNo,'red'),e
 	success = 0
 
-def warning(w):
+def warning(w, lineNo=-1):
 	if lineNo == -1:
 		lineNo = currLine
 
@@ -1237,6 +1250,13 @@ def merge_patches(a,b):
 		p['redoList'] = list1 + list2
 	
 	return p
+
+#Get The Base type of a typeExpr
+def baseType ( typeExpr ):
+	if isinstance(typeExpr, tuple):
+		return typeExpr[0]
+	else :
+		return typeExpr
 
 #Declare globals
 ST = symbolTable.SymbolTable()
