@@ -1031,7 +1031,7 @@ def p_method_defn(p):
         p[0]={}
 	#Check the return statements in p[6]
 	if p[6].get('retType') == None:
-		error('Function (%s) should have a return statement!'%p[2])
+		ST.setRetType('VOID')
 	else:
 		ST.setRetType(p[6]['retType'])
 	#Add a default return statement ( For security )
