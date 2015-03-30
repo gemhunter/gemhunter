@@ -1,14 +1,9 @@
-method definitions:
-	return types
-	arguments
-
-dot operator
-	main functions
-	class instances/methods
-
+calling main functions
+special things for class methods
+class instance variables
 array
-case for
-objects
+case
+for
 constants
 yield / blocks
 super
