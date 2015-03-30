@@ -1001,13 +1001,26 @@ def p_opt_inheritance(p):
 #Method Definition#
 ###################
 def p_method_defn(p):
-	'''method_defn : KEYWORD_DEF method_var method_params M_met1 lin_term method_defn_compstmt KEYWORD_END
+	'''method_defn : KEYWORD_DEF method_var method_params M_meth1 lin_term method_defn_compstmt KEYWORD_END
 	'''
         p[0]={}
-	print p[3]
+	ST.endMethod()
+	TAC.emit('label', p[4], '', '')
 
 def p_start_method(p):
-	''' M_met1 : none '''
+	''' M_meth1 : none '''
+	if ST.methodExists(p[-2]):
+		error('Cannot redeclare a method! ( ' + p[-2] + ' )')
+		return
+
+	#Currently skip over the method
+	endLabel = TAC.makeLabel()
+	p[0] = endLabel
+	TAC.emit('goto', endLabel, '', '')
+
+	ST.addMethod(p[-2])
+	#Emit the label for method
+	TAC.emit('label', ST.getLabel(), '', '')
 
 def p_method_params(p):
 	'''method_params : none 
@@ -1129,11 +1142,8 @@ def p_method(p):
 def p_method_var(p):
 	'''method_var : LOCALVAR
 	| METHOD_ONLY_VAR
-	| CONST
 	'''
-	p[0] = {
-		'methodName' : p[1]
-	}
+	p[0] = p[1]
 
 ##################
 #Base Expressions#

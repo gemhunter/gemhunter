@@ -17,13 +17,13 @@ class SymbolTable:
 		self.tempNo = -1
 		self.blockBase = "b"
 		self.blockNo = -1
-		#self.funcBase = "f"
-		#self.funcNo = -1
+		self.methBase = "m"
+		self.methNo = -1
 		#Sizes
 		self.wordSize = 4
 		self.addressSize = 4
 
-        #Functions to manipulate (add/end) scope blocks
+        #Methods to manipulate (add/end) scope blocks
 	def addBlock(self):
 		bName = self.createBlockName()
 		self.symbolTable[bName] = {
@@ -38,7 +38,7 @@ class SymbolTable:
 	def endBlock(self):
 		self.currentScope = self.symbolTable[self.currentScope]['parent']
 
-        #Functions to work with classes
+        #Methods to work with classes
         def addClass(self,className,parent = 'main'):
 		self.symbolTable[className] = {
 				'name' : className,
@@ -61,12 +61,31 @@ class SymbolTable:
 		else:
 			return self.symbolTable[className]['type'] == 'class'
 
-	#Functions to work with functions
-	def addFunction(self, fnName):
-		fnName = self.currentScope + '_' + fnName
-		self.symbolTable[fnName] = {
+	#Methods to work with methods
+	def addMethod(self, mtName):
+		mtName = self.currentScope + '#' + mtName
+		self.symbolTable[mtName] = {
+				'name' : mtName,
+				'type' : 'method',
+				'parent' : self.currentScope,
+				'identifiers' : {},
+				'places' : {},
+				'label' : self.createMethodName()
 				}
-		self.currentScope = fnName
+		self.currentScope = mtName
+	
+	def endMethod(self):
+		self.currentScope = self.symbolTable[self.currentScope]['parent']
+
+	def methodExists(self, mtName):
+		return self.symbolTable.get(self.currentScope + '#' + mtName) != None
+
+	def getLabel(self):
+		#return the method label if currentScope is a method
+		if self.symbolTable[self.currentScope]['type'] == 'method':
+			return self.symbolTable[self.currentScope]['label']
+		else:
+			return None
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
@@ -147,6 +166,11 @@ class SymbolTable:
 	def createBlockName(self):
 		self.blockNo += 1
 		return self.blockBase + str(self.blockNo)
+
+	#Scope name for new method
+	def createMethodName(self):
+		self.methNo += 1
+		return self.methBase + str(self.methNo)
 
 	#Tells the scope according to variable type
 	#If it doesn't exist, returns None
