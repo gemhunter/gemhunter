@@ -29,12 +29,18 @@ def p_stmts(p):
 def p_method_defn_compstmt(p):
 	'''method_defn_compstmt : method_defn_stmts opt_terms
 	'''
+	p[0] = p[1]
 
 def p_method_defn_stmts(p):
 	'''method_defn_stmts : method_defn_stmt
 	| method_defn_stmts lin_terms method_defn_stmt
 	| none
 	'''
+	#Merge the returns here (check if they are of same type)
+	if len(p) == 2:
+		p[0] = p[1]
+		return
+	p[0] = merge_returns(p[1],p[3])
 
 def p_class_defn_compstmt(p):
 	'''class_defn_compstmt : class_defn_stmts opt_terms
@@ -60,6 +66,8 @@ def p_imp_body_stmts(p):
 		p[0] = p[1]
 		return
 	p[0] = merge_patches(p[1],p[3])
+	r = merge_returns(p[1],p[3])
+	p[0].update(r)
 
 ####################
 #Combined Statments#
@@ -134,7 +142,15 @@ def p_stmt_method(p):
 	| KEYWORD_YIELD args
 	| KEYWORD_RETURN
 	'''
-	p[0] = {}
+	#Pass the return argument above
+	if len(p) == 2:
+		newPlace = ST.createTemp()
+		TAC.emit(newPlace,'nil','','=')
+		TAC.emit('return', newPlace, '', '')
+		p[0] = { 'retType' : 'VOID' }
+	else:
+		TAC.emit('return', p[2]['place'], '', '')
+		p[0] = { 'retType' : p[2]['type'] }
 
 def p_stmt_loop(p):
 	'''stmt_loop : KEYWORD_BREAK
@@ -773,6 +789,8 @@ def p_if_block(p):
 	'''if_block : KEYWORD_IF expr M_checkBool then_clause M_if1 imp_body_compstmt M_if2 if_tail M_if3 KEYWORD_END
 	'''
 	p[0] = merge_patches(p[6],p[8])
+	r = merge_returns(p[6],p[8])
+	p[0].update(r)
 
 def p_checkBool(p):
 	''' M_checkBool : '''
@@ -814,6 +832,7 @@ def p_if_tail(p):
 		p[0] = p[1]
 		return
 	p[0] = merge_patches(p[6],p[8])
+	p[0].update(merge_returns(p[6],p[8]))
 
 def p_makeElsifLabels(p):
 	''' M_elsif1 : '''
@@ -881,6 +900,8 @@ def p_until_block(p):
 			instr += [i[1]]
 
 		TAC.patch(instr, p[2][1])
+	if p[7].get('retType') != None:
+		p[0]['retType'] = p[7]['retType']
 
 def p_makeUntilLabels(p):
 	''' M_until1 : '''
@@ -928,6 +949,8 @@ def p_while_block(p):
 			instr += [i[1]]
 
 		TAC.patch(instr, p[2][1])
+	if p[7].get('retType') != None:
+		p[0]['retType'] = p[7]['retType']
 
 def p_makeWhileLabels(p):
 	''' M_while1 : '''
@@ -947,6 +970,7 @@ def p_outputWhileCondn(p):
 #Case statement#
 ################
 #TODO pass patchlist
+#TODO pass return list
 def p_case_block(p):
 	'''case_block : KEYWORD_CASE expr opt_terms case_body KEYWORD_END
 	'''
@@ -964,6 +988,7 @@ def p_case_clause(p):
 #For Block#
 ###########
 #TODO pass patchlist
+#TODO pass return list
 def p_for_block(p):
 	'''for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause imp_body_compstmt KEYWORD_END
 	'''
@@ -1004,6 +1029,11 @@ def p_method_defn(p):
 	'''method_defn : KEYWORD_DEF method_var method_params M_meth1 lin_term method_defn_compstmt KEYWORD_END
 	'''
         p[0]={}
+	#Check the return statements in p[6]
+	if p[6].get('retType') == None:
+		error('Function (%s) should have a return statement!'%p[2])
+	else:
+		ST.setRetType(p[6]['retType'])
 	ST.endMethod()
 	TAC.emit('label', p[4], '', '')
 
@@ -1293,6 +1323,35 @@ def merge_patches(a,b):
 		p['redoList'] = list1 + list2
 	
 	return p
+
+#Merge returns
+def merge_returns(a,b):
+	p = {}
+	if a.get('retType') == None:
+		if b.get('retType') != None :
+			p = {'retType' : b.get('retType') }
+		else:
+			p = {}
+		return p
+	if b.get('retType') == None:
+		if a.get('retType') != None :
+			p = {'retType' : a.get('retType') }
+		else:
+			p = {}
+		return p
+	if a['retType'] != b['retType']:
+		error('Cannot return two different types (' + a['retType'] +  ',' + b['retType'] + ')!')
+		p = {'retType' : 'TYPE_ERROR' }
+		return p
+	p = {'retType' : a['retType'] }
+	return p
+
+#Merge Dictionaries
+def merge_two_dicts(x, y):
+	'''Given two dicts, merge them into a new dict as a shallow copy.'''
+	z = x.copy()
+	z.update(y)
+	return z
 
 #Get The Base type of a typeExpr
 def baseType ( typeExpr ):

@@ -70,7 +70,8 @@ class SymbolTable:
 				'parent' : self.currentScope,
 				'identifiers' : {},
 				'places' : {},
-				'label' : self.createMethodName()
+				'label' : self.createMethodName(),
+				'retType' : 'TYPE_ERROR'
 				}
 		self.currentScope = mtName
 	
@@ -86,6 +87,11 @@ class SymbolTable:
 			return self.symbolTable[self.currentScope]['label']
 		else:
 			return None
+	
+	def setRetType(self, typeExpr):
+		#Set the return type of the current function as typeExpr
+		assert(self.symbolTable[self.currentScope]['type'] == 'method')
+		self.symbolTable[self.currentScope]['retType'] = typeExpr
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
