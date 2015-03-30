@@ -180,7 +180,7 @@ def p_assign_expr2(p):
                 error('Can\'t assign to non-class variables in a class')
                 return
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
-                error('Can\'t use class variables outside a class')
+                error('Can\'t assign class variables outside a class')
                 return
 
         if not ST.lookupIdentifier(p[1]['idenName']):
@@ -225,7 +225,7 @@ def p_assign_expr1(p):
                 error('Can\'t assign to non-class variables in a class')
                 return
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
-                error('Can\'t use class variables outside a class')
+                error('Can\'t assign class variables outside a class')
                 return
                         
         if not ST.lookupIdentifier(p[1]['idenName']):
@@ -1021,6 +1021,14 @@ def p_start_method(p):
 	ST.addMethod(p[-2])
 	#Emit the label for method
 	TAC.emit('label', ST.getLabel(), '', '')
+	
+	#Get the arguments from stack and add them to scope
+	for i in p[-1]:
+		iden = i[1]
+		idenType = i[0]
+		myPlace = ST.createTemp()
+		ST.addIdentifier(iden, myPlace, idenType)
+		TAC.emit(myPlace, '', '', 'getarg')
 
 def p_method_params(p):
 	'''method_params : none 
@@ -1062,13 +1070,13 @@ def p_type_param(p):
 			error(p[1] + ' is not a valid type!')
 			p[0] = 'TYPE_ERROR'
 			return
-		p[0] = p[1]
+		p[0] = p[1].upper()
 	elif p[1] == 'Array' :
-		p[0] = ('Array', p[3], p[5] )
+		p[0] = ('ARRAY', p[3], p[5] )
 	elif p[1] == 'String' :
-		p[0] = ('String', p[3] )
+		p[0] = ('STRING', p[3] )
 	else:
-		p[0] = ('Range', p[3], p[5] )
+		p[0] = ('RANGE', p[3], p[5] )
 
 ##################
 #Block parameters#
