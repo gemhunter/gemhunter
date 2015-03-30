@@ -13,5 +13,8 @@ def thisIsAFunction(Int x, Array(Int, 10) y, Int c)
   end
   return y
 end
+def noReturn
+	a = 1
+end
 a=4
 y = "ha"

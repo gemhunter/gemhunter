@@ -733,6 +733,14 @@ def p_method_call(p):
 	''' method_call : primary_expr '.'  method '(' arg_list ')'
 	| method '(' arg_list ')'
 	'''
+	if len(p) == 5:
+		#Direct method call
+		newPlace = ST.createTemp()
+		#Check arguments
+		#TAC params, (newplace , fn_label,'', "call")
+	else:
+		#Need to do a full Lookup
+		newPlace = ST.createTemp()
 
 #TODO - figure out what compstmt should be
 #TODO - implement yield
