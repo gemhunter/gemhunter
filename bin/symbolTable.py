@@ -67,8 +67,8 @@ class SymbolTable:
 	#Methods to work with methods
 	def addMethod(self, mtName):
 		#Current scope can be class/main
-		mtName = self.currentScope + '#' + mtName
-		self.symbolTable[mtName] = {
+		extendedName = self.currentScope + '#' + mtName
+		self.symbolTable[extendedName] = {
 				'name' : mtName,
 				'type' : 'method',
 				'parent' : self.currentScope,
@@ -80,9 +80,9 @@ class SymbolTable:
 				'argList' : []
 				}
 		self.symbolTable[self.currentScope]['methods'][mtName] = {
-				'place' : self.symbolTable[mtName]['label']
+				'extendedName' : extendedName
 				}
-		self.currentScope = mtName
+		self.currentScope = extendedName
 	
 	def endMethod(self):
 		self.currentScope = self.symbolTable[self.currentScope]['parent']
@@ -112,14 +112,17 @@ class SymbolTable:
 	def lookUpMethod(self, mtName):
 		#Search for a method in all ancestor scopes (till main)
 		#During a method call (non-class method)
+		#Returns label,argList,retType
 		scope = self.currentScope
 		while self.symbolTable[scope]['type'] not in ['main']:
 			if mtName in self.symbolTable[scope]['methods']:
-				return scope
-				scope = self.symbolTable[scope]['parent']
+				eName = self.symbolTable[scope]['methods'][mtName]['extendedName']
+				return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
+			scope = self.symbolTable[scope]['parent']
 		if mtName in self.symbolTable[scope]['methods']:
-			return scope
-		return None
+			eName = self.symbolTable[scope]['methods'][mtName]['extendedName']
+			return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
+		return None,None,None
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):

@@ -733,13 +733,34 @@ def p_method_call(p):
 	''' method_call : primary_expr '.'  method '(' arg_list ')'
 	| method '(' arg_list ')'
 	'''
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
 	if len(p) == 5:
 		#Direct method call
-		newPlace = ST.createTemp()
+		label, argList, retType = ST.lookUpMethod(p[1]) 
+		if label == None:
+			error('Cannot use undefined method in this scope ( %s )'%p[1])
+			return
 		#Check arguments
-		#TAC params, (newplace , fn_label,'', "call")
+		givenArgs = []
+		for i in p[3]:
+			givenArgs.append(i[0])
+		if givenArgs != argList:
+			error('Cannot call this function ( %s ). Wrong argument(s)'%p[1])
+		#Call function
+		newPlace = ST.createTemp()	
+		for i in p[3]:
+			TAC.emit('param', i[1], '', '')
+		TAC.emit(newPlace, label, '', 'call')
+		p[0] = {
+				'place' : newPlace,
+				'type' : retType
+				}
 	else:
 		#Need to do a full Lookup
+		#TODO
 		newPlace = ST.createTemp()
 
 #TODO - figure out what compstmt should be
@@ -779,21 +800,24 @@ def p_lhs_array(p):
 #Arguments#
 ###########
 
-def p_arg_list(p):
-	'''arg_list : none
-	| expr
-	| expr ',' arg_list_tail
-	'''
+def p_arg_list_empty(p):
+	'''arg_list : none'''
+	p[0] = []
 
-def p_non_empty_arg_list(p):
-	'''non_empty_arg_list : expr    
-	| expr ',' arg_list_tail
+def p_arg_list_non_empty(p):
+	'''arg_list : arg_list_tail
 	'''
+	p[0] = p[1]
 
 def p_arg_list_tail(p):
 	'''arg_list_tail : expr ',' arg_list_tail
 	| expr
 	'''
+	p[0] = []
+	if len(p) == 2:
+		p[0] = [(p[1]['type'], p[1]['place'])]
+	else:
+		p[0] = [(p[1]['type'], p[1]['place'])] + p[3]
 
 ##############
 #If statement#
@@ -990,7 +1014,7 @@ def p_case_block(p):
 	'''
 
 def p_case_body(p):
-	'''case_body : KEYWORD_WHEN non_empty_arg_list then_clause imp_body_compstmt case_clause   
+	'''case_body : KEYWORD_WHEN arg_list_tail then_clause imp_body_compstmt case_clause   
 	'''
 
 def p_case_clause(p):
@@ -1048,10 +1072,16 @@ def p_method_defn(p):
 		ST.setRetType('VOID')
 	else:
 		ST.setRetType(p[6]['retType'])
-	#Add a default return statement ( For security )
+	#Set the arg list
+	argList = []
+	for i in p[3]:
+		argList.append(i[0])
+	ST.setArgList(argList)
+	#Add a default return statement ( For security ) (next 3 lines)
 	newPlace = ST.createTemp()
 	TAC.emit(newPlace, 'nil', '', '=')
 	TAC.emit('return', newPlace, '', '')
+	#End method scope
 	ST.endMethod()
 	TAC.emit('label', p[4], '', '')
 
@@ -1114,7 +1144,9 @@ def p_type_param(p):
         '''
 	#Return the type (as string)
 	if len(p) == 2:
-		if p[1] not in ['Int', 'Bool', 'Void', 'Char']:
+		#TODO
+		#Add functionality for classes
+		if p[1] not in ['Int', 'Bool', 'Void', 'Char', 'Float']:
 			error(p[1] + ' is not a valid type!')
 			p[0] = 'TYPE_ERROR'
 			return

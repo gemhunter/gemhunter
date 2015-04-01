@@ -1,5 +1,5 @@
 a = 1
-def thisIsAFunction(Int x, Array(Int, 10) y, Int c)
+def tiaf(Int x, Float y, Int c)
   a = x
   b = a < 2
   if b then
@@ -15,6 +15,9 @@ def thisIsAFunction(Int x, Array(Int, 10) y, Int c)
 end
 def noReturn
 	a = 1
+	pol= tiaf(a, 0.96 - 0.124e12, 2) + 0.4
 end
 a=4
 y = "ha"
+e = .5 !=  noReturn()
+q = e || a > 4
