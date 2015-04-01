@@ -1068,7 +1068,7 @@ def p_start_method(p):
 
 	ST.addMethod(p[-2])
 	#Emit the label for method
-	TAC.emit('label', ST.getLabel(), '', '')
+	TAC.emit('label', ST.getCurrLabel(), '', '')
 	
 	#Get the arguments from stack and add them to scope
 	for i in p[-1]:

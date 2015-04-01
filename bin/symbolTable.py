@@ -8,6 +8,7 @@ class SymbolTable:
 					'type' : 'main',
 					'parent' : None,
 					'identifiers' : {},
+					'methods' : {},
 					'places' : {}
 					}
 				}
@@ -31,6 +32,7 @@ class SymbolTable:
 				'type' : 'block',
 				'parent' : self.currentScope,
 				'identifiers' : {},
+				'methods' : {},
 				'places' : {}
 				}
 		self.currentScope = bName
@@ -45,6 +47,7 @@ class SymbolTable:
 				'type' : 'class',
 				'parent' : parent,
 				'identifiers' : {},
+				'methods' : {},
 				'places' : {}
 				}
 		self.currentScope = className
@@ -63,15 +66,21 @@ class SymbolTable:
 
 	#Methods to work with methods
 	def addMethod(self, mtName):
+		#Current scope can be class/main
 		mtName = self.currentScope + '#' + mtName
 		self.symbolTable[mtName] = {
 				'name' : mtName,
 				'type' : 'method',
 				'parent' : self.currentScope,
 				'identifiers' : {},
+				'methods' : {},
 				'places' : {},
 				'label' : self.createMethodName(),
-				'retType' : 'TYPE_ERROR'
+				'retType' : 'TYPE_ERROR',
+				'argList' : []
+				}
+		self.symbolTable[self.currentScope]['methods'][mtName] = {
+				'place' : self.symbolTable[mtName]['label']
 				}
 		self.currentScope = mtName
 	
@@ -79,9 +88,11 @@ class SymbolTable:
 		self.currentScope = self.symbolTable[self.currentScope]['parent']
 
 	def methodExists(self, mtName):
+		#Before calling addMethod
 		return self.symbolTable.get(self.currentScope + '#' + mtName) != None
 
-	def getLabel(self):
+	#Assumes that we are in a method
+	def getCurrLabel(self):
 		#return the method label if currentScope is a method
 		if self.symbolTable[self.currentScope]['type'] == 'method':
 			return self.symbolTable[self.currentScope]['label']
@@ -89,9 +100,26 @@ class SymbolTable:
 			return None
 	
 	def setRetType(self, typeExpr):
-		#Set the return type of the current function as typeExpr
+		#Set the return type of the current method as typeExpr
 		assert(self.symbolTable[self.currentScope]['type'] == 'method')
 		self.symbolTable[self.currentScope]['retType'] = typeExpr
+
+	def setArgList(self, typeExprs):
+		#Sets the argument list of the current method as typeExprs (list)
+		assert(self.symbolTable[self.currentScope]['type'] == 'method')
+		self.symbolTable[self.currentScope]['argList'] = typeExprs
+
+	def lookUpMethod(self, mtName):
+		#Search for a method in all ancestor scopes (till main)
+		#During a method call (non-class method)
+		scope = self.currentScope
+		while self.symbolTable[scope]['type'] not in ['main']:
+			if mtName in self.symbolTable[scope]['methods']:
+				return scope
+				scope = self.symbolTable[scope]['parent']
+		if mtName in self.symbolTable[scope]['methods']:
+			return scope
+		return None
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
@@ -181,6 +209,7 @@ class SymbolTable:
 	#Tells the scope according to variable type
 	#If it doesn't exist, returns None
 	def lookUpScope(self, idenName):
+		#Only called from within the class
 		if idenName[0] == '$' :
 			#Search for global variable in main
 			if idenName in self.symbolTable['main']['identifiers'] :
@@ -190,8 +219,7 @@ class SymbolTable:
 		
 		elif idenName[0] != '@' and not idenName[0].isupper():
 			#Local variable
-			#Can be a variable or a method
-			#Note that for method currentScope is either main or class
+			#Called only for a local variable not a method
 			#Search till you find method/main/class
 			scope = self.currentScope
 			while self.symbolTable[scope]['type'] not in ['main', 'method', 'class']:
