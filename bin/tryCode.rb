@@ -1,1 +1,3 @@
-a = b = 3
+class A
+	@@a = 2
+end

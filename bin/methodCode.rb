@@ -1,5 +1,5 @@
 a = 1
-def tiaf(Int x, Float y, Int c)
+def Float tiaf(Int x, Float y, Int c)
   a = x
   b = a < 2
   if b then
@@ -13,7 +13,7 @@ def tiaf(Int x, Float y, Int c)
   end
   return y
 end
-def noReturn
+def Void noReturn
 	a = 1
 	pol= tiaf(a, 0.96 - 0.124e12, 2) + 0.4
 end

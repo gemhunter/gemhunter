@@ -104,6 +104,11 @@ class SymbolTable:
 		assert(self.symbolTable[self.currentScope]['type'] == 'method')
 		self.symbolTable[self.currentScope]['retType'] = typeExpr
 
+	def getRetType(self):
+		#Get the return type of the current method
+		assert(self.symbolTable[self.currentScope]['type'] == 'method')
+		return self.symbolTable[self.currentScope]['retType']
+
 	def setArgList(self, typeExprs):
 		#Sets the argument list of the current method as typeExprs (list)
 		assert(self.symbolTable[self.currentScope]['type'] == 'method')

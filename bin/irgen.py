@@ -96,6 +96,7 @@ def p_method_defn_stmt(p):
 	'''method_defn_stmt : expr
 	| stmt_imp
 	| stmt_method
+	| method_defn
 	'''
 	#Check for wrong breaks etc.
 	p[0] = p[1]
@@ -743,6 +744,10 @@ def p_method_call(p):
 		if label == None:
 			error('Cannot use undefined method in this scope ( %s )'%p[1])
 			return
+		#Check if function returns incorrectly
+		if retType == 'TYPE_ERROR':
+			error('Function( %s ) ill-defined. Thus cannot be called'%p[1])
+			return
 		#Check arguments
 		givenArgs = []
 		for i in p[3]:
@@ -1064,26 +1069,25 @@ def p_opt_inheritance(p):
 #Method Definition#
 ###################
 def p_method_defn(p):
-	'''method_defn : KEYWORD_DEF method_var method_params M_meth1 lin_term method_defn_compstmt KEYWORD_END
+	'''method_defn : KEYWORD_DEF type_param method_var method_params M_meth1 lin_term method_defn_compstmt KEYWORD_END
 	'''
         p[0]={}
-	#Check the return statements in p[6]
-	if p[6].get('retType') == None:
-		ST.setRetType('VOID')
+	#Check the return statements in p[7]
+	if p[7].get('retType') == None:
+		if ST.getRetType() != 'VOID':
+			ST.setRetType('TYPE_ERROR')
+			error('Mismatch in return types in function %s!'%p[3])
 	else:
-		ST.setRetType(p[6]['retType'])
-	#Set the arg list
-	argList = []
-	for i in p[3]:
-		argList.append(i[0])
-	ST.setArgList(argList)
+		if ST.getRetType() != p[7]['retType']:
+			ST.setRetType('TYPE_ERROR')
+			error('Mismatch in return types in function %s!'%p[3])
 	#Add a default return statement ( For security ) (next 3 lines)
 	newPlace = ST.createTemp()
 	TAC.emit(newPlace, 'nil', '', '=')
 	TAC.emit('return', newPlace, '', '')
 	#End method scope
 	ST.endMethod()
-	TAC.emit('label', p[4], '', '')
+	TAC.emit('label', p[5], '', '')
 
 def p_start_method(p):
 	''' M_meth1 : none '''
@@ -1100,6 +1104,15 @@ def p_start_method(p):
 	#Emit the label for method
 	TAC.emit('label', ST.getCurrLabel(), '', '')
 	
+	#Set the arg list
+	argList = []
+	for i in p[-1]:
+		argList.append(i[0])
+	ST.setArgList(argList)
+
+	#Set the return type
+	ST.setRetType(p[-3])
+
 	#Get the arguments from stack and add them to scope
 	for i in p[-1]:
 		iden = i[1]
