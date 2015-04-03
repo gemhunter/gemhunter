@@ -774,13 +774,29 @@ def p_primary_expr_bracket(p):
 	''' primary_expr : '(' expr ')' '''
 	p[0] = p[2]
 
-#TODO Arrays decln, array indexing, object-var lookup, class - var lookup
+#TODO Arrays decln, array indexing, object-var lookup
 def p_primary_expr(p):
 	''' primary_expr : '[' arg_list ']'
 	| primary_expr '[' expr ']'
 	| primary_expr '.' LOCALVAR
-	| CONST '.' LOCALVAR
 	'''
+
+def p_primary_class_var(p):
+	''' primary_expr :  CONST '.' LOCALVAR '''
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
+	if not ST.classExists(p[1]):
+		error('Class (%s) does not exist'%p[1])
+		return
+
+	idenName = "@@" + p[3] + "#" + p[1]
+	if ST.lookupIdentifier(idenName) :
+		p[0]['place'] = ST.getAttribute(idenName,'place')
+		p[0]['type'] = ST.getAttribute(idenName,'type')
+	else:
+		error("Use of undefined variable %s!"%idenName)
 
 def p_primary_expr_method_call(p):
 	''' primary_expr : method_call'''

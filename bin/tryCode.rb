@@ -1,7 +1,7 @@
 class A
 	@@a = 2
 	def A new()
-		@b = a
+		@b = 2
 		@t = 5 + @b
 	end
 	def Int ha()
@@ -9,3 +9,4 @@ class A
 	end
 end
 a = A.new()
+y = A.a
