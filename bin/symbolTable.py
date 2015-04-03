@@ -55,6 +55,9 @@ class SymbolTable:
 				'hasNew' : False,
 				'inNew' : False
 				}
+		if parent != 'main' :
+			#Inheritance Baby!
+			self.symbolTable[className]['instanceVars'] = self.symbolTable[parent]['instanceVars']
 		self.currentScope = className
 		self.classes.append(className)
 
