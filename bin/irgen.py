@@ -1154,6 +1154,11 @@ def p_method_defn(p):
 			if ST.getRetType() != p[7]['retType']:
 				ST.setRetType('TYPE_ERROR')
 				error('Mismatch in return types in function %s!'%p[3])
+	else:
+		#Set the return type
+		ST.setRetType(ST.getParClass())
+		TAC.emit('return',ST.getAttribute('guys', 'place') , '', '')
+
 	#Add a default return statement ( For security ) (next 3 lines)
 	newPlace = ST.createTemp()
 	TAC.emit(newPlace, 'nil', '', '=')

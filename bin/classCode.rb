@@ -11,7 +11,7 @@ class Customer
 		@p = 4
 		a = @p
 		a += 4
-		return a - @p
+		return a - @p * $a
 	end
 end
 class Brother < Customer

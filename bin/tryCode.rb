@@ -4,4 +4,7 @@ class A
 		@b = 3
 		@t = 5 + @b
 	end
+	def Int ha()
+		return @b
+	end
 end
