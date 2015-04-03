@@ -2,6 +2,7 @@ make new method accessible
 call new methods in succession ( through super )
 dot operator
 array
+strings
 case
 for
 constants
