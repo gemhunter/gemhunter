@@ -199,7 +199,10 @@ def p_assign_expr2(p):
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
                 error('Can\'t assign class variables outside a class')
                 return
-
+	    
+	if p[1]['idenName'][:2] == '@@' and ST.currentlyInAClass():
+		p[1]['idenName'] += '#' + ST.getClass()
+							    
         if not ST.lookupIdentifier(p[1]['idenName']):
                 error('Use of undeclared variable %s!'%p[1]['idenName'])
 		return
@@ -244,6 +247,8 @@ def p_assign_expr1(p):
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
                 error('Can\'t assign class variables outside a class')
                 return
+	if p[1]['idenName'][:2] == '@@' and ST.currentlyInAClass():
+		p[1]['idenName'] += '#' + ST.getClass()
                         
         if not ST.lookupIdentifier(p[1]['idenName']):
                 myPlace = ST.createTemp()
@@ -688,9 +693,12 @@ def p_primary_expr_primitive_variable(p):
 		'place' : 'undefined',
 		'type' : 'TYPE_ERROR'
 	}
-        if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
-                error('Can\'t use class variables outside a class')
-                return
+        if p[1]['idenName'][:2] == '@@':
+		if not ST.currentlyInAClass():
+			error('Can\'t use class variables outside a class')
+        	        return
+		else:
+			p[1]['idenName'] += "#" + ST.getClass()
 
 	if ST.lookupIdentifier(p[1]['idenName']) :
 		p[0]['place'] = ST.getAttribute(p[1]['idenName'],'place')
@@ -1043,7 +1051,9 @@ def p_class_defn(p):
 	'''class_defn : KEYWORD_CLASS CONST opt_inheritance M_class1 lin_term class_defn_compstmt KEYWORD_END
 	'''
         p[0] = {}
-        ST.endClass(p[2])
+	if not ST.classHasNew() :
+		error('Class (%s) definition should have a new method (returning an object with instance variables declared)'%p[2])
+	ST.endClass(p[2])
 
 def p_startClass(p):
         ''' M_class1 : '''
@@ -1073,14 +1083,16 @@ def p_method_defn(p):
 	'''
         p[0]={}
 	#Check the return statements in p[7]
-	if p[7].get('retType') == None:
-		if ST.getRetType() != 'VOID':
-			ST.setRetType('TYPE_ERROR')
-			error('Mismatch in return types in function %s!'%p[3])
-	else:
-		if ST.getRetType() != p[7]['retType']:
-			ST.setRetType('TYPE_ERROR')
-			error('Mismatch in return types in function %s!'%p[3])
+	if not ST.inNew():
+		#Don't Check return type in new
+		if p[7].get('retType') == None:
+			if ST.getRetType() != 'VOID':
+				ST.setRetType('TYPE_ERROR')
+				error('Mismatch in return types in function %s!'%p[3])
+		else:
+			if ST.getRetType() != p[7]['retType']:
+				ST.setRetType('TYPE_ERROR')
+				error('Mismatch in return types in function %s!'%p[3])
 	#Add a default return statement ( For security ) (next 3 lines)
 	newPlace = ST.createTemp()
 	TAC.emit(newPlace, 'nil', '', '=')
@@ -1157,9 +1169,7 @@ def p_type_param(p):
         '''
 	#Return the type (as string)
 	if len(p) == 2:
-		#TODO
-		#Add functionality for classes
-		if p[1] not in ['Int', 'Bool', 'Void', 'Char', 'Float']:
+		if p[1] not in ['Int', 'Bool', 'Void', 'Char', 'Float'] + ST.getClasses():
 			error(p[1] + ' is not a valid type!')
 			p[0] = 'TYPE_ERROR'
 			return

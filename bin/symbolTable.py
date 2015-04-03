@@ -23,6 +23,7 @@ class SymbolTable:
 		#Sizes
 		self.wordSize = 4
 		self.addressSize = 4
+		self.classes = []
 
         #Methods to manipulate (add/end) scope blocks
 	def addBlock(self):
@@ -48,15 +49,24 @@ class SymbolTable:
 				'parent' : parent,
 				'identifiers' : {},
 				'methods' : {},
-				'places' : {}
+				'places' : {},
+				'instanceVars' : {},
+				'instanceNum' : 0,
+				'hasNew' : False,
+				'inNew' : False
 				}
 		self.currentScope = className
-        
+		self.classes.append(className)
+
         def endClass(self,className):
                 self.currentScope = 'main'
 
         def currentlyInAClass(self):
                 return self.symbolTable[self.currentScope]['type']=='class'
+
+	def getClass(self):
+		assert(self.currentlyInAClass())
+		return self.currentScope
 
         def classExists(self,className):
 		if self.symbolTable.get(className) == None:
@@ -64,9 +74,38 @@ class SymbolTable:
 		else:
 			return self.symbolTable[className]['type'] == 'class'
 
+	def addInstanceVariable(self, idenName, typeVar):
+		assert(self.currentlyInAClass())
+		assert(idenName[0] == '@')
+		assert(self.lookUpScope("@" + idenName))
+		self.symbolTable[self.currentScope]['instanceVars'] = {
+				'type' : typeVar,
+				'size' : self.getSize(typeVar),
+				'place' : self.symbolTable[self.currentScope]['instanceNum']
+				}
+		self.symbolTable[self.currentScope]['instanceNum'] += 1
+
+	def lookUpInstanceVariable(self, className, idenName):
+		return self.symbolTable[className]['instanceVars'].get(idenName)
+
+	def classHasNew(self):
+		assert(self.currentlyInAClass())
+		return self.symbolTable[self.currentScope]['hasNew']
+	
+	def inNew(self):
+		parentScope = self.symbolTable[self.currentScope]['parent']
+		return parentScope != None and self.symbolTable[parentScope]['type'] == 'class' and self.symbolTable[parentScope]['inNew']
+
+	def getClasses(self):
+		return self.classes
+
 	#Methods to work with methods
 	def addMethod(self, mtName):
 		#Current scope can be class/main
+		if self.currentlyInAClass() and mtName == 'new':
+			assert(not self.symbolTable[self.currentScope]['hasNew'])
+			self.symbolTable[self.currentScope]['hasNew'] = True
+			self.symbolTable[self.currentScope]['inNew'] = True
 		extendedName = self.currentScope + '#' + mtName
 		self.symbolTable[extendedName] = {
 				'name' : mtName,
@@ -86,6 +125,8 @@ class SymbolTable:
 	
 	def endMethod(self):
 		self.currentScope = self.symbolTable[self.currentScope]['parent']
+		if self.currentlyInAClass():
+			self.symbolTable[self.currentScope]['inNew'] = False
 
 	def methodExists(self, mtName):
 		#Before calling addMethod
@@ -145,9 +186,18 @@ class SymbolTable:
 						'size' : idenSize
 						}
 				self.symbolTable['main']['places'][place] = idenName
+		elif idenName[:2] == '@@':
+			#Class Variable
+			scope = self.lookUpScope(idenName)
+			if scope == None:
+				self.symbolTable['main']['identifiers'][idenName] = {
+						'place' : place,
+						'type' : idenType,
+						'size' : idenSize
+						}
+				self.symbolTable['main']['places'][place] = idenName
 		else: 
                         #idenName[0] != '@' and not idenName[0].isupper()  -> Local Scope! Add in current scope
-                        #idenName[:2] == '@@' -> Can be a class variable too
 			scope = self.lookUpScope(idenName)
 			if scope == None:
 				self.symbolTable[self.currentScope]['identifiers'][idenName] = {
@@ -239,11 +289,10 @@ class SymbolTable:
 				return scope
 
 			return None
-                
                 elif idenName[:2] == '@@':
-                        assert(self.currentlyInAClass())
-                        if idenName in self.symbolTable[self.currentScope]['identifiers']:
-                                return self.currentScope
+			#Search for class variable in main
+		       	if idenName in self.symbolTable['main']['identifiers']:
+                                return 'main'
                         else:
                                 return None
 

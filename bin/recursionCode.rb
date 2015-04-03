@@ -16,4 +16,4 @@ def Int m1(Int x)
 	end
 	return m2(x) + m3(x) + m1(x-1)
 end
-m1(5)
+a = m1(5)
