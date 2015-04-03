@@ -99,6 +99,10 @@ class SymbolTable:
 	def getClasses(self):
 		return self.classes
 
+	def currentlyInAClassMethod(self):
+		parentScope = self.symbolTable[self.currentScope]['parent']
+		return self.symbolTable[self.currentScope]['type'] == 'method' and parentScope != None and self.symbolTable[parentScope]['type'] == 'class'
+
 	#Methods to work with methods
 	def addMethod(self, mtName):
 		#Current scope can be class/main

@@ -699,6 +699,14 @@ def p_primary_expr_primitive_variable(p):
         	        return
 		else:
 			p[1]['idenName'] += "#" + ST.getClass()
+	
+	if p[1]['idenName'][0] == '@':
+		if not ST.currentlyInAClassMethod():
+			error('Can\'t use instance variables out of class method')
+			return
+		else:
+			#Need to lookup instance variable and self!
+			a = "fp"
 
 	if ST.lookupIdentifier(p[1]['idenName']) :
 		p[0]['place'] = ST.getAttribute(p[1]['idenName'],'place')
@@ -801,7 +809,6 @@ def p_lhs_var(p):
 #TODO
 def p_lhs_dot(p):
 	'''lhs : primary_expr '.' LOCALVAR
-	| primary_expr '.' CONST
 	'''
 
 #TODO	
@@ -1112,6 +1119,10 @@ def p_start_method(p):
 	p[0] = endLabel
 	TAC.emit('goto', endLabel, '', '')
 
+	#Check the return value if method name is new
+	if ST.currentlyInAClass() and p[-2] == "new" and p[-3] != ST.getClass():
+		error('Return type of new should be the same as the class (%s)'%ST.getClass())
+
 	ST.addMethod(p[-2])
 	#Emit the label for method
 	TAC.emit('label', ST.getCurrLabel(), '', '')
@@ -1174,6 +1185,9 @@ def p_type_param(p):
 			p[0] = 'TYPE_ERROR'
 			return
 		p[0] = p[1].upper()
+		if p[1] in ST.getClasses():
+			#For classes type is in the same case
+			p[0] = p[1]
 	elif p[1] == 'Array' :
 		p[0] = ('ARRAY', p[3], p[5] )
 	elif p[1] == 'String' :
