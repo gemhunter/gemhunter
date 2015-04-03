@@ -4,6 +4,9 @@ class A
 		@b = 2
 		@t = 5 + @b
 	end
+	def Void inc()
+		A.a = A.a +  1
+	end
 	def Int ha()
 		return @b
 	end

@@ -193,7 +193,12 @@ def p_assign_expr2(p):
 	}
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
-        if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
+        
+	if p[1]['idenName'] == 'NOPE':
+		error('Please use expanded assignment operator. Thanks! :p')
+		return
+
+	if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
                 error('Can\'t assign to non-class variables in a class')
                 return
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
@@ -204,7 +209,7 @@ def p_assign_expr2(p):
 		p[1]['idenName'] += '#' + ST.getClass()
 			
 	if p[1]['idenName'][0] == '@' and p[1]['idenName'][1] != '@':
-		error('Sorry, we do not allow compound assignment with instance variables (%s)'%p[1]['idenName'])
+		error('Sorry, we do not allow compound assignment with instance variables (%s), Sorry!'%p[1]['idenName'])
 		return
 
         if not ST.lookupIdentifier(p[1]['idenName']):
@@ -244,6 +249,14 @@ def p_assign_expr1(p):
 	}
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
+	if p[1]['idenName'] == 'NOPE':
+		#LHS is a class variable
+		if p[1]['type'] != p[3]['type']:
+			error('Type mismatch in assignment!')
+			return
+		TAC.emit(p[1]['place'], p[3]['place'], '', '=');
+		p[0] = p[3]
+		p[0]['place'] = p[1]['place']
 
         if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
                 error('Can\'t assign to non-class variables in a class')
@@ -917,6 +930,23 @@ def p_lhs_var(p):
 	'''lhs : user_var
 	'''
         p[0]=p[1]
+
+def p_lhs_class_var(p):
+	'''lhs : CONST '.' LOCALVAR '''
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR',
+			'idenName' : 'NOPE'
+			}
+	if not ST.classExists(p[1]):
+		error('Class (%s) does not exist'%p[1])
+		return
+	idenName = "@@" + p[3] + "#" + p[1]
+	if ST.lookupIdentifier(idenName) :
+		p[0]['place'] = ST.getAttribute(idenName,'place')
+		p[0]['type'] = ST.getAttribute(idenName,'type')
+	else:
+		error("Use of undefined variable %s!"%idenName)
 
 #TODO
 #Set an object instance
