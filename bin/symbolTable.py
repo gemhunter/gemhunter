@@ -58,6 +58,7 @@ class SymbolTable:
 		if parent != 'main' :
 			#Inheritance Baby!
 			self.symbolTable[className]['instanceVars'] = self.symbolTable[parent]['instanceVars']
+			self.symbolTable[className]['instanceNum'] = self.symbolTable[parent]['instanceNum']
 		self.currentScope = className
 		self.classes.append(className)
 
@@ -70,6 +71,11 @@ class SymbolTable:
 	def getClass(self):
 		assert(self.currentlyInAClass())
 		return self.currentScope
+	
+	def getParClass(self):
+		parentScope = self.symbolTable[self.currentScope]['parent']
+		assert(self.symbolTable[parentScope]['type'] == 'class')
+		return parentScope
 
         def classExists(self,className):
 		if self.symbolTable.get(className) == None:

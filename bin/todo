@@ -1,6 +1,7 @@
 special things for class methods
-class instance variables
-inheritance
+make new method accessible
+call new methods in succession
+dot operator
 array
 case
 for

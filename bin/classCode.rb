@@ -5,12 +5,24 @@ class Customer
 	@@y = 1 + @@a
 	def Customer new()
 		@p = 3
+		@pro = 4
+	end
+	def Int ha()
+		@p = 4
+		a = @p
+		a += 4
+		return a - @p
 	end
 end
-class Brother < Customer 
+class Brother < Customer
 	@@b = $a + $a
 	def Brother new()
-		x = 1
-		@x = 1
+		@a = 1
+	end
+	def Int ha()
+		@p = 4
+		a = @p
+		a += ha()
+		return a - @p
 	end
 end

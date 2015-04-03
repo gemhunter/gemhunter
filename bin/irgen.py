@@ -261,8 +261,21 @@ def p_assign_expr1(p):
 		else:
 			if ST.inNew():
 				ST.addInstanceVariable(p[1]['idenName'], p[3]['type'])
-			#TODO
 			#Lookup and substitute
+			instVar = ST.lookUpInstanceVariable(ST.getParClass(), p[1]['idenName'])
+			if instVar == None:
+				error('Instance Variable not declared (%s)'%p[1]['idenName'])
+				return
+			if instVar['type'] != p[3]['type']:
+				error('Type mismatch in assignment to ' + p[1]['idenName'])
+				return
+			selfPlace = ST.getAttribute('guys', 'place')
+			assert(selfPlace != None)
+			TAC.emit(selfPlace, 4*instVar['place'], p[3]['place'], '*=')
+			p[0] = {
+					'place' : p[3]['place'],
+					'type' : p[3]['type']
+					}
 			return
 
         if not ST.lookupIdentifier(p[1]['idenName']):
@@ -723,9 +736,20 @@ def p_primary_expr_primitive_variable(p):
 			error('Can\'t use instance variables out of class method')
 			return
 		else:
-			#TODO
 			#Need to lookup instance variable and self!
-			a = "fp"
+			instVar = ST.lookUpInstanceVariable(ST.getParClass(), p[1]['idenName'])
+			if instVar == None:
+				error('Instance Variable not declared (%s)'%p[1]['idenName'])
+				return
+			selfPlace = ST.getAttribute('guys', 'place')
+			assert(selfPlace != None)
+			newPlace = ST.createTemp()
+			TAC.emit(newPlace, selfPlace, 4*instVar['place'], '=*')
+			p[0] = {
+					'place' : newPlace,
+					'type' : instVar['type']
+					}
+			return
 
 	if ST.lookupIdentifier(p[1]['idenName']) :
 		p[0]['place'] = ST.getAttribute(p[1]['idenName'],'place')
@@ -1297,10 +1321,13 @@ def p_user_var(p):
 	| INSTANCEVAR 
 	| METHOD_ONLY_VAR 
 	| CONST
+	| KEYWORD_GUYS
 	'''
 	p[0] = {
 		'idenName' : p[1]
 	}
+	if p[1] == 'guys':
+		error('Sorry this is a reserved keyword. Only certain people can use it! (%s)'%p[1])
 
 ##################
 #Keyword Literals#
@@ -1329,6 +1356,15 @@ def p_key_var_FALSE(p):
 		'type' : 'BOOL',
 		'value' : 'false'
 	}
+
+def p_key_var_GUYS(p):
+	'''key_var : KEYWORD_GUYS
+	'''
+	p[0] = 	{
+		'type' : 'TYPE_ERROR',
+		'value' : 'false'
+	}
+	error('Sorry this is a reserved keyword. Only certain people can use it! (%s)'%p[1])
 
 ##########
 #Literals#
