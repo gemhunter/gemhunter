@@ -774,7 +774,7 @@ def p_primary_expr_bracket(p):
 	''' primary_expr : '(' expr ')' '''
 	p[0] = p[2]
 
-#TODO Arrays, object-var lookup
+#TODO Arrays decln, array indexing, object-var lookup
 def p_primary_expr(p):
 	''' primary_expr : '[' arg_list ']'
 	| primary_expr '[' expr ']'
@@ -861,11 +861,13 @@ def p_lhs_var(p):
         p[0]=p[1]
 
 #TODO
+#Set an object instance
 def p_lhs_dot(p):
 	'''lhs : primary_expr '.' LOCALVAR
 	'''
 
 #TODO	
+#Set an array index
 def p_lhs_array(p):
 	''' lhs : primary_expr '[' expr ']'
 	'''
@@ -1343,7 +1345,6 @@ def p_user_var(p):
 	| CLASSVAR 
 	| INSTANCEVAR 
 	| METHOD_ONLY_VAR 
-	| CONST
 	| KEYWORD_GUYS
 	'''
 	p[0] = {

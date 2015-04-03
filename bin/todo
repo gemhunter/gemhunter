@@ -5,7 +5,6 @@ array
 strings
 case
 for
-constants
 yield / blocks
 super
 putint/ getint
