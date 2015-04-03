@@ -841,9 +841,44 @@ def p_method_call(p):
 
 def p_class_method_call(p):
 	'''method_call : CONST '.' method '(' arg_list ')' '''
-	#TODO
 	#Class-method call (new)	
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
+	if p[3] != 'new':
+		error('Class method not found! (%s)'%p[3])
+		return
+	if not ST.classExists(p[1]):
+		error('Class (%s) does not exist'%p[1])
+		return
+	
+	label, argList, retType = ST.lookUpClassMethod(p[1], p[3])
+	
+	#Create a new temporary and allocate memory
+	newPlace = ST.createTemp()
+	TAC.emit(newPlace,p[1], '', 'new')
 
+	#Add self to agruments
+	p[5] = [(p[1], newPlace)] + p[5]
+	
+	#Check arguments
+	givenArgs = []
+	for i in p[5]:
+		givenArgs.append(i[0])
+	if givenArgs != argList:
+		error('Cannot call this function ( %s.new ). Wrong argument(s)'%p[1])
+		return
+
+	#Call function
+	newPlace = ST.createTemp()	
+	for i in p[5]:
+		TAC.emit('param', i[1], '', '')
+	TAC.emit(newPlace, label, '', 'call')
+	p[0] = {
+			'place' : newPlace,
+			'type' : retType
+			}
 
 #TODO - figure out what compstmt should be
 #TODO - implement yield

@@ -173,7 +173,6 @@ class SymbolTable:
 
 	def lookUpMethod(self, mtName):
 		#Search for a method in all ancestor scopes (till main)
-		#During a method call (non-class method)
 		#Returns label,argList,retType
 		#Returns whether this is a class method
 		scope = self.currentScope
@@ -186,6 +185,14 @@ class SymbolTable:
 			eName = self.symbolTable[scope]['methods'][mtName]['extendedName']
 			return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType'],None
 		return None,None,None,None
+
+	def lookUpClassMethod(self, className, mtName):
+		#Search for a method in the given class
+		mt = self.symbolTable[className]['methods'] . get(mtName)
+		if mt == None:
+			return None, None, None
+		eName = mt['extendedName']
+		return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
