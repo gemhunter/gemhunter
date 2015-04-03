@@ -774,11 +774,12 @@ def p_primary_expr_bracket(p):
 	''' primary_expr : '(' expr ')' '''
 	p[0] = p[2]
 
-#TODO Arrays decln, array indexing, object-var lookup
+#TODO Arrays decln, array indexing, object-var lookup, class - var lookup
 def p_primary_expr(p):
 	''' primary_expr : '[' arg_list ']'
 	| primary_expr '[' expr ']'
 	| primary_expr '.' LOCALVAR
+	| CONST '.' LOCALVAR
 	'''
 
 def p_primary_expr_method_call(p):
@@ -834,9 +835,14 @@ def p_method_call(p):
 				'type' : retType
 				}
 	else:
-		#Need to do a full Lookup
 		#TODO
+		#Object-method call
 		newPlace = ST.createTemp()
+
+def p_class_method_call(p):
+	'''method_call : CONST '.' method '(' arg_list ')' '''
+	#TODO
+	#Class-method call (new)	
 
 #TODO - figure out what compstmt should be
 #TODO - implement yield
