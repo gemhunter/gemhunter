@@ -7,7 +7,7 @@ class Customer
 		@p = 3
 		@pro = 4
 	end
-	def Int ha()
+	def Int ha(Int a)
 		@p = 4
 		a = @p
 		a += 4
@@ -19,10 +19,10 @@ class Brother < Customer
 	def Brother new()
 		@a = 1
 	end
-	def Int ha()
+	def Int ha1(Int a, Float b)
 		@p = 4
 		a = @p
-		a += ha()
+		a += ha(@p)
 		return a - @pro
 	end
 end
@@ -36,3 +36,4 @@ end
 bro = Brother.new()
 sis = Sister.new(bro)
 sis.a.pro + 3
+q = sis.a.ha(3) + 4

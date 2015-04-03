@@ -115,6 +115,16 @@ class SymbolTable:
 		parentScope = self.symbolTable[self.currentScope]['parent']
 		return self.symbolTable[self.currentScope]['type'] == 'method' and parentScope != None and self.symbolTable[parentScope]['type'] == 'class'
 
+	def checkIfAncestor(self, a, b):
+		#Checks if a is an ancestor of b
+		assert(self.symbolTable[a]['type'] == 'class')
+		assert(self.symbolTable[b]['type'] == 'class')
+		while self.symbolTable[b]['type'] == 'class':
+			if a == b:
+				return True
+			b = self.symbolTable[b]['parent']
+		return False
+
 	#Methods to work with methods
 	def addMethod(self, mtName):
 		#Current scope can be class/main
@@ -188,11 +198,15 @@ class SymbolTable:
 
 	def lookUpClassMethod(self, className, mtName):
 		#Search for a method in the given class
-		mt = self.symbolTable[className]['methods'] . get(mtName)
-		if mt == None:
-			return None, None, None
-		eName = mt['extendedName']
-		return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
+		#Search up the hierarchy and end at the first method
+		scope = className
+		while self.symbolTable[scope]['type'] == 'class':
+			mt = self.symbolTable[scope]['methods'] . get(mtName)
+			if mt !=  None:
+				eName = mt['extendedName']
+				return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
+			scope = self.symbolTable[scope]['parent']
+		return None, None, None
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):

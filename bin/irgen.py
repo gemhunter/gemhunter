@@ -885,9 +885,26 @@ def p_method_call(p):
 		givenArgs = []
 		for i in p[3]:
 			givenArgs.append(i[0])
-		if givenArgs != argList:
+
+		#Now for class type arguments, argument of subtype works
+		argError = False
+		if len(givenArgs) != len(argList):
+			argError = True
+		for a,b in zip(givenArgs, argList):
+			if ST.classExists(a):
+				if not ST.classExists(b):
+					argError = True
+				else:
+					#Check if ancestor
+					if not ST.checkIfAncestor(b, a):
+						#LSP
+						argError = True
+			else:
+				if a != b:
+					argError = True
+		if argError:
 			error('Cannot call this function ( %s ). Wrong argument(s)'%p[1])
-	
+
 		#Call function
 		newPlace = ST.createTemp()	
 		for i in p[3]:
@@ -901,7 +918,54 @@ def p_method_call(p):
 		#TODO
 		#Object-method call
 		#Lookup the hierarchy
-		newPlace = ST.createTemp()
+		if not ST.classExists(p[1]['type']):
+			error('Cannot dereference non-objects (%s)'%p[1]['place'])
+			return
+
+		label, argList, retType = ST.lookUpClassMethod(p[1]['type'], p[3])
+		
+		if label == None:
+			error('Cannot find method (%s) for this object'%p[3])
+			return
+		
+		if retType == 'TYPE_ERROR':
+			error('Function( %s ) ill-defined. Thus cannot be called'%p[3])
+			return
+
+		#Add a default self argument
+		p[5] = [(p[1]['type'], p[1]['place'])] + p[5]
+
+		#Check arguments
+		givenArgs = []
+		for i in p[5]:
+			givenArgs.append(i[0])
+		argError = False
+		if len(givenArgs) != len(argList):
+			argError = True
+		for a,b in zip(givenArgs, argList):
+			if ST.classExists(a):
+				if not ST.classExists(b):
+					argError = True
+				else:
+					#Check if ancestor
+					if not ST.checkIfAncestor(b, a):
+						#LSP
+						argError = True
+			else:
+				if a != b:
+					argError = True
+		if argError:
+			error('Cannot call this function ( %s ). Wrong argument(s)'%p[3])
+
+		#Call function
+		newPlace = ST.createTemp()	
+		for i in p[5]:
+			TAC.emit('param', i[1], '', '')
+		TAC.emit(newPlace, label, '', 'call')
+		p[0] = {
+				'place' : newPlace,
+				'type' : retType
+				}
 
 def p_class_method_call(p):
 	'''method_call : CONST '.' method '(' arg_list ')' '''
