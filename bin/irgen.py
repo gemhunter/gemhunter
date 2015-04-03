@@ -257,6 +257,7 @@ def p_assign_expr1(p):
 		TAC.emit(p[1]['place'], p[3]['place'], '', '=');
 		p[0] = p[3]
 		p[0]['place'] = p[1]['place']
+		return
 
         if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
                 error('Can\'t assign to non-class variables in a class')
