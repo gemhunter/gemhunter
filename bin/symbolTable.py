@@ -175,16 +175,17 @@ class SymbolTable:
 		#Search for a method in all ancestor scopes (till main)
 		#During a method call (non-class method)
 		#Returns label,argList,retType
+		#Returns whether this is a class method
 		scope = self.currentScope
 		while self.symbolTable[scope]['type'] not in ['main']:
 			if mtName in self.symbolTable[scope]['methods']:
 				eName = self.symbolTable[scope]['methods'][mtName]['extendedName']
-				return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
+				return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType'], self.symbolTable[scope]['type'] == 'class'
 			scope = self.symbolTable[scope]['parent']
 		if mtName in self.symbolTable[scope]['methods']:
 			eName = self.symbolTable[scope]['methods'][mtName]['extendedName']
-			return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
-		return None,None,None
+			return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType'],None
+		return None,None,None,None
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):

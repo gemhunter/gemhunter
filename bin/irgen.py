@@ -799,7 +799,7 @@ def p_method_call(p):
 			}
 	if len(p) == 5:
 		#Direct method call
-		label, argList, retType = ST.lookUpMethod(p[1]) 
+		label, argList, retType , isClass = ST.lookUpMethod(p[1]) 
 		if label == None:
 			error('Cannot use undefined method in this scope ( %s )'%p[1])
 			return
@@ -807,12 +807,23 @@ def p_method_call(p):
 		if retType == 'TYPE_ERROR':
 			error('Function( %s ) ill-defined. Thus cannot be called'%p[1])
 			return
+
+		#If it is a class method, it must be called from inside a class method
+		if isClass == True:
+			if not ST.currentlyInAClassMethod():
+				error('Cannot call class method from here (%s)'%p[1])
+				return
+			else:
+				#Add a default self argument
+				p[3] = [(ST.getParClass(), ST.getAttribute('guys','place'))] + p[3]
+
 		#Check arguments
 		givenArgs = []
 		for i in p[3]:
 			givenArgs.append(i[0])
 		if givenArgs != argList:
 			error('Cannot call this function ( %s ). Wrong argument(s)'%p[1])
+	
 		#Call function
 		newPlace = ST.createTemp()	
 		for i in p[3]:

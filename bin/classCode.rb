@@ -23,6 +23,6 @@ class Brother < Customer
 		@p = 4
 		a = @p
 		a += ha()
-		return a - @p
+		return a - @pro
 	end
 end

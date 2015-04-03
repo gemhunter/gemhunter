@@ -1,6 +1,5 @@
-special things for class methods
 make new method accessible
-call new methods in succession
+call new methods in succession ( through super )
 dot operator
 array
 case
