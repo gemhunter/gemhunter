@@ -1172,7 +1172,14 @@ def p_start_method(p):
 	
 	#Set the arg list
 	argList = []
-	for i in p[-1]:
+	args = p[-1]
+
+	#For class methods, add a default self argument
+	if ST.currentlyInAClassMethod():
+		className = ST.getParClass()
+		args = [(className, 'guys')] + args
+	
+	for i in args:
 		argList.append(i[0])
 	ST.setArgList(argList)
 
@@ -1180,7 +1187,7 @@ def p_start_method(p):
 	ST.setRetType(p[-3])
 
 	#Get the arguments from stack and add them to scope
-	for i in p[-1]:
+	for i in args:
 		iden = i[1]
 		idenType = i[0]
 		myPlace = ST.createTemp()
