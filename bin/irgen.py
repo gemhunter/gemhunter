@@ -202,7 +202,11 @@ def p_assign_expr2(p):
 	    
 	if p[1]['idenName'][:2] == '@@' and ST.currentlyInAClass():
 		p[1]['idenName'] += '#' + ST.getClass()
-							    
+			
+	if p[1]['idenName'][0] == '@' and p[1]['idenName'][1] != '@':
+		error('Sorry, we do not allow compound assignment with instance variables (%s)'%p[1]['idenName'])
+		return
+
         if not ST.lookupIdentifier(p[1]['idenName']):
                 error('Use of undeclared variable %s!'%p[1]['idenName'])
 		return
@@ -249,9 +253,23 @@ def p_assign_expr1(p):
                 return
 	if p[1]['idenName'][:2] == '@@' and ST.currentlyInAClass():
 		p[1]['idenName'] += '#' + ST.getClass()
-                        
+
+	if p[1]['idenName'][0] == '@' and p[1]['idenName'][1] != '@':
+		if not ST.currentlyInAClassMethod():
+			error('Can\'t use instance variables out of class method')
+			return
+		else:
+			if ST.inNew():
+				ST.addInstanceVariable(p[1]['idenName'], p[3]['type'])
+			#TODO
+			#Lookup and substitute
+			return
+
         if not ST.lookupIdentifier(p[1]['idenName']):
-                myPlace = ST.createTemp()
+                #We need to declare variable. For class variable, we need to check if it isn't instance variable
+		if p[1]['idenName'][:2] == '@@' and ST.lookUpInstanceVariable(ST.getClass(),(p[1]['idenName'].split('#'))[0][1:]) != None:
+			error('Class variable cannot share name with instance variable (%s)'%p[1]['idenName'])
+		myPlace = ST.createTemp()
 		ST.addIdentifier(p[1]['idenName'],myPlace,p[3]['type'])
 		TAC.emit(myPlace, p[3]['place'], '', '=')
 		p[0] = p[3]
@@ -700,11 +718,12 @@ def p_primary_expr_primitive_variable(p):
 		else:
 			p[1]['idenName'] += "#" + ST.getClass()
 	
-	if p[1]['idenName'][0] == '@':
+	if p[1]['idenName'][0] == '@' and p[1]['idenName'][1] != '@':
 		if not ST.currentlyInAClassMethod():
 			error('Can\'t use instance variables out of class method')
 			return
 		else:
+			#TODO
 			#Need to lookup instance variable and self!
 			a = "fp"
 

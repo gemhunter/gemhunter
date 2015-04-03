@@ -75,15 +75,18 @@ class SymbolTable:
 			return self.symbolTable[className]['type'] == 'class'
 
 	def addInstanceVariable(self, idenName, typeVar):
-		assert(self.currentlyInAClass())
+		#Adds instance variable in class (if it doesn't exist) (also it shouldn't be a class variable)
 		assert(idenName[0] == '@')
-		assert(self.lookUpScope("@" + idenName))
-		self.symbolTable[self.currentScope]['instanceVars'] = {
-				'type' : typeVar,
-				'size' : self.getSize(typeVar),
-				'place' : self.symbolTable[self.currentScope]['instanceNum']
-				}
-		self.symbolTable[self.currentScope]['instanceNum'] += 1
+		assert(self.currentlyInAClassMethod())
+		assert(self.inNew())
+		parentScope = self.symbolTable[self.currentScope]['parent']
+		if self.symbolTable[parentScope]['instanceVars'].get(idenName) == None and self.lookUpScope("@" + idenName + "#" + parentScope) == None:
+			self.symbolTable[parentScope]['instanceVars'][idenName] = {
+					'type' : typeVar,
+					'size' : self.getSize(typeVar),
+					'place' : self.symbolTable[parentScope]['instanceNum']
+					}
+			self.symbolTable[parentScope]['instanceNum'] += 1
 
 	def lookUpInstanceVariable(self, className, idenName):
 		return self.symbolTable[className]['instanceVars'].get(idenName)
@@ -192,6 +195,7 @@ class SymbolTable:
 				self.symbolTable['main']['places'][place] = idenName
 		elif idenName[:2] == '@@':
 			#Class Variable
+			assert(self.symbolTable[self.currentScope]['type'] == 'class')
 			scope = self.lookUpScope(idenName)
 			if scope == None:
 				self.symbolTable['main']['identifiers'][idenName] = {
