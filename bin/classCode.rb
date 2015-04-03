@@ -26,3 +26,13 @@ class Brother < Customer
 		return a - @pro
 	end
 end
+
+class Sister
+	def Sister new(Brother a)
+		@a = a
+	end
+end
+
+bro = Brother.new()
+sis = Sister.new(bro)
+sis.a.pro + 3

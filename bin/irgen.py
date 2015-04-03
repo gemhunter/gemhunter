@@ -778,6 +778,7 @@ def p_primary_expr_primitive_literals(p):
 	| literal
 	'''
 	newPlace = ST.createTemp()
+	#TODO for strings (ptr)
 	TAC.emit(newPlace,p[1]['value'],'','=')
 	p[0] = {
 		'place' : newPlace,
@@ -788,12 +789,44 @@ def p_primary_expr_bracket(p):
 	''' primary_expr : '(' expr ')' '''
 	p[0] = p[2]
 
-#TODO Arrays decln, array indexing, object-var lookup
+#TODO Arrays decln, array indexing
 def p_primary_expr(p):
 	''' primary_expr : '[' arg_list ']'
 	| primary_expr '[' expr ']'
-	| primary_expr '.' LOCALVAR
 	'''
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
+
+def p_primary_expr_objectVar(p):
+	''' primary_expr : primary_expr '.' LOCALVAR '''
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
+	if not ST.classExists(p[1]['type']):
+		error('Cannot dereference non-objects (%s)'%p[1]['place'])
+		return
+
+	instVar  = ST.lookUpInstanceVariable(p[1]['type'], "@" + p[3])
+	if instVar != None:
+		#Code for instance var
+		newPlace = ST.createTemp()
+		TAC.emit(newPlace,p[1]['place'] ,4 * instVar['place'] , '=*')
+		p[0] = {
+				'place' : newPlace,
+				'type' : instVar['type']
+				}
+	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
+		#Class Variable here
+		p[0] = {
+				'place' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'place'),
+				'type' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'type')
+				}
+	else:
+		error('%s not found in '%p[3] + p[1]['place'])
+		return
 
 def p_primary_class_var(p):
 	''' primary_expr :  CONST '.' LOCALVAR '''
@@ -867,6 +900,7 @@ def p_method_call(p):
 	else:
 		#TODO
 		#Object-method call
+		#Lookup the hierarchy
 		newPlace = ST.createTemp()
 
 def p_class_method_call(p):
@@ -910,8 +944,8 @@ def p_class_method_call(p):
 			'type' : retType
 			}
 
-#TODO - figure out what compstmt should be
-#TODO - implement yield
+#NOTE - figure out what compstmt should be
+#NOTE - implement yield
 def p_method_callBlock(p):
 	''' method_call : primary_expr '.' method_var '{' '|' block_param_list '|' compstmt '}' 
 	| method_var '{' '|' block_param_list '|' compstmt '}' 
@@ -920,8 +954,7 @@ def p_method_callBlock(p):
 #TODO
 def p_method_super(p):
 	#Should return type, place
-	'''method_call : KEYWORD_SUPER
-	| KEYWORD_SUPER '(' arg_list ')'
+	'''method_call : KEYWORD_SUPER '(' arg_list ')'
 	'''
 
 ###################
@@ -955,7 +988,7 @@ def p_lhs_dot(p):
 	'''lhs : primary_expr '.' LOCALVAR
 	'''
 
-#TODO	
+#TODO
 #Set an array index
 def p_lhs_array(p):
 	''' lhs : primary_expr '[' expr ']'
