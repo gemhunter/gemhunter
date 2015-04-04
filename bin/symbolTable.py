@@ -277,10 +277,10 @@ class SymbolTable:
 
 	#Get the size of a type
 	def getSize(self, typeExpr):
-		if typeExpr in ['INT', 'BOOL', 'CHAR', 'VOID' ]:
+		if typeExpr in ['INT', 'BOOL', 'CHAR', 'VOID' ] + self.classes:
 			return self.wordSize
 		elif typeExpr[0] == 'RANGE':
-			return 2*self.wordSize
+			return self.addressSize
 		elif typeExpr[0] == 'STRING':
 			return self.addressSize
 		elif typeExpr[0] == 'ARRAY':
