@@ -6,4 +6,5 @@
 ./irgen.py classCode.rb
 ./irgen.py methodCode.rb
 ./irgen.py recursionCode.rb
+./irgen.py arrayCode.rb
 ./irgen.py tryCode.rb

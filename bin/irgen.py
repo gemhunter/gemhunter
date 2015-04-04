@@ -324,6 +324,7 @@ def p_range_expr(p):
 		'place' : newPlace,
 		'type' : 'TYPE_ERROR'
 	}
+	#TODO range pointer
 	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
 		return
 	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
@@ -789,11 +790,53 @@ def p_primary_expr_bracket(p):
 	''' primary_expr : '(' expr ')' '''
 	p[0] = p[2]
 
-#TODO Arrays decln, array indexing
 def p_primary_expr(p):
 	''' primary_expr : '[' arg_list ']'
-	| primary_expr '[' expr ']'
+	| type_param '[' INT ']'
 	'''
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
+	if len(p) == 4:
+		#explicit decleration
+		#First check that all the types are same
+		if len(p[2]) < 1:
+			error('Cannot declare an empty array')
+			return
+		arrType = p[2][0][0]
+		for i in p[2]:
+			if i[0] != arrType:
+				error('in Array expression, all types must be same')
+				return
+
+		size = len(p[2])
+		newPlace = ST.createTemp()
+		newType = ('ARRAY', arrType, size)
+		TAC.emit(newPlace, newType, '', 'new')
+		cnt = 0
+		for i in p[2]:
+			TAC.emit(newPlace, 4 * cnt,i[1] , '*=')
+			cnt+=1
+		p[0] = {
+				'place' : newPlace,
+				'type' : newType
+				}
+	else:
+		#implicit decleration
+		newPlace = ST.createTemp()
+		newType = ('ARRAY', p[1], '', p[3])
+		TAC.emit(newPlace,newType, '', 'new')
+		p[0] = {
+				'place' : newPlace,
+				'type' : newType
+				}
+
+#TODO array indexing
+def p_primary_expr_array_index(p):
+	'''primary_expr : primary_expr '[' expr ']'
+	'''
+
 	p[0] = {
 			'place' : 'undefined',
 			'type' : 'TYPE_ERROR'
@@ -915,7 +958,6 @@ def p_method_call(p):
 				'type' : retType
 				}
 	else:
-		#TODO
 		#Object-method call
 		#Lookup the hierarchy
 		if not ST.classExists(p[1]['type']):
@@ -1430,7 +1472,7 @@ def p_type_param(p):
         '''type_param : CONST
 	| KEYWORD_STRING '(' INT ')'
         | KEYWORD_ARRAY  '(' type_param ',' INT ')'
-        | KEYWORD_RANGE '(' INT ',' INT ')'
+        | KEYWORD_RANGE
         '''
 	#Return the type (as string)
 	if len(p) == 2:
@@ -1447,7 +1489,7 @@ def p_type_param(p):
 	elif p[1] == 'String' :
 		p[0] = ('STRING', p[3] )
 	else:
-		p[0] = ('RANGE', p[3], p[5] )
+		p[0] = 'RANGE'
 
 ##################
 #Block parameters#
