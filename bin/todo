@@ -5,6 +5,7 @@ case
 for
 super
 putint/ getint/ putstring
+# string equal/not equal operators
 # optimizations
 # type casting
 # yield / blocks

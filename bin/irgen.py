@@ -285,7 +285,9 @@ def p_assign_expr1(p):
 				return
 			selfPlace = ST.getAttribute('guys', 'place')
 			assert(selfPlace != None)
-			TAC.emit(selfPlace, 4*instVar['place'], p[3]['place'], '*=')
+			offset = ST.createTemp()
+			TAC.emit(offset, 4*instVar['place'], '', '=')
+			TAC.emit(selfPlace, offset, p[3]['place'], '*=')
 			p[0] = {
 					'place' : p[3]['place'],
 					'type' : p[3]['type']
@@ -435,9 +437,10 @@ def p_l11_expr(p):
 		elif p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL':
 			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 			p[0]['type']='BOOL'
-		elif baseType(p[1]['type'][0]) == 'STRING' and baseType(p[3]['type'][0]) == 'STRING':
-			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
-			p[0]['type']='BOOL'
+		#elif baseType(p[1]['type'][0]) == 'STRING' and baseType(p[3]['type'][0]) == 'STRING':
+			#TODO String comparison
+			#TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			#p[0]['type']='BOOL'
 		elif p[1]['type'] == 'VOID' and p[3]['type'] == 'VOID':
 			if p[2] == '==' :
 				TAC.emit(newPlace,'true','','=')
@@ -759,7 +762,9 @@ def p_primary_expr_primitive_variable(p):
 			selfPlace = ST.getAttribute('guys', 'place')
 			assert(selfPlace != None)
 			newPlace = ST.createTemp()
-			TAC.emit(newPlace, selfPlace, 4*instVar['place'], '=*')
+			offset = ST.createTemp()
+			TAC.emit(offset,  4*instVar['place'], '', '=')
+			TAC.emit(newPlace, selfPlace, offset, '=*')
 			p[0] = {
 					'place' : newPlace,
 					'type' : instVar['type']
@@ -816,7 +821,9 @@ def p_primary_expr(p):
 		TAC.emit(newPlace, newType, '', 'new')
 		cnt = 0
 		for i in p[2]:
-			TAC.emit(newPlace, 4 * cnt,i[1] , '*=')
+			offset = ST.createTemp()
+			TAC.emit(offset, 4*cnt, '', '=')
+			TAC.emit(newPlace, offset,i[1] , '*=')
 			cnt+=1
 		p[0] = {
 				'place' : newPlace,
@@ -832,7 +839,6 @@ def p_primary_expr(p):
 				'type' : newType
 				}
 
-#TODO array indexing
 def p_primary_expr_array_index(p):
 	'''primary_expr : primary_expr '[' expr ']'
 	'''
@@ -841,6 +847,40 @@ def p_primary_expr_array_index(p):
 			'place' : 'undefined',
 			'type' : 'TYPE_ERROR'
 			}
+	if not isinstance(p[1]['type'], tuple):
+		error('Only arrays or strings can be indexed')
+		return
+	if p[3]['type'] != 'INT':
+		error('Arrays or Strings can only be indexed by integers')
+		return
+	if p[1]['type'][0] == 'STRING':
+		#String index
+		indivSize = ST.createTemp()
+		TAC.emit(indivSize, '4', '', '=')
+		offset = ST.createTemp()
+		TAC.emit(offset, p[3]['place'], indivSize, '*')
+		newPlace = ST.createTemp()
+		TAC.emit(newPlace, p[1]['place'],offset , '=*')
+		p[0] = {
+				'place' : newPlace,
+				'type' : 'CHAR'
+				}
+	elif p[1]['type'][0] == 'ARRAY':
+		#Array index
+		subType = p[1]['type'][1]
+		indivSize = ST.createTemp()
+		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
+		offset = ST.createTemp()
+		TAC.emit(offset, p[3]['place'], indivSize, '*')
+		newPlace = ST.createTemp()
+		TAC.emit(newPlace, p[1]['place'],offset , '=*')
+		p[0] = {
+				'place' : newPlace,
+				'type' : subType
+				}
+	else:
+		error('Only arrays or strings can be indexed')
+		return
 
 def p_primary_expr_objectVar(p):
 	''' primary_expr : primary_expr '.' LOCALVAR '''
@@ -856,7 +896,9 @@ def p_primary_expr_objectVar(p):
 	if instVar != None:
 		#Code for instance var
 		newPlace = ST.createTemp()
-		TAC.emit(newPlace,p[1]['place'] ,4 * instVar['place'] , '=*')
+		offset = ST.createTemp()
+		TAC.emit(offset,  4*instVar['place'], '', '=')
+		TAC.emit(newPlace,p[1]['place'] ,offset , '=*')
 		p[0] = {
 				'place' : newPlace,
 				'type' : instVar['type']

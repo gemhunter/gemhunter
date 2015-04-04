@@ -301,7 +301,7 @@ class SymbolTable:
 		elif typeExpr[0] == 'STRING':
 			return self.wordSize * typeExpr[1]
 		elif typeExpr[0] == 'ARRAY':
-			return getActualSize(typeExpr[1]) * typeExpr[2]
+			return self.getActualSize(typeExpr[1]) * typeExpr[2]
 		else:
 			assert(False)
 

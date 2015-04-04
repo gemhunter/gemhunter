@@ -25,11 +25,11 @@ v = (3 < 5)
 w= 3 < 5
 x = 3 == 3
 'h' == 'r'
-"itt" == "qe"
+#"itt" == "qe"
 nil == nil
 nil != nil
 true == false
-"ha" == "ha" && 1 < 2 || false && nil == nil
+#"ha" == "ha" && 1 < 2 || false && nil == nil
 aw = a == c && true
 a+=0o45
-a > 5 &&  "la" == "po"
+#a > 5 &&  "la" == "po"

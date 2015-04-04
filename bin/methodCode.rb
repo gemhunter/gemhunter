@@ -19,5 +19,5 @@ def Void noReturn
 end
 a=4
 y = "ha"
-e = .5 !=  noReturn()
+e = nil !=  noReturn()
 q = e || a > 4
