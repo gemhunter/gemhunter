@@ -1139,7 +1139,6 @@ def p_lhs_class_var(p):
 	else:
 		error("Use of undefined variable %s!"%idenName)
 
-#TODO
 #Set an object instance
 def p_lhs_dot(p):
 	'''lhs : primary_expr '.' LOCALVAR
@@ -1150,6 +1149,26 @@ def p_lhs_dot(p):
 			'offset' : 'undefined',
 			'type' : 'TYPE_ERROR'
 			}
+	if not ST.classExists(p[1]['type']):
+		error('Cannot dereference non-objects (%s)'%p[1]['place'])
+		return
+	instVar  = ST.lookUpInstanceVariable(p[1]['type'], "@" + p[3])
+	if instVar != None:
+		#Code for instance var
+		offset = ST.createTemp()
+		TAC.emit(offset,  4*instVar['place'], '', '=')
+		p[0]['base'] = p[1]['place']
+		p[0]['offset'] = offset
+		p[0]['type'] = instVar['type']
+	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
+		#Class Variable here
+		p[0] = {
+				'place' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'place'),
+				'type' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'type')
+				}
+	else:
+		error('%s not found in '%p[3] + p[1]['place'])
+		return
 
 #Set an array index
 def p_lhs_array(p):
