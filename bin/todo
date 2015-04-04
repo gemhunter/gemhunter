@@ -4,7 +4,7 @@ range as pointer
 case
 for
 super
-putint/ getint
+putint/ getint/ putstring
 # optimizations
 # type casting
 # yield / blocks

@@ -277,16 +277,33 @@ class SymbolTable:
 
 	#Get the size of a type
 	def getSize(self, typeExpr):
-		if typeExpr in ['INT', 'BOOL', 'CHAR', 'VOID' ] + self.classes:
+		if typeExpr in ['INT', 'BOOL', 'FLOAT', 'CHAR', 'VOID' ]:
 			return self.wordSize
-		elif typeExpr[0] == 'RANGE':
+		elif typeExpr in self.classes:
+			return self.addressSize
+		elif typeExpr == 'RANGE':
 			return self.addressSize
 		elif typeExpr[0] == 'STRING':
 			return self.addressSize
 		elif typeExpr[0] == 'ARRAY':
 			return self.addressSize
 		else:
-			return 0
+			assert(False)
+
+	#Get actual size of a type
+	def getActualSize(self, typeExpr):
+		if typeExpr in ['INT', 'BOOL', 'FLOAT', 'CHAR', 'VOID']:
+			return self.wordSize
+		elif typeExpr in self.classes:
+			return self.wordSize * self.symbolTable[typeExpr]['instanceNum']
+		elif typeExpr == 'RANGE':
+			return 2 * self.wordSize
+		elif typeExpr[0] == 'STRING':
+			return self.wordSize * typeExpr[1]
+		elif typeExpr[0] == 'ARRAY':
+			return getActualSize(typeExpr[1]) * typeExpr[2]
+		else:
+			assert(False)
 
 	#Create a temporary variable
 	def createTemp(self):
