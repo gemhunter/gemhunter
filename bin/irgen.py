@@ -194,7 +194,7 @@ def p_assign_expr2(p):
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
         
-	if p[1]['idenName'] == 'NOPE':
+	if p[1]['idenName'] == 'NOPE' or p[1]['idenName'] == 'PTR':
 		error('Please use expanded assignment operator. Thanks! :p')
 		return
 
@@ -257,6 +257,15 @@ def p_assign_expr1(p):
 		TAC.emit(p[1]['place'], p[3]['place'], '', '=');
 		p[0] = p[3]
 		p[0]['place'] = p[1]['place']
+		return
+
+	if p[1]['idenName'] == 'PTR':
+		#LHS is a pointer (with offset)
+		if p[1]['type'] != p[3]['type']:
+			 error('Type mismatch in assignment to ' + p[1]['base'] + ' from ' + p[3]['place'])
+			 return
+		TAC.emit(p[1]['base'], p[1]['offset'], p[3]['place'], '*=')
+		p[0] = p[3]
 		return
 
         if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
@@ -1135,12 +1144,51 @@ def p_lhs_class_var(p):
 def p_lhs_dot(p):
 	'''lhs : primary_expr '.' LOCALVAR
 	'''
+	p[0] = {
+			'idenName' : 'PTR',
+			'base' :  'undefined',
+			'offset' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
 
-#TODO
 #Set an array index
 def p_lhs_array(p):
 	''' lhs : primary_expr '[' expr ']'
 	'''
+	p[0] = {
+			'idenName' : 'PTR',
+			'base' : 'undefined',
+			'offset' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
+	if not isinstance(p[1]['type'], tuple):
+		error('Only arrays or strings can be indexed')
+		return
+	if p[3]['type'] != 'INT':
+		error('Arrays or Strings can only be indexed by integers')
+		return
+	if p[1]['type'][0] == 'STRING':
+		#String index
+		indivSize = ST.createTemp()
+		TAC.emit(indivSize, '4', '', '=')
+		offset = ST.createTemp()
+		TAC.emit(offset, p[3]['place'], indivSize, '*')
+		p[0]['base'] = p[1]['place']
+		p[0]['offset'] = offset
+		p[0]['type'] = 'CHAR'
+	elif p[1]['type'][0] == 'ARRAY':
+		#Array index
+		subType = p[1]['type'][1]
+		indivSize = ST.createTemp()
+		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
+		offset = ST.createTemp()
+		TAC.emit(offset, p[3]['place'], indivSize, '*')
+		p[0]['base'] = p[1]['place']
+		p[0]['offset'] = offset
+		p[0]['type'] = subType
+	else:
+		error('Only arrays or strings can be indexed')
+		return
 
 ###########
 #Arguments#
