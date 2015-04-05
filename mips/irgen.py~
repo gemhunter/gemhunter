@@ -193,12 +193,7 @@ def p_assign_expr2(p):
 	}
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
-        
-	if p[1]['idenName'] == 'NOPE' or p[1]['idenName'] == 'PTR':
-		error('Please use expanded assignment operator. Thanks! :p')
-		return
-
-	if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
+        if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
                 error('Can\'t assign to non-class variables in a class')
                 return
         if not ST.currentlyInAClass() and p[1]['idenName'][:2] == '@@':
@@ -209,7 +204,7 @@ def p_assign_expr2(p):
 		p[1]['idenName'] += '#' + ST.getClass()
 			
 	if p[1]['idenName'][0] == '@' and p[1]['idenName'][1] != '@':
-		error('Sorry, we do not allow compound assignment with instance variables (%s)!'%p[1]['idenName'])
+		error('Sorry, we do not allow compound assignment with instance variables (%s)'%p[1]['idenName'])
 		return
 
         if not ST.lookupIdentifier(p[1]['idenName']):
@@ -249,24 +244,6 @@ def p_assign_expr1(p):
 	}
 	if p[3]['type'] == 'TYPE_ERROR':
 		return
-	if p[1]['idenName'] == 'NOPE':
-		#LHS is a class variable
-		if p[1]['type'] != p[3]['type']:
-			error('Type mismatch in assignment!')
-			return
-		TAC.emit(p[1]['place'], p[3]['place'], '', '=');
-		p[0] = p[3]
-		p[0]['place'] = p[1]['place']
-		return
-
-	if p[1]['idenName'] == 'PTR':
-		#LHS is a pointer (with offset)
-		if p[1]['type'] != p[3]['type']:
-			 error('Type mismatch in assignment to ' + p[1]['base'] + ' from ' + p[3]['place'])
-			 return
-		TAC.emit(p[1]['base'], p[1]['offset'], p[3]['place'], '*=')
-		p[0] = p[3]
-		return
 
         if ST.currentlyInAClass() and p[1]['idenName'][:2] != '@@':
                 error('Can\'t assign to non-class variables in a class')
@@ -282,26 +259,10 @@ def p_assign_expr1(p):
 			error('Can\'t use instance variables out of class method')
 			return
 		else:
-                        #If in the new method of the class, add a new instance variable, if not previously declared (this is checked in the addInstanceVariable function in symbol table)
 			if ST.inNew():
 				ST.addInstanceVariable(p[1]['idenName'], p[3]['type'])
+			#TODO
 			#Lookup and substitute
-			instVar = ST.lookUpInstanceVariable(ST.getParClass(), p[1]['idenName'])
-			if instVar == None:
-				error('Instance Variable not declared (%s)'%p[1]['idenName'])
-				return
-			if instVar['type'] != p[3]['type']:
-				error('Type mismatch in assignment to ' + p[1]['idenName'])
-				return
-			selfPlace = ST.getAttribute('guys', 'place')
-			assert(selfPlace != None)
-			offset = ST.createTemp()
-			TAC.emit(offset, 4*instVar['place'], '', '=')
-			TAC.emit(selfPlace, offset, p[3]['place'], '*=')
-			p[0] = {
-					'place' : p[3]['place'],
-					'type' : p[3]['type']
-					}
 			return
 
         if not ST.lookupIdentifier(p[1]['idenName']):
@@ -336,7 +297,6 @@ def p_range_expr(p):
 		'place' : newPlace,
 		'type' : 'TYPE_ERROR'
 	}
-	#TODO range pointer
 	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
 		return
 	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
@@ -447,10 +407,9 @@ def p_l11_expr(p):
 		elif p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL':
 			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 			p[0]['type']='BOOL'
-		#elif baseType(p[1]['type'][0]) == 'STRING' and baseType(p[3]['type'][0]) == 'STRING':
-			#TODO String comparison
-			#TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
-			#p[0]['type']='BOOL'
+		elif baseType(p[1]['type'][0]) == 'STRING' and baseType(p[3]['type'][0]) == 'STRING':
+			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+			p[0]['type']='BOOL'
 		elif p[1]['type'] == 'VOID' and p[3]['type'] == 'VOID':
 			if p[2] == '==' :
 				TAC.emit(newPlace,'true','','=')
@@ -764,22 +723,9 @@ def p_primary_expr_primitive_variable(p):
 			error('Can\'t use instance variables out of class method')
 			return
 		else:
+			#TODO
 			#Need to lookup instance variable and self!
-			instVar = ST.lookUpInstanceVariable(ST.getParClass(), p[1]['idenName'])
-			if instVar == None:
-				error('Instance Variable not declared (%s)'%p[1]['idenName'])
-				return
-			selfPlace = ST.getAttribute('guys', 'place')
-			assert(selfPlace != None)
-			newPlace = ST.createTemp()
-			offset = ST.createTemp()
-			TAC.emit(offset,  4*instVar['place'], '', '=')
-			TAC.emit(newPlace, selfPlace, offset, '=*')
-			p[0] = {
-					'place' : newPlace,
-					'type' : instVar['type']
-					}
-			return
+			a = "fp"
 
 	if ST.lookupIdentifier(p[1]['idenName']) :
 		p[0]['place'] = ST.getAttribute(p[1]['idenName'],'place')
@@ -794,7 +740,6 @@ def p_primary_expr_primitive_literals(p):
 	| literal
 	'''
 	newPlace = ST.createTemp()
-	#TODO for strings (ptr)
 	TAC.emit(newPlace,p[1]['value'],'','=')
 	p[0] = {
 		'place' : newPlace,
@@ -805,140 +750,12 @@ def p_primary_expr_bracket(p):
 	''' primary_expr : '(' expr ')' '''
 	p[0] = p[2]
 
+#TODO Arrays, object-var lookup
 def p_primary_expr(p):
 	''' primary_expr : '[' arg_list ']'
-	| type_param '[' INT ']'
+	| primary_expr '[' expr ']'
+	| primary_expr '.' LOCALVAR
 	'''
-	p[0] = {
-			'place' : 'undefined',
-			'type' : 'TYPE_ERROR'
-			}
-	if len(p) == 4:
-		#explicit declaration
-		#First check that all the types are same
-		if len(p[2]) < 1:
-			error('Cannot declare an empty array')
-			return
-		arrType = p[2][0][0]
-		for i in p[2]:
-			if i[0] != arrType:
-				error('in Array expression, all types must be same')
-				return
-
-		size = len(p[2])
-		newPlace = ST.createTemp()
-		newType = ('ARRAY', arrType, size)
-		TAC.emit(newPlace, newType, '', 'new')
-		cnt = 0
-		for i in p[2]:
-			offset = ST.createTemp()
-			TAC.emit(offset, 4*cnt, '', '=')
-			TAC.emit(newPlace, offset,i[1] , '*=')
-			cnt+=1
-		p[0] = {
-				'place' : newPlace,
-				'type' : newType
-				}
-	else:
-		#implicit declaration
-		newPlace = ST.createTemp()
-		newType = ('ARRAY', p[1], '', p[3])
-		TAC.emit(newPlace,newType, '', 'new')
-		p[0] = {
-				'place' : newPlace,
-				'type' : newType
-				}
-
-def p_primary_expr_array_index(p):
-	'''primary_expr : primary_expr '[' expr ']'
-	'''
-
-	p[0] = {
-			'place' : 'undefined',
-			'type' : 'TYPE_ERROR'
-			}
-	if not isinstance(p[1]['type'], tuple):
-		error('Only arrays or strings can be indexed')
-		return
-	if p[3]['type'] != 'INT':
-		error('Arrays or Strings can only be indexed by integers')
-		return
-	if p[1]['type'][0] == 'STRING':
-		#String index
-		indivSize = ST.createTemp()
-		TAC.emit(indivSize, '4', '', '=')
-		offset = ST.createTemp()
-		TAC.emit(offset, p[3]['place'], indivSize, '*')
-		newPlace = ST.createTemp()
-		TAC.emit(newPlace, p[1]['place'],offset , '=*')
-		p[0] = {
-				'place' : newPlace,
-				'type' : 'CHAR'
-				}
-	elif p[1]['type'][0] == 'ARRAY':
-		#Array index
-		subType = p[1]['type'][1]
-		indivSize = ST.createTemp()
-		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
-		offset = ST.createTemp()
-		TAC.emit(offset, p[3]['place'], indivSize, '*')
-		newPlace = ST.createTemp()
-		TAC.emit(newPlace, p[1]['place'],offset , '=*')
-		p[0] = {
-				'place' : newPlace,
-				'type' : subType
-				}
-	else:
-		error('Only arrays or strings can be indexed')
-		return
-
-def p_primary_expr_objectVar(p):
-	''' primary_expr : primary_expr '.' LOCALVAR '''
-	p[0] = {
-			'place' : 'undefined',
-			'type' : 'TYPE_ERROR'
-			}
-	if not ST.classExists(p[1]['type']):
-		error('Cannot dereference non-objects (%s)'%p[1]['place'])
-		return
-
-	instVar  = ST.lookUpInstanceVariable(p[1]['type'], "@" + p[3])
-	if instVar != None:
-		#Code for instance var
-		newPlace = ST.createTemp()
-		offset = ST.createTemp()
-		TAC.emit(offset,  4*instVar['place'], '', '=')
-		TAC.emit(newPlace,p[1]['place'] ,offset , '=*')
-		p[0] = {
-				'place' : newPlace,
-				'type' : instVar['type']
-				}
-	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
-		#Class Variable here
-		p[0] = {
-				'place' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'place'),
-				'type' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'type')
-				}
-	else:
-		error('%s not found in '%p[3] + p[1]['place'])
-		return
-
-def p_primary_class_var(p):
-	''' primary_expr :  CONST '.' LOCALVAR '''
-	p[0] = {
-			'place' : 'undefined',
-			'type' : 'TYPE_ERROR'
-			}
-	if not ST.classExists(p[1]):
-		error('Class (%s) does not exist'%p[1])
-		return
-
-	idenName = "@@" + p[3] + "#" + p[1]
-	if ST.lookupIdentifier(idenName) :
-		p[0]['place'] = ST.getAttribute(idenName,'place')
-		p[0]['type'] = ST.getAttribute(idenName,'type')
-	else:
-		error("Use of undefined variable %s!"%idenName)
 
 def p_primary_expr_method_call(p):
 	''' primary_expr : method_call'''
@@ -958,7 +775,7 @@ def p_method_call(p):
 			}
 	if len(p) == 5:
 		#Direct method call
-		label, argList, retType , isClass = ST.lookUpMethod(p[1]) 
+		label, argList, retType = ST.lookUpMethod(p[1]) 
 		if label == None:
 			error('Cannot use undefined method in this scope ( %s )'%p[1])
 			return
@@ -966,40 +783,12 @@ def p_method_call(p):
 		if retType == 'TYPE_ERROR':
 			error('Function( %s ) ill-defined. Thus cannot be called'%p[1])
 			return
-
-		#If it is a class method, it must be called from inside a class method
-		if isClass == True:
-			if not ST.currentlyInAClassMethod():
-				error('Cannot call class method from here (%s)'%p[1])
-				return
-			else:
-				#Add a default self argument
-				p[3] = [(ST.getParClass(), ST.getAttribute('guys','place'))] + p[3]
-
 		#Check arguments
 		givenArgs = []
 		for i in p[3]:
 			givenArgs.append(i[0])
-
-		#Now for class type arguments, argument of subtype works
-		argError = False
-		if len(givenArgs) != len(argList):
-			argError = True
-		for a,b in zip(givenArgs, argList):
-			if ST.classExists(a):
-				if not ST.classExists(b):
-					argError = True
-				else:
-					#Check if ancestor
-					if not ST.checkIfAncestor(b, a):
-						#LSP
-						argError = True
-			else:
-				if a != b:
-					argError = True
-		if argError:
+		if givenArgs != argList:
 			error('Cannot call this function ( %s ). Wrong argument(s)'%p[1])
-
 		#Call function
 		newPlace = ST.createTemp()	
 		for i in p[3]:
@@ -1010,100 +799,12 @@ def p_method_call(p):
 				'type' : retType
 				}
 	else:
-		#Object-method call
-		#Lookup the hierarchy
-		if not ST.classExists(p[1]['type']):
-			error('Cannot dereference non-objects (%s)'%p[1]['place'])
-			return
+		#Need to do a full Lookup
+		#TODO
+		newPlace = ST.createTemp()
 
-		label, argList, retType = ST.lookUpClassMethod(p[1]['type'], p[3])
-		
-		if label == None:
-			error('Cannot find method (%s) for this object'%p[3])
-			return
-		
-		if retType == 'TYPE_ERROR':
-			error('Function( %s ) ill-defined. Thus cannot be called'%p[3])
-			return
-
-		#Add a default self argument
-		p[5] = [(p[1]['type'], p[1]['place'])] + p[5]
-
-		#Check arguments
-		givenArgs = []
-		for i in p[5]:
-			givenArgs.append(i[0])
-		argError = False
-		if len(givenArgs) != len(argList):
-			argError = True
-		for a,b in zip(givenArgs, argList):
-			if ST.classExists(a):
-				if not ST.classExists(b):
-					argError = True
-				else:
-					#Check if ancestor
-					if not ST.checkIfAncestor(b, a):
-						#LSP
-						argError = True
-			else:
-				if a != b:
-					argError = True
-		if argError:
-			error('Cannot call this function ( %s ). Wrong argument(s)'%p[3])
-
-		#Call function
-		newPlace = ST.createTemp()	
-		for i in p[5]:
-			TAC.emit('param', i[1], '', '')
-		TAC.emit(newPlace, label, '', 'call')
-		p[0] = {
-				'place' : newPlace,
-				'type' : retType
-				}
-
-def p_class_method_call(p):
-	'''method_call : CONST '.' method '(' arg_list ')' '''
-	#Class-method call (new)	
-	p[0] = {
-			'place' : 'undefined',
-			'type' : 'TYPE_ERROR'
-			}
-	if p[3] != 'new':
-		error('Class method not found! (%s)'%p[3])
-		return
-	if not ST.classExists(p[1]):
-		error('Class (%s) does not exist'%p[1])
-		return
-	
-	label, argList, retType = ST.lookUpClassMethod(p[1], p[3])
-	
-	#Create a new temporary and allocate memory
-	newPlace = ST.createTemp()
-	TAC.emit(newPlace,p[1], '', 'new')
-
-	#Add self to arguments
-	p[5] = [(p[1], newPlace)] + p[5]
-	
-	#Check arguments
-	givenArgs = []
-	for i in p[5]:
-		givenArgs.append(i[0])
-	if givenArgs != argList:
-		error('Cannot call this function ( %s.new ). Wrong argument(s)'%p[1])
-		return
-
-	#Call function
-	newPlace = ST.createTemp()	
-	for i in p[5]:
-		TAC.emit('param', i[1], '', '')
-	TAC.emit(newPlace, label, '', 'call')
-	p[0] = {
-			'place' : newPlace,
-			'type' : retType
-			}
-
-#NOTE - figure out what compstmt should be
-#NOTE - implement yield
+#TODO - figure out what compstmt should be
+#TODO - implement yield
 def p_method_callBlock(p):
 	''' method_call : primary_expr '.' method_var '{' '|' block_param_list '|' compstmt '}' 
 	| method_var '{' '|' block_param_list '|' compstmt '}' 
@@ -1112,7 +813,8 @@ def p_method_callBlock(p):
 #TODO
 def p_method_super(p):
 	#Should return type, place
-	'''method_call : KEYWORD_SUPER '(' arg_list ')'
+	'''method_call : KEYWORD_SUPER
+	| KEYWORD_SUPER '(' arg_list ')'
 	'''
 
 ###################
@@ -1123,92 +825,15 @@ def p_lhs_var(p):
 	'''
         p[0]=p[1]
 
-def p_lhs_class_var(p):
-	'''lhs : CONST '.' LOCALVAR '''
-	p[0] = {
-			'place' : 'undefined',
-			'type' : 'TYPE_ERROR',
-			'idenName' : 'NOPE'
-			}
-	if not ST.classExists(p[1]):
-		error('Class (%s) does not exist'%p[1])
-		return
-	idenName = "@@" + p[3] + "#" + p[1]
-	if ST.lookupIdentifier(idenName) :
-		p[0]['place'] = ST.getAttribute(idenName,'place')
-		p[0]['type'] = ST.getAttribute(idenName,'type')
-	else:
-		error("Use of undefined variable %s!"%idenName)
-
-#Set an object instance
+#TODO
 def p_lhs_dot(p):
 	'''lhs : primary_expr '.' LOCALVAR
 	'''
-	p[0] = {
-			'idenName' : 'PTR',
-			'base' :  'undefined',
-			'offset' : 'undefined',
-			'type' : 'TYPE_ERROR'
-			}
-	if not ST.classExists(p[1]['type']):
-		error('Cannot dereference non-objects (%s)'%p[1]['place'])
-		return
-	instVar  = ST.lookUpInstanceVariable(p[1]['type'], "@" + p[3])
-	if instVar != None:
-		#Code for instance var
-		offset = ST.createTemp()
-		TAC.emit(offset,  4*instVar['place'], '', '=')
-		p[0]['base'] = p[1]['place']
-		p[0]['offset'] = offset
-		p[0]['type'] = instVar['type']
-	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
-		#Class Variable here
-		p[0] = {
-				'place' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'place'),
-				'type' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'type')
-				}
-	else:
-		error('%s not found in '%p[3] + p[1]['place'])
-		return
 
-#Set an array index
+#TODO	
 def p_lhs_array(p):
 	''' lhs : primary_expr '[' expr ']'
 	'''
-	p[0] = {
-			'idenName' : 'PTR',
-			'base' : 'undefined',
-			'offset' : 'undefined',
-			'type' : 'TYPE_ERROR'
-			}
-	if not isinstance(p[1]['type'], tuple):
-		error('Only arrays or strings can be indexed')
-		return
-	if p[3]['type'] != 'INT':
-		error('Arrays or Strings can only be indexed by integers')
-		return
-	if p[1]['type'][0] == 'STRING':
-		#String index
-		indivSize = ST.createTemp()
-		TAC.emit(indivSize, '4', '', '=')
-		offset = ST.createTemp()
-		TAC.emit(offset, p[3]['place'], indivSize, '*')
-		p[0]['base'] = p[1]['place']
-		p[0]['offset'] = offset
-		p[0]['type'] = 'CHAR'
-	elif p[1]['type'][0] == 'ARRAY':
-		#Array index
-		subType = p[1]['type'][1]
-		indivSize = ST.createTemp()
-		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
-		offset = ST.createTemp()
-		TAC.emit(offset, p[3]['place'], indivSize, '*')
-		p[0]['base'] = p[1]['place']
-		p[0]['offset'] = offset
-		p[0]['type'] = subType
-	else:
-		error('Only arrays or strings can be indexed')
-		return
 
 ###########
 #Arguments#
@@ -1494,11 +1119,6 @@ def p_method_defn(p):
 			if ST.getRetType() != p[7]['retType']:
 				ST.setRetType('TYPE_ERROR')
 				error('Mismatch in return types in function %s!'%p[3])
-	else:
-		#Set the return type
-		ST.setRetType(ST.getParClass())
-		TAC.emit('return',ST.getAttribute('guys', 'place') , '', '')
-
 	#Add a default return statement ( For security ) (next 3 lines)
 	newPlace = ST.createTemp()
 	TAC.emit(newPlace, 'nil', '', '=')
@@ -1528,14 +1148,7 @@ def p_start_method(p):
 	
 	#Set the arg list
 	argList = []
-	args = p[-1]
-
-	#For class methods, add a default self argument
-	if ST.currentlyInAClassMethod():
-		className = ST.getParClass()
-		args = [(className, 'guys')] + args
-	
-	for i in args:
+	for i in p[-1]:
 		argList.append(i[0])
 	ST.setArgList(argList)
 
@@ -1543,7 +1156,7 @@ def p_start_method(p):
 	ST.setRetType(p[-3])
 
 	#Get the arguments from stack and add them to scope
-	for i in args:
+	for i in p[-1]:
 		iden = i[1]
 		idenType = i[0]
 		myPlace = ST.createTemp()
@@ -1582,7 +1195,7 @@ def p_type_param(p):
         '''type_param : CONST
 	| KEYWORD_STRING '(' INT ')'
         | KEYWORD_ARRAY  '(' type_param ',' INT ')'
-        | KEYWORD_RANGE
+        | KEYWORD_RANGE '(' INT ',' INT ')'
         '''
 	#Return the type (as string)
 	if len(p) == 2:
@@ -1599,7 +1212,7 @@ def p_type_param(p):
 	elif p[1] == 'String' :
 		p[0] = ('STRING', p[3] )
 	else:
-		p[0] = 'RANGE'
+		p[0] = ('RANGE', p[3], p[5] )
 
 ##################
 #Block parameters#
@@ -1683,13 +1296,11 @@ def p_user_var(p):
 	| CLASSVAR 
 	| INSTANCEVAR 
 	| METHOD_ONLY_VAR 
-	| KEYWORD_GUYS
+	| CONST
 	'''
 	p[0] = {
 		'idenName' : p[1]
 	}
-	if p[1] == 'guys':
-		error('Sorry this is a reserved keyword. Only certain people can use it! (%s)'%p[1])
 
 ##################
 #Keyword Literals#
@@ -1718,15 +1329,6 @@ def p_key_var_FALSE(p):
 		'type' : 'BOOL',
 		'value' : 'false'
 	}
-
-def p_key_var_GUYS(p):
-	'''key_var : KEYWORD_GUYS
-	'''
-	p[0] = 	{
-		'type' : 'TYPE_ERROR',
-		'value' : 'false'
-	}
-	error('Sorry this is a reserved keyword. Only certain people can use it! (%s)'%p[1])
 
 ##########
 #Literals#
