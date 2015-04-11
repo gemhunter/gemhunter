@@ -66,6 +66,7 @@ reserved = {
     'if' : "KEYWORD_IF",
     'return' : "KEYWORD_RETURN",
     'yield' : "KEYWORD_YIELD",
+    'guys' : "KEYWORD_GUYS",
 }
 
 tokens = tokens + tuple(reserved.values())

@@ -24,8 +24,6 @@ class SymbolTable:
 		self.wordSize = 4
 		self.addressSize = 4
 		self.classes = []
-                self.offset = 0
-                self.addressDescriptors = {}
 
         #Methods to manipulate (add/end) scope blocks
 	def addBlock(self):
@@ -60,6 +58,7 @@ class SymbolTable:
 		if parent != 'main' :
 			#Inheritance Baby!
 			self.symbolTable[className]['instanceVars'] = self.symbolTable[parent]['instanceVars']
+			self.symbolTable[className]['instanceNum'] = self.symbolTable[parent]['instanceNum']
 		self.currentScope = className
 		self.classes.append(className)
 
@@ -72,6 +71,11 @@ class SymbolTable:
 	def getClass(self):
 		assert(self.currentlyInAClass())
 		return self.currentScope
+	
+	def getParClass(self):
+		parentScope = self.symbolTable[self.currentScope]['parent']
+		assert(self.symbolTable[parentScope]['type'] == 'class')
+		return parentScope
 
         def classExists(self,className):
 		if self.symbolTable.get(className) == None:
@@ -110,6 +114,16 @@ class SymbolTable:
 	def currentlyInAClassMethod(self):
 		parentScope = self.symbolTable[self.currentScope]['parent']
 		return self.symbolTable[self.currentScope]['type'] == 'method' and parentScope != None and self.symbolTable[parentScope]['type'] == 'class'
+
+	def checkIfAncestor(self, a, b):
+		#Checks if a is an ancestor of b
+		assert(self.symbolTable[a]['type'] == 'class')
+		assert(self.symbolTable[b]['type'] == 'class')
+		while self.symbolTable[b]['type'] == 'class':
+			if a == b:
+				return True
+			b = self.symbolTable[b]['parent']
+		return False
 
 	#Methods to work with methods
 	def addMethod(self, mtName):
@@ -169,18 +183,30 @@ class SymbolTable:
 
 	def lookUpMethod(self, mtName):
 		#Search for a method in all ancestor scopes (till main)
-		#During a method call (non-class method)
 		#Returns label,argList,retType
+		#Returns whether this is a class method
 		scope = self.currentScope
 		while self.symbolTable[scope]['type'] not in ['main']:
 			if mtName in self.symbolTable[scope]['methods']:
 				eName = self.symbolTable[scope]['methods'][mtName]['extendedName']
-				return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
+				return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType'], self.symbolTable[scope]['type'] == 'class'
 			scope = self.symbolTable[scope]['parent']
 		if mtName in self.symbolTable[scope]['methods']:
 			eName = self.symbolTable[scope]['methods'][mtName]['extendedName']
-			return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
-		return None,None,None
+			return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType'],None
+		return None,None,None,None
+
+	def lookUpClassMethod(self, className, mtName):
+		#Search for a method in the given class
+		#Search up the hierarchy and end at the first method
+		scope = className
+		while self.symbolTable[scope]['type'] == 'class':
+			mt = self.symbolTable[scope]['methods'] . get(mtName)
+			if mt !=  None:
+				eName = mt['extendedName']
+				return self.symbolTable[eName]['label'], self.symbolTable[eName]['argList'], self.symbolTable[eName]['retType']
+			scope = self.symbolTable[scope]['parent']
+		return None, None, None
 
 	#Adds identifier to the current scope
 	def addIdentifier(self, idenName, place, idenType = 'unknown', idenSize = 0):
@@ -251,24 +277,37 @@ class SymbolTable:
 
 	#Get the size of a type
 	def getSize(self, typeExpr):
-		if typeExpr in ['INT', 'BOOL', 'CHAR', 'VOID' ]:
+		if typeExpr in ['INT', 'BOOL', 'FLOAT', 'CHAR', 'VOID' ]:
 			return self.wordSize
-		elif typeExpr[0] == 'RANGE':
-			return 2*self.wordSize
+		elif typeExpr in self.classes:
+			return self.addressSize
+		elif typeExpr == 'RANGE':
+			return self.addressSize
 		elif typeExpr[0] == 'STRING':
 			return self.addressSize
 		elif typeExpr[0] == 'ARRAY':
 			return self.addressSize
 		else:
-			return 0
+			assert(False)
+
+	#Get actual size of a type
+	def getActualSize(self, typeExpr):
+		if typeExpr in ['INT', 'BOOL', 'FLOAT', 'CHAR', 'VOID']:
+			return self.wordSize
+		elif typeExpr in self.classes:
+			return self.wordSize * self.symbolTable[typeExpr]['instanceNum']
+		elif typeExpr == 'RANGE':
+			return 2 * self.wordSize
+		elif typeExpr[0] == 'STRING':
+			return self.wordSize * typeExpr[1]
+		elif typeExpr[0] == 'ARRAY':
+			return self.getActualSize(typeExpr[1]) * typeExpr[2]
+		else:
+			assert(False)
 
 	#Create a temporary variable
 	def createTemp(self):
 		self.tempNo += 1
-                
-                self.addressDescriptors[self.tempBase + str(self.tempNo)]=self.offset
-                self.offset += 4
-                                
 		return self.tempBase + str(self.tempNo)
 
 	#Scope name for new block

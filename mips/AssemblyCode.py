@@ -24,6 +24,8 @@ class AssemblyCode:
             '$s6' : None,
             '$s7' : None
         }
+
+        #address descriptor
     
     def getReg(self,tempName):
         return self.ST.addressDescriptors[tempName]

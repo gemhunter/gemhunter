@@ -15,6 +15,7 @@ if __name__=='__main__':
         for line in TAC.code:
             AC.comment(str(line))
             #print line,
+            continue
             if line[3]=='=':
                 tempReg = AC.availReg()
                 if not isinstance(line[1],int):
@@ -25,8 +26,5 @@ if __name__=='__main__':
                 AC.emit('sw',tempReg,AC.getReg(line[0]))
                 #freeReg(tempReg)
                 #print AC.getReg(line[1])
-        
-            
-
-        
+                        
         AC.printCode()
