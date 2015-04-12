@@ -75,7 +75,8 @@ class AssemblyCode:
             #no need to emit code to assign the tempName to this memory location, taken care at flush
             #assign register and return
             newReg = self.availReg(TACline)
-            self.setReg(tempName,newReg)
+            self.registerDescriptors[newReg]=tempName
+            self.addressDescriptors[tempName]['register']=newReg
             return newReg
             
     #Internal fn to get a register such that no tempName from the current instruction is replaced
@@ -97,8 +98,8 @@ class AssemblyCode:
                 break
 
         #flush the old contents back to disk
-        self.emit('sw',reg,self.addressDescriptors[tempName]['memory'])
-        self.addressDescriptors[tempName]['register'] = None
+        self.emit('sw',reg,self.addressDescriptors[self.registerDescriptors[reg]]['memory'])
+        self.addressDescriptors[self.registerDescriptors[reg]]['register'] = None
 
         return reg #Should never come to this line
 
@@ -115,13 +116,8 @@ class AssemblyCode:
     
     #print the whole assembly code
     def printCode(self):
-        header = '''.text
-        main:
-        '''
-        footer = '''
-        li $v0, 10 # terminate program
-        syscall
-        '''
+        header = '.text \nmain:'
+        footer = 'li $v0, 10 \nsyscall'
 
         print header
 
