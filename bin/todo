@@ -2,7 +2,7 @@ strings
 range as pointer
 case
 for
-super
+super (will be used in new)
 putint/ getint/ putstring
 # string equal/not equal operators
 # optimizations

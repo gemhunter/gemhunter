@@ -244,7 +244,7 @@ class SymbolTable:
 						'type' : idenType,
 						'size' : idenSize
 						}
-				self.symbolTable[self.currentScope]['places'][place] = idenName
+				#self.symbolTable[self.currentScope]['places'][place] = idenName
 
 	#Returns a boolean indicating presence of identifier 
 	def lookupIdentifier(self, idenName):

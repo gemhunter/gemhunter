@@ -7,24 +7,27 @@ import AssemblyCode
 if __name__=='__main__':
 
         #Parse it!
+        #initialize all the helpers
         ST,TAC = parse()
         #TAC.printCode()
         
         AC = AssemblyCode.AssemblyCode(ST,TAC)
         
+
+        #iterate over all lines in the TAC to process
         for line in TAC.code:
-            AC.comment(str(line))
-            #print line,
+            #print the TAC line as comment
+            AC.comment(line)
+            
             continue
+            #Assignment to temporary variables, consider all cases
             if line[3]=='=':
-                tempReg = AC.availReg()
-                if not isinstance(line[1],int):
-                    AC.emit('la',tempReg,AC.getReg(line[1]))
-                else:
-                    AC.emit('la',tempReg,[1])
-                    AC.assignReg(tempReg,line[1])
-                AC.emit('sw',tempReg,AC.getReg(line[0]))
-                #freeReg(tempReg)
-                #print AC.getReg(line[1])
+
+                #lhs of assignment, get register to assign
+                tempReg = AC.getReg(line[0])
+
+                #assignment from immediate value to a variable
+                if isinstance(line[1],int):
+                        
                         
         AC.printCode()
