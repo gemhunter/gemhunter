@@ -56,15 +56,19 @@ if __name__=='__main__':
 
             #Bitwise not
             elif line[3]=='~':
-                if isinstance(line[1],float):
-                    #TODO
-                    a = 1
-                else:
-                    AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[1],line))
+                AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[1],line))
 
             #Boolean complement
             elif line[3]=='!':
-                AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[1],line))
+                label1 = AC.getLabel()
+                label2 = AC.getLabel()
+
+                AC.emit("beqz",AC.getReg(line[1],line),label1)
+                AC.emit("li",AC.getReg(line[0],line),0)
+                AC.emit("b",label2)
+                AC.emit(label1+":")
+                AC.emit("li",AC.getReg(line[0],line),1)
+                AC.emit(label2+":")
 
             #Unary minus
             elif line[3]=='-' and not line[2]:
@@ -87,7 +91,7 @@ if __name__=='__main__':
                 AC.emit("add",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
 
             #Subtraction
-            elif line[3]=='+':
+            elif line[3]=='-':
                 AC.emit("sub",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
    
             #Left shift
@@ -127,5 +131,47 @@ if __name__=='__main__':
             elif line[3]=='<=':
                 AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
                 AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[0],line))
+
+            #Equal to
+            elif line[3]=='==':
+                label1 = AC.getLabel()
+                label2 = AC.getLabel()
+                label3 = AC.getLabel()
+
+                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.emit("beqz",AC.getReg(line[0],line),label1)
+                AC.emit("li",AC.getReg(line[0],line),0)
+                AC.emit("b",label2)
+                
+                AC.emit(label1+":")
+                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
+                AC.emit("beqz",AC.getReg(line[0],line),label3)
+                AC.emit("li",AC.getReg(line[0],line),0)
+                AC.emit("b",label2)
+
+                AC.emit(label3+":")
+                AC.emit("li",AC.getReg(line[0],line),1)
+                AC.emit(label2+":")
+
+            #Not equal to
+            elif line[3]=='!=':
+                label1 = AC.getLabel()
+                label2 = AC.getLabel()
+                label3 = AC.getLabel()
+
+                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.emit("beqz",AC.getReg(line[0],line),label1)
+                AC.emit("li",AC.getReg(line[0],line),1)
+                AC.emit("b",label2)
+                
+                AC.emit(label1+":")
+                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
+                AC.emit("beqz",AC.getReg(line[0],line),label3)
+                AC.emit("li",AC.getReg(line[0],line),1)
+                AC.emit("b",label2)
+
+                AC.emit(label3+":")
+                AC.emit("li",AC.getReg(line[0],line),0)
+                AC.emit(label2+":")
 
         AC.printCode()

@@ -37,6 +37,10 @@ class AssemblyCode:
         self.localAllocated = []
         self.localAllocated.append(0)
 
+        #jump label count
+        self.labelBase = 'mipsLabel'
+        self.labelCount = 0
+
     def setReg(self,tempName,reg):
         #Update the new contents of register reg and emit code for the same
         self.emit('ld',reg,self.addressDescriptors[tempName]['memory'])
@@ -104,6 +108,12 @@ class AssemblyCode:
 
         return reg
 
+    #Get the next label
+    def getLabel(self):
+        label = self.labelBase + str(self.labelCount)
+        self.labelCount += 1
+        return label
+
 
     #Emit the code, by appending to the list
     def emit(self,instr='',arg1='',arg2='',arg3=''):
@@ -129,7 +139,9 @@ class AssemblyCode:
                     continue
         
                 outfile.write(str(line[0])+" ")
-                outfile.write(str(line[1]))
+                if str(line[1]):
+                    outfile.write(" ")
+                    outfile.write(str(line[1]))
                 if str(line[2]):
                     outfile.write(", ")
                     outfile.write(str(line[2]))
