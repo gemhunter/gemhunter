@@ -1,4 +1,5 @@
 import random
+import sys
 
 class AssemblyCode:
     #Initialize
@@ -116,22 +117,24 @@ class AssemblyCode:
     
     #print the whole assembly code
     def printCode(self):
-        header = '.text \nmain:'
-        footer = 'li $v0, 10 \nsyscall'
+        with open(sys.argv[1]+'.s','w+') as outfile:
+            header = '.text \nmain:'
+            footer = 'li $v0, 10 \nsyscall'
 
-        print header
+            outfile.write(header+'\n')
 
-        for line in self.code:
-            if line[0][0]=='#':
-                print line[0]+', '+line[1]+', '+line[2]+', '+line[3]
-                continue
-    
-            print line[0],
-            print " ",
-            print line[1],
-            if line[2]: print ', ',
-            print line[2],
-            if line[3]: print ', ',
-            print line[3]
-
-        print footer
+            for line in self.code:
+                if line[0][0]=='#':
+                    outfile.write(line[0]+', '+line[1]+', '+line[2]+', '+line[3]+'\n')
+                    continue
+        
+                outfile.write(str(line[0])+" ")
+                outfile.write(str(line[1]))
+                if str(line[2]):
+                    outfile.write(", ")
+                    outfile.write(str(line[2]))
+                if str(line[3]): 
+                    outfile.write(", ")
+                    outfile.write(str(line[3]))
+                outfile.write("\n")
+            outfile.write(footer)

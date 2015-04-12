@@ -20,3 +20,4 @@ int
 
 float - ??
 
+exponent (l3_expr) - left because no mips instr present for it

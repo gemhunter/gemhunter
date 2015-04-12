@@ -14,7 +14,8 @@ li $v0, 11 # system call code for printing string = 4
 	#la $a0, out_string # load address of string to be printed into $a0
 syscall # call operating system to perform operation
 
-li $s0, 9
+li $s0, -9
+sub $s0,$zero,$s0
 sw $s0, 0($sp)
 ld $a0, 0($sp)
 

@@ -1886,8 +1886,7 @@ def parse():
 
         #Parsing success?
         if success == 1:
-                #print colored("Successfully Compiled", 'green')
-                a = 1
+                print colored("Successfully Compiled", 'green')
         else:
                 exit()
 

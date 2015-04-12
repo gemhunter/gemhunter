@@ -53,5 +53,45 @@ if __name__=='__main__':
                     #assignment from a variable to another variable
                     elif line[1][0]=='t':
                         AC.emit("move",tempReg,AC.getReg(line[1],line))
-            
+
+            #Bitwise not
+            elif line[3]=='~':
+                if isinstance(line[1],float):
+                    #TODO
+                    a = 1
+                else:
+                    AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[1],line))
+
+            #Boolean complement
+            elif line[3]=='!':
+                AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[1],line))
+
+            #Unary minus
+            elif line[3]=='-' and not line[2]:
+                if isinstance(line[1],float):
+                    #TODO
+                    a = 1
+                else:
+                    AC.emit("sub",AC.getReg(line[0],line),'$zero',AC.getReg(line[1],line))
+
+            #Multiplication
+            elif line[3]=='*':
+                if isinstance(line[1],float):
+                    #TODO
+                    a = 1
+                else:
+                    AC.emit("mul",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
+            #Division
+            elif line[3]=='/':
+                if isinstance(line[1],float):
+                    #TODO
+                    a = 1
+                else:
+                    AC.emit("div",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
+            #Remainder on division
+            elif line[3]=='%':
+                AC.emit("rem",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
         AC.printCode()
