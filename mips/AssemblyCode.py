@@ -1,3 +1,5 @@
+import random
+
 class AssemblyCode:
     #Initialize
     def __init__(self,ST,TAC):
@@ -26,26 +28,26 @@ class AssemblyCode:
             '$s7' : None
         }
 
+        #stores the location of each tempName in memory and registers, if any
         self.addressDescriptors = {}
-        #address descriptor
-        #TODO
 
+        #reflects the number of variables (each of size one word), which have been allocated currently, for global and local scopes
         self.globalAllocated = 0
         self.localAllocated = 0
 
     def setReg(self,tempName,reg):
-        #flush the old contents back to disk ALWAYS!!
-        #Reflect the flush in the address Desciptor dict by changing to None
-        #TODO
+        #Update the new contents of register reg and emit code for the same
+        self.emit('ld',reg,self.addressDescriptors[tempName]['memory'])
         self.registerDescriptors[reg]=tempName
         self.addressDescriptors[tempName]['register']=reg
         return
 
-    def getReg(self,tempName):
+    #get the register for tempName
+    def getReg(self,tempName,TACline):
         #check if the tempName already is present in the memory
-        if tempName in addressDescriptors:
+        if tempName in self.addressDescriptors:
             if self.addressDescriptors[tempName]['register'] == None:
-                newReg = self.availReg()
+                newReg = self.availReg(TACline)   #returns the appropriate register for this tempName
                 self.setReg(tempName,newReg)
                 return newReg
             else:
@@ -53,31 +55,52 @@ class AssemblyCode:
                 
 
         #if not, assign a memory location to it, and a register too
-        #TODO
         else:
             if tempName in self.ST.symbolTable['main']['places']:
                 #global variable, static allocation
-                self.addressDescriptors[tempName]['memory'] = '%d($gp)'%($*self.globalAllocated)
+                self.addressDescriptors[tempName] = {}
+                self.addressDescriptors[tempName]['memory'] = '%d($gp)'%(4*self.globalAllocated)
                 self.addressDescriptors[tempName]['register'] = None
                 self.globalAllocated += 1
+
             else:
+                #Do something for functions, via stack or sth else, process localAllocated
+                #TODO ^
                 #local variable, stack allocation
-                a = 1
+                self.addressDescriptors[tempName] = {}
+                self.addressDescriptors[tempName]['memory'] = '%d($fp)'%(4*self.localAllocated)
+                self.addressDescriptors[tempName]['register'] = None
+                self.localAllocated += 1
+
+            #no need to emit code to assign the tempName to this memory location, taken care at flush
             #assign register and return
-            newReg = self.availReg()
+            newReg = self.availReg(TACline)
             self.setReg(tempName,newReg)
             return newReg
             
-    #Internal fn to get the first free register available, if not avaiable, make a register free by flushing
-    def availReg(self):
+    #Internal fn to get a register such that no tempName from the current instruction is replaced
+    def availReg(self,TACline):
+        #check if some register is empty or not
         for reg in self.registerDescriptors:
             if self.registerDescriptors[reg]==None:
                 return reg
-        return 
 
-    #internal register, to assign temp to a register
-    def assignReg(self,regNo,tempName):
-        self.registerDescriptors[regNo] = tempName
+        #get a filled regsiter, and flush it's contents out
+        while True:            
+            rnd = random.randint(0, 17)
+            if rnd<10:
+                reg = '$t'+str(rnd%10)
+            else:
+                reg = '$s'+str(rnd%10)
+            
+            if self.registerDescriptors[reg] not in TACline:
+                break
+
+        #flush the old contents back to disk
+        self.emit('sw',reg,self.addressDescriptors[tempName]['memory'])
+        self.addressDescriptors[tempName]['register'] = None
+
+        return reg #Should never come to this line
 
 
     #Emit the code, by appending to the list
@@ -92,9 +115,27 @@ class AssemblyCode:
     
     #print the whole assembly code
     def printCode(self):
+        header = '''.text
+        main:
+        '''
+        footer = '''
+        li $v0, 10 # terminate program
+        syscall
+        '''
+
+        print header
+
         for line in self.code:
-            #print line[0]+' '+line[1]+' '+line[2]+' '+line[3]
-            print line[0], 
+            if line[0][0]=='#':
+                print line[0]+', '+line[1]+', '+line[2]+', '+line[3]
+                continue
+    
+            print line[0],
+            print " ",
             print line[1],
+            if line[2]: print ', ',
             print line[2],
+            if line[3]: print ', ',
             print line[3]
+
+        print footer
