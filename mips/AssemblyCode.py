@@ -33,7 +33,8 @@ class AssemblyCode:
 
         #reflects the number of variables (each of size one word), which have been allocated currently, for global and local scopes
         self.globalAllocated = 0
-        self.localAllocated = 0
+        self.localAllocated = []
+        self.localAllocated.append(0)
 
     def setReg(self,tempName,reg):
         #Update the new contents of register reg and emit code for the same
@@ -68,15 +69,14 @@ class AssemblyCode:
                 #TODO ^
                 #local variable, stack allocation
                 self.addressDescriptors[tempName] = {}
-                self.addressDescriptors[tempName]['memory'] = '%d($fp)'%(4*self.localAllocated)
+                self.addressDescriptors[tempName]['memory'] = '%d($sp)'%(4*self.localAllocated[len(self.localAllocated)-1])
                 self.addressDescriptors[tempName]['register'] = None
-                self.localAllocated += 1
+                self.localAllocated[len(self.localAllocated)-1] += 1
 
             #no need to emit code to assign the tempName to this memory location, taken care at flush
             #assign register and return
             newReg = self.availReg(TACline)
-            self.registerDescriptors[newReg]=tempName
-            self.addressDescriptors[tempName]['register']=newReg
+            self.setReg(tempName,newReg)
             return newReg
             
     #Internal fn to get a register such that no tempName from the current instruction is replaced
@@ -101,7 +101,7 @@ class AssemblyCode:
         self.emit('sw',reg,self.addressDescriptors[self.registerDescriptors[reg]]['memory'])
         self.addressDescriptors[self.registerDescriptors[reg]]['register'] = None
 
-        return reg #Should never come to this line
+        return reg
 
 
     #Emit the code, by appending to the list

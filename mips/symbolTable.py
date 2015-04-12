@@ -9,7 +9,8 @@ class SymbolTable:
 					'parent' : None,
 					'identifiers' : {},
 					'methods' : {},
-					'places' : {}
+					'places' : {},
+					'label'	: 'main'
 					}
 				}
 		self.currentScope = 'main'
@@ -24,6 +25,9 @@ class SymbolTable:
 		self.wordSize = 4
 		self.addressSize = 4
 		self.classes = []
+		self.methodSize = {
+			'main': 0
+		}
 
         #Methods to manipulate (add/end) scope blocks
 	def addBlock(self):
@@ -144,10 +148,12 @@ class SymbolTable:
 				'retType' : 'TYPE_ERROR',
 				'argList' : []
 				}
+
 		self.symbolTable[self.currentScope]['methods'][mtName] = {
 				'extendedName' : extendedName
 				}
 		self.currentScope = extendedName
+		self.methodSize[self.getCurrLabel()]=0
 	
 	def endMethod(self):
 		self.currentScope = self.symbolTable[self.currentScope]['parent']
@@ -308,6 +314,15 @@ class SymbolTable:
 	#Create a temporary variable
 	def createTemp(self):
 		self.tempNo += 1
+		
+
+		scope = self.currentScope
+		while self.symbolTable[scope]['type'] not in ['main', 'method']:
+			scope = self.symbolTable[scope]['parent']
+
+		
+		self.methodSize[self.symbolTable[scope]['label']] += 1
+
 		return self.tempBase + str(self.tempNo)
 
 	#Scope name for new block

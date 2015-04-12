@@ -1,5 +1,4 @@
-#!/usr/bin/python        
-
+#!/usr/bin/python
 import sys
 from termcolor import colored
 import yacc
@@ -723,10 +722,10 @@ def p_l2_expr(p):
 	elif p[1] == '+':
 		#Unary plus
 		if p[2]['type'] == 'FLOAT':
-			TAC.emit(newPlace,p[2]['place'],'','+')
+			TAC.emit(newPlace,p[2]['place'],'','=')
 			p[0]['type'] = 'FLOAT'
 		elif p[2]['type'] == 'INT' :
-			TAC.emit(newPlace,p[2]['place'],'','+')
+			TAC.emit(newPlace,p[2]['place'],'','=')
 			p[0]['type'] = 'INT'
 		else:
 			error('Type Error (Expected Integer or float) %s!'%p[2]['place'])
@@ -752,7 +751,7 @@ def p_primary_expr_primitive_variable(p):
 		'place' : 'undefined',
 		'type' : 'TYPE_ERROR'
 	}
-        if p[1]['idenName'][:2] == '@@':
+    if p[1]['idenName'][:2] == '@@':
 		if not ST.currentlyInAClass():
 			error('Can\'t use class variables outside a class')
         	        return
@@ -1505,6 +1504,7 @@ def p_method_defn(p):
 	TAC.emit('return', newPlace, '', '')
 	#End method scope
 	ST.endMethod()
+	TAC.emit('methodEnds','','','')
 	TAC.emit('label', p[5], '', '')
 
 def p_start_method(p):

@@ -1,0 +1,23 @@
+on method labels, update the pointers, push the methodSize on localAllocated stack
+
+on methodEnds, pop from LA stack
+
+add exprs
+
+how to pass args to methods
+waths is fp
+
+
+
+assign (=)
+
+var
+nil
+true
+false
+float
+char
+int
+
+
+

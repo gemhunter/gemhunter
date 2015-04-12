@@ -10,9 +10,10 @@ if __name__=='__main__':
         #initialize all the helpers
         ST,TAC = parse()
         #TAC.printCode()
-        
+        currMeth = 'main'
         AC = AssemblyCode.AssemblyCode(ST,TAC)
         
+        AC.emit('addi','$sp','$sp', (-4)*ST.methodSize[currMeth])
 
         #iterate over all lines in the TAC to process
         for line in TAC.code:
