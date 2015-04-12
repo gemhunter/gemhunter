@@ -751,7 +751,7 @@ def p_primary_expr_primitive_variable(p):
 		'place' : 'undefined',
 		'type' : 'TYPE_ERROR'
 	}
-    if p[1]['idenName'][:2] == '@@':
+	if p[1]['idenName'][:2] == '@@':
 		if not ST.currentlyInAClass():
 			error('Can\'t use class variables outside a class')
         	        return

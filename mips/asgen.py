@@ -12,7 +12,7 @@ if __name__=='__main__':
         #TAC.printCode()
         currMeth = 'main'
         AC = AssemblyCode.AssemblyCode(ST,TAC)
-        
+
         AC.emit('addi','$sp','$sp', (-4)*ST.methodSize[currMeth])
 
         #iterate over all lines in the TAC to process
@@ -23,17 +23,35 @@ if __name__=='__main__':
 
             #Assignment to temporary variables
             if line[3]=='=':
-                #lhs of assignment, get register to assign
-                tempReg = AC.getReg(line[0],line)
+                #Floating point
+                if isinstance(line[1],float):
+                    #tempReg = AC.getFloatReg(line[0],line)
+                    #AC.emit("li.s",tempReg,line[1])
+                    a = 1
+                    #TODO
 
-                #assignment from immediate value to a variable
-                if isinstance(line[1],int):
+                else:    
+                    tempReg = AC.getReg(line[0],line)
+
+                    #assignment from immediate value to a variable
+                    if isinstance(line[1],int):
                         AC.emit("li",tempReg,line[1])
 
-                #assignment from a variable to another variable
-                elif line[1][0]=='t':
-                        AC.emit("move",tempReg,AC.getReg(line[1],line))
+                    elif line[1]=='true':
+                        AC.emit("li",tempReg,1)
 
-                #check for other possible uses of assignment operator
-                        
+                    elif line[1]=='false':
+                        AC.emit("li",tempReg,0)
+
+                    elif line[1]=='nil':
+                        AC.emit("li",tempReg,0)
+
+                    #character
+                    elif len(line[1])==1:
+                        AC.emit("li",tempReg,line[1])
+
+                    #assignment from a variable to another variable
+                    elif line[1][0]=='t':
+                        AC.emit("move",tempReg,AC.getReg(line[1],line))
+            
         AC.printCode()
