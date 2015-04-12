@@ -9,6 +9,12 @@
 -bitwise not
 -boolean complement
 -unary minus
--multiplication
+-multiplication (only first 32 bits are preserved)
 -division
 -remainder
+-addition
+-subtraction
+-left shift
+-right shift
+-bitwise and, or, xor
+-greater than, less than, greater than equal to, less than equal to

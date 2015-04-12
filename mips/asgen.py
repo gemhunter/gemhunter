@@ -68,30 +68,64 @@ if __name__=='__main__':
 
             #Unary minus
             elif line[3]=='-' and not line[2]:
-                if isinstance(line[1],float):
-                    #TODO
-                    a = 1
-                else:
-                    AC.emit("sub",AC.getReg(line[0],line),'$zero',AC.getReg(line[1],line))
+                AC.emit("sub",AC.getReg(line[0],line),'$zero',AC.getReg(line[1],line))
 
             #Multiplication
             elif line[3]=='*':
-                if isinstance(line[1],float):
-                    #TODO
-                    a = 1
-                else:
-                    AC.emit("mul",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.emit("mul",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
 
             #Division
             elif line[3]=='/':
-                if isinstance(line[1],float):
-                    #TODO
-                    a = 1
-                else:
-                    AC.emit("div",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.emit("div",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
 
             #Remainder on division
             elif line[3]=='%':
                 AC.emit("rem",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
+            #Addition
+            elif line[3]=='+':
+                AC.emit("add",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
+            #Subtraction
+            elif line[3]=='+':
+                AC.emit("sub",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+   
+            #Left shift
+            elif line[3]=='<<':
+                AC.emit("sllv",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))             
+
+            #Right shift
+            elif line[3]=='>>':
+                AC.emit("srlv",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))             
+        
+            #Bitwise And
+            elif line[3]=='&':
+                AC.emit("and",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
+            #Bitwise Or
+            elif line[3]=='|':
+                AC.emit("or",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
+            #Bitwise Xor
+            elif line[3]=='^':
+                AC.emit("xor",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
+            #Greater than
+            elif line[3]=='>':
+                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
+
+            #Less than
+            elif line[3]=='<':
+                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+
+            #Greater than or equal to
+            elif line[3]=='>=':
+                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[0],line))
+
+            #Less than or equal to
+            elif line[3]=='<=':
+                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
+                AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[0],line))
 
         AC.printCode()
