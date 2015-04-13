@@ -1783,7 +1783,7 @@ def p_start_method(p):
 	ST.setRetType(p[-3])
 
 	#Get the arguments from stack and add them to scope
-	for i in args:
+	for i in reversed(args):
 		iden = i[1]
 		idenType = i[0]
 		myPlace = ST.createTemp()

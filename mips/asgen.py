@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from irgen import parse
 import sys
 import threeAddressCode
