@@ -240,7 +240,12 @@ def p_stmt_get_uservar(p):
 				TAC.emit(zero, 0, '', '=')
 				stringAddr = ST.createTemp()
 				TAC.emit(stringAddr,fullAddr, zero, '=*')
-				TAC.emit('readstring', stringAddr, mtype[1], '')
+				for i in range(0, mtype[1]-1):
+					offset = ST.createTemp()
+					TAC.emit(offset, 4*i, '', '=')
+					charAddr = ST.createTemp()
+					TAC.emit(charAddr, stringAddr, offset, '+')
+					TAC.emit('readcharmem', charAddr, '', '')
 			else:
 				error('Can\'t read this type(%s)!'%str(mtype))
 				return
@@ -258,8 +263,13 @@ def p_stmt_get_uservar(p):
 			#getchar
 			TAC.emit('readchar', mplace, '', '')
 		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
-			#get string
-			TAC.emit('readstring', mplace, mtype[1], '')
+			#get string by taking characters!
+			for i in range(0, mtype[1]-1):
+				offset = ST.createTemp()
+				TAC.emit(offset, 4*i, '', '=')
+				charAddr = ST.createTemp()
+				TAC.emit(charAddr, mplace, offset, '+')
+				TAC.emit('readcharmem', charAddr, '', '')
 		else:
 			error('Can\'t read this type(%s)!'%str(mtype))
 			return
@@ -305,7 +315,12 @@ def p_stmt_get_array_index(p):
 			TAC.emit(zero, 0, '', '=')
 			stringAddr = ST.createTemp()
 			TAC.emit(stringAddr,fullAddr, zero, '=*')
-			TAC.emit('readstring', stringAddr, mtype[1], '')
+			for i in range(0, mtype[1]-1):
+				offset = ST.createTemp()
+				TAC.emit(offset, 4*i, '', '=')
+				charAddr = ST.createTemp()
+				TAC.emit(charAddr, stringAddr, offset, '+')
+				TAC.emit('readcharmem', charAddr, '', '')
 		else:
 			error('Can\'t read this type(%s)!'%str(mtype))
 			return
@@ -338,7 +353,12 @@ def p_stmt_get_objectvar(p):
 			TAC.emit(zero, 0, '', '=')
 			stringAddr = ST.createTemp()
 			TAC.emit(stringAddr,fullAddr, zero, '=*')
-			TAC.emit('readstring', stringAddr, mtype[1], '')
+			for i in range(0, mtype[1]-1):
+				offset = ST.createTemp()
+				TAC.emit(offset, 4*i, '', '=')
+				charAddr = ST.createTemp()
+				TAC.emit(charAddr, stringAddr, offset, '+')
+				TAC.emit('readcharmem', charAddr, '', '')
 		else:
 			error('Can\'t read this type(%s)!'%str(mtype))
 			return
@@ -354,7 +374,12 @@ def p_stmt_get_objectvar(p):
 			TAC.emit('readchar', mplace, '', '')
 		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
 			#get string
-			TAC.emit('readstring', mplace, mtype[1], '')
+			for i in range(0, mtype[1]-1):
+				offset = ST.createTemp()
+				TAC.emit(offset, 4*i, '', '=')
+				charAddr = ST.createTemp()
+				TAC.emit(charAddr, mplace, offset, '+')
+				TAC.emit('readcharmem', charAddr, '', '')
 		else:
 			error('Can\'t read this type(%s)!'%str(mtype))
 			return
@@ -382,7 +407,12 @@ def p_stmt_get_classvar(p):
 			TAC.emit('readchar', mplace, '', '')
 		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
 			#get string
-			TAC.emit('readstring', mplace, mtype[1], '')
+			for i in range(0, mtype[1]-1):
+				offset = ST.createTemp()
+				TAC.emit(offset, 4*i, '', '=')
+				charAddr = ST.createTemp()
+				TAC.emit(charAddr, mplace, offset, '+')
+				TAC.emit('readcharmem', charAddr, '', '')
 		else:
 			error('Can\'t read this type(%s)!'%str(mtype))
 			return
