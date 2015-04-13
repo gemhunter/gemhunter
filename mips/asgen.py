@@ -6,13 +6,12 @@ import AssemblyCode
 
 if __name__=='__main__':
 
-        #Parse it!
         #initialize all the helpers
         ST,TAC = parse()
-        #TAC.printCode()
         currMeth = 'main'
         AC = AssemblyCode.AssemblyCode(ST,TAC)
 
+        #allocate stack frame for 'main' by decrementing $sp
         AC.emit('addi','$sp','$sp', (-4)*ST.methodSize[currMeth])
 
         #iterate over all lines in the TAC to process
@@ -173,5 +172,17 @@ if __name__=='__main__':
                 AC.emit(label3+":")
                 AC.emit("li",AC.getReg(line[0],line),0)
                 AC.emit(label2+":")
+
+            #ifnot
+            elif line[0]=='ifnot':
+                AC.emit('beq',AC.getReg(line[1],line),'$zero',line[3])
+
+            #goto
+            elif line[0]=='goto':
+                AC.emit('b',line[1])
+
+            #label
+            elif line[0]=='label':
+                AC.emit(line[1]+":")
 
         AC.printCode()

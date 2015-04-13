@@ -315,12 +315,10 @@ class SymbolTable:
 	def createTemp(self):
 		self.tempNo += 1
 		
-
 		scope = self.currentScope
 		while self.symbolTable[scope]['type'] not in ['main', 'method']:
 			scope = self.symbolTable[scope]['parent']
 
-		
 		self.methodSize[self.symbolTable[scope]['label']] += 1
 
 		return self.tempBase + str(self.tempNo)
