@@ -10,6 +10,11 @@ if __name__=='__main__':
         ST,TAC = parse()
         currMeth = 'main'
         AC = AssemblyCode.AssemblyCode(ST,TAC)
+        regt0 = "$t0"
+        regt1 = "$t1"
+        regt2 = "$t2"
+        rega0 = "$a0"
+        rega1 = "$a1"
 
         #allocate stack frame for 'main' by decrementing $sp
         AC.emit('addi','$sp','$sp', (-4)*ST.methodSize[currMeth])
@@ -29,25 +34,23 @@ if __name__=='__main__':
                     a = 1
                     #TODO
 
-                else:    
-                    tempReg = '$t0'
-
+                else:
                     #assignment from immediate value to a variable
                     if isinstance(line[1],int):
-                        AC.emit("li",tempReg,line[1])
-                        AC.flushFromReg(tempReg,line[0])
+                        AC.emit("li",regt0,line[1])
+                        AC.flushFromReg(regt0,line[0])
 
                     elif line[1]=='true':
-                        AC.emit("li",tempReg,1)
-                        AC.flushFromReg(tempReg,line[0])
+                        AC.emit("li",regt0,1)
+                        AC.flushFromReg(regt0,line[0])
 
                     elif line[1]=='false':
-                        AC.emit("li",tempReg,0)
-                        AC.flushFromReg(tempReg,line[0])
+                        AC.emit("li",regt0,0)
+                        AC.flushFromReg(regt0,line[0])
                         
                     elif line[1]=='nil':
-                        AC.emit("li",tempReg,0)
-                        AC.flushFromReg(tempReg,line[0])
+                        AC.emit("li",regt0,0)
+                        AC.flushFromReg(regt0,line[0])
                         
                     #character
                     elif line[1][0]=="'" and line[1][-1]=="'":
@@ -62,33 +65,39 @@ if __name__=='__main__':
                                 char = ord('\\')
                         else:
                             char = ord(line[1][1])
-                        AC.emit("li",tempReg,char)
-                        AC.flushFromReg(tempReg,line[0])
+                        AC.emit("li",regt0,char)
+                        AC.flushFromReg(regt0,line[0])
                         
                     #assignment from a variable to another variable
                     elif line[1][0]=='t':
-                        AC.getToReg(line[1],tempReg)
-                        AC.flushFromReg(tempReg,line[0])
+                        AC.getToReg(line[1],regt0)
+                        AC.flushFromReg(regt0,line[0])
                         
             #Bitwise not
             elif line[3]=='~':
-                AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[1],line))
+                AC.getToReg(line[1],regt1)
+                AC.emit("not",regt0,regt1)
+                AC.flushFromReg(regt0,line[0])
 
             #Boolean complement
             elif line[3]=='!':
                 label1 = AC.getLabel()
                 label2 = AC.getLabel()
 
-                AC.emit("beqz",AC.getReg(line[1],line),label1)
-                AC.emit("li",AC.getReg(line[0],line),0)
+                AC.getToReg(line[1],regt0)
+                AC.emit("beqz",regt0,label1)
+                AC.emit("li",regt1,0)
                 AC.emit("b",label2)
                 AC.emit(label1+":")
-                AC.emit("li",AC.getReg(line[0],line),1)
+                AC.emit("li",regt1,1)
                 AC.emit(label2+":")
+                AC.flushFromReg(regt1,line[0])
 
             #Unary minus
             elif line[3]=='-' and not line[2]:
-                AC.emit("sub",AC.getReg(line[0],line),'$zero',AC.getReg(line[1],line))
+                AC.getToReg(line[1],regt1)
+                AC.emit("sub",regt0,'$zero',regt1)
+                AC.flushFromReg(regt0,line[0])
 
             #Multiplication
             elif line[3]=='*':
@@ -208,7 +217,7 @@ if __name__=='__main__':
 
             #putint
             elif line[0]=='putint':
-                AC.emit('move','$a0',AC.getReg(line[1],line))
+                AC.getToReg(line[1],rega0)
                 AC.emit('li','$v0',1)
                 AC.emit('syscall')
 

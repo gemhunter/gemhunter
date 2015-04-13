@@ -1,5 +1,5 @@
-a = 1
-while a <10
-	puts a
-	a += 1
-end
+a = true
+a = !a
+b = -20
+c = -b
+puts c

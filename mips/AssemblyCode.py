@@ -57,7 +57,7 @@ class AssemblyCode:
                 self.localAllocated[len(self.localAllocated)-1] += 1
 
         #assign register and return
-        self.emit('ld',reg,self.addressDescriptors[tempName]['memory'])
+        self.emit('ld',reg,self.addressDescriptors[tempName])
         return
 
     def flushFromReg(self,reg,tempName):
