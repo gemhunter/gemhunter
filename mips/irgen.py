@@ -214,20 +214,31 @@ def p_stmt_get_uservar(p):
 		else:
 			#Need to lookup instance variable and self!
 			#Now read into memory
-			#instVar = ST.lookUpInstanceVariable(ST.getParClass(), p[1]['idenName'])
-			#if instVar == None:
-			#	error('Instance Variable not declared (%s)'%p[1]['idenName'])
-			#	return
-			#selfPlace = ST.getAttribute('guys', 'place')
-			#assert(selfPlace != None)
-			#newPlace = ST.createTemp()
-			#offset = ST.createTemp()
-			#TAC.emit(offset,  4*instVar['place'], '', '=')
-			#TAC.emit(newPlace, selfPlace, offset, '=*')
-			#p[0] = {
-			#		'place' : newPlace,
-			#		'type' : instVar['type']
-			#		}
+			instVar = ST.lookUpInstanceVariable(ST.getParClass(), p[2]['idenName'])
+			if instVar == None:
+				error('Instance Variable not declared (%s)'%p[2]['idenName'])
+				return
+			selfPlace = ST.getAttribute('guys', 'place')
+			assert(selfPlace != None)
+			offset = ST.createTemp()
+			fullAddr = ST.createTemp()
+			TAC.emit(offset,  4*instVar['place'], '', '=')
+			TAC.emit(fullAddr, selfPlace, offset, '+')
+			mtype = instVar['type']
+			if mtype == 'INT':
+				TAC.emit('readintmem', fullAddr, '', '')
+			elif mtype == 'CHAR':
+				TAC.emit('readcharmem', fullAddr, '', '')
+			elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
+				zero = ST.createTemp()
+				TAC.emit(zero, 0, '', '=')
+				stringAddr = ST.createTemp()
+				TAC.emit(stringAddr,fullAddr, zero, '=*')
+				TAC.emit('readstring', stringAddr, mtype[1], '')
+			else:
+				error('Can\'t read this type(%s)!'%str(mtype))
+				return
+
 			return
 
 	if ST.lookupIdentifier(p[2]['idenName']) :
@@ -249,63 +260,58 @@ def p_stmt_get_uservar(p):
 	else:
 		error("Use of undefined variable %s!"%p[2]['idenName'])
 
-	#########
-
-#TODO
 def p_stmt_get_array_index(p):
 	'''stmt_get : KEYWORD_GETS primary_expr '[' expr ']' 
 	'''
 	p[0] = {}
 
-#	p[0] = {
-#			'place' : 'undefined',
-#			'type' : 'TYPE_ERROR'
-#			}
-#	if not isinstance(p[1]['type'], tuple):
-#		error('Only arrays or strings can be indexed')
-#		return
-#	if p[3]['type'] != 'INT':
-#		error('Arrays or Strings can only be indexed by integers')
-#		return
-#	if p[1]['type'][0] == 'STRING':
-#		#String index
-#		indivSize = ST.createTemp()
-#		TAC.emit(indivSize, '4', '', '=')
-#		offset = ST.createTemp()
-#		TAC.emit(offset, p[3]['place'], indivSize, '*')
-#		newPlace = ST.createTemp()
-#		TAC.emit(newPlace, p[1]['place'],offset , '=*')
-#		p[0] = {
-#				'place' : newPlace,
-#				'type' : 'CHAR'
-#				}
-#	elif p[1]['type'][0] == 'ARRAY':
-#		#Array index
-#		subType = p[1]['type'][1]
-#		indivSize = ST.createTemp()
-#		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
-#		offset = ST.createTemp()
-#		TAC.emit(offset, p[3]['place'], indivSize, '*')
-#		newPlace = ST.createTemp()
-#		TAC.emit(newPlace, p[1]['place'],offset , '=*')
-#		p[0] = {
-#				'place' : newPlace,
-#				'type' : subType
-#				}
-#	else:
-#		error('Only arrays or strings can be indexed')
-#		return
+	if not isinstance(p[2]['type'], tuple):
+		error('Only arrays or strings can be indexed')
+		return
+	if p[4]['type'] != 'INT':
+		error('Arrays or Strings can only be indexed by integers')
+		return
+	if p[2]['type'][0] == 'STRING':
+		#String index
+		indivSize = ST.createTemp()
+		TAC.emit(indivSize, '4', '', '=')
+		offset = ST.createTemp()
+		TAC.emit(offset, p[4]['place'], indivSize, '*')
+		fullAddr = ST.createTemp()
+		TAC.emit(fullAddr, p[2]['place'],offset , '+')
+		TAC.emit('readcharmem', fullAddr, '', '')
+	elif p[2]['type'][0] == 'ARRAY':
+		#Array index
+		subType = p[2]['type'][1]
+		indivSize = ST.createTemp()
+		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
+		offset = ST.createTemp()
+		TAC.emit(offset, p[4]['place'], indivSize, '*')
+		fullAddr = ST.createTemp()
+		TAC.emit(fullAddr, p[2]['place'],offset , '+')
+		mtype = subType
+		if mtype == 'INT':
+			TAC.emit('readintmem', fullAddr, '', '')
+		elif mtype == 'CHAR':
+			TAC.emit('readcharmem', fullAddr, '', '')
+		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
+			zero = ST.createTemp()
+			TAC.emit(zero, 0, '', '=')
+			stringAddr = ST.createTemp()
+			TAC.emit(stringAddr,fullAddr, zero, '=*')
+			TAC.emit('readstring', stringAddr, mtype[1], '')
+		else:
+			error('Can\'t read this type(%s)!'%str(mtype))
+			return
+	else:
+		error('Only arrays or strings can be indexed')
+		return
 
 #TODO
 def p_stmt_get_objectvar(p):
 	'''stmt_get : KEYWORD_GETS primary_expr '.' LOCALVAR 
 	'''
 	p[0] = {}
-
-#	p[0] = {
-#			'place' : 'undefined',
-#			'type' : 'TYPE_ERROR'
-#			}
 #	if not ST.classExists(p[1]['type']):
 #		error('Cannot dereference non-objects (%s)'%p[1]['place'])
 #		return
@@ -331,26 +337,32 @@ def p_stmt_get_objectvar(p):
 #		error('%s not found in '%p[3] + p[1]['place'])
 #		return
 
-#TODO
 def p_stmt_get_classvar(p):
 	'''stmt_get : KEYWORD_GETS CONST '.' LOCALVAR 
 	'''
 	p[0] = {}
-#	p[0] = {
-#			'place' : 'undefined',
-#			'type' : 'TYPE_ERROR'
-#			}
-#	if not ST.classExists(p[1]):
-#		error('Class (%s) does not exist'%p[1])
-#		return
-#
-#	idenName = "@@" + p[3] + "#" + p[1]
-#	if ST.lookupIdentifier(idenName) :
-#		p[0]['place'] = ST.getAttribute(idenName,'place')
-#		p[0]['type'] = ST.getAttribute(idenName,'type')
-#	else:
-#		error("Use of undefined variable %s!"%idenName)
+	if not ST.classExists(p[2]):
+		error('Class (%s) does not exist'%p[2])
+		return
 
+	idenName = "@@" + p[4] + "#" + p[2]
+	if ST.lookupIdentifier(idenName) :
+		mplace = ST.getAttribute(idenName,'place')
+		mtype = ST.getAttribute(idenName,'type')
+		if mtype == 'INT':
+			#get int
+			TAC.emit('readint', mplace, '', '')
+		elif mtype == 'CHAR':
+			#getchar
+			TAC.emit('readchar', mplace, '', '')
+		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
+			#get string
+			TAC.emit('readstring', mplace, mtype[1], '')
+		else:
+			error('Can\'t read this type(%s)!'%str(mtype))
+			return
+	else:
+		error("Use of undefined variable %s!"%idenName)
 
 ############
 #Expression#
