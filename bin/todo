@@ -4,7 +4,7 @@ case
 for
 super (will be used in new)
 putint/ getint/ putstring
-# string equal/not equal operators
+string equal/not equal operators
 # optimizations
 # type casting
 # yield / blocks

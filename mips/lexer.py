@@ -67,7 +67,9 @@ reserved = {
     'return' : "KEYWORD_RETURN",
     'yield' : "KEYWORD_YIELD",
     'guys' : "KEYWORD_GUYS",
+    'puts' : "KEYWORD_PUTS",
 }
+
 
 tokens = tokens + tuple(reserved.values())
 

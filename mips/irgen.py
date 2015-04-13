@@ -76,6 +76,7 @@ def p_stmt(p):
 	| class_defn
 	| expr
 	| stmt_imp
+	| stmt_print
 	'''
 	#Check for wrong breaks etc.
 	p[0] = p[1]
@@ -96,6 +97,7 @@ def p_method_defn_stmt(p):
 	| stmt_imp
 	| stmt_method
 	| method_defn
+	| stmt_print
 	'''
 	#Check for wrong breaks etc.
 	p[0] = p[1]
@@ -121,6 +123,7 @@ def p_imp_body_stmt(p):
 	| expr
 	| stmt_imp
 	| stmt_method
+	| stmt_print
 	'''
 	p[0] = p[1]
 
@@ -159,6 +162,7 @@ def p_stmt_loop(p):
 	'''
 	global currLine
 	p[0] = {}
+	#Will be patched later
 	TAC.emit('goto', '', '', '')
 	if p[1] == 'break':
 		p[0]['breakList'] = [(currLine,TAC.getCurrQuad())] 
@@ -166,6 +170,22 @@ def p_stmt_loop(p):
 		p[0]['nextList'] = [(currLine,TAC.getCurrQuad())] 
 	elif p[1] == 'redo':
 		p[0]['redoList'] = [(currLine,TAC.getCurrQuad())] 
+
+def p_stmt_print(p):
+	'''stmt_print : KEYWORD_PUTS expr
+	'''
+	p[0] = {}
+	if p[2]['type'] == 'TYPE_ERROR':
+		return
+	if p[2]['type'] == 'INT':
+		TAC.emit('putint', p[2]['place'], '', '')
+	elif p[2]['type'] == 'CHAR':
+		TAC.emit('putchar', p[2]['place'], '', '')
+	elif p[2]['type'] == 'STRING':
+		TAC.emit('putstring', p[2]['place'], '', '')
+	else :
+		error('Cannot print this type(%s)!'%str(p[2]['type']))
+		return
 
 ############
 #Expression#
@@ -1748,7 +1768,7 @@ def p_literal_string(p):
 	''' literal : STRING
 	'''
 	p[0] = {
-		'type' : ('STRING', len(p[1])),
+		'type' : ('STRING', len(p[1])+1),
 		'value' : p[1]
 	}
 
