@@ -1,0 +1,3 @@
+#!/bin/bash
+./asgen.py testfile.rb
+spim -file testfile.rb.s
