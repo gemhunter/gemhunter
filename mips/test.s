@@ -20,9 +20,11 @@ slt $s3, $s0, $s1
 sub $s0,$zero,$s0
 sw $s3, 0($sp)
 ld $a0, 0($sp)
+li $a0, 0
 li $v0, 1 
 syscall
 # specified in $v0
 # syscall takes its arguments from $a0, $a1, ...
+exit:
 li $v0, 10 # terminate program
 syscall

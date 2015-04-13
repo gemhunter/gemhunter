@@ -1,1 +1,6 @@
-false != false
+a = true
+b = true
+c = a && b
+if c
+	puts 23
+end

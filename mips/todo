@@ -2,22 +2,21 @@ on method labels, update the pointers, push the methodSize on localAllocated sta
 
 on methodEnds, pop from LA stack
 
-add exprs
 
-how to pass args to methods
-waths is fp
-
-
-
-assign (=)
-
-var
-nil
-true
-false
-char
-int
 
 float - ??
+(all instrs for float)
+** (exponent) (l3_expr) - left because no mips instr present for it
 
-exponent (l3_expr) - left because no mips instr present for it
+
+
+
+*= - ??
+* - ??
+return - ??
+getarg - ??
+methodEnds - ??
+call - ??
+param - ??
+new - ??
+=* - ??

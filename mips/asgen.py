@@ -173,9 +173,13 @@ if __name__=='__main__':
                 AC.emit("li",AC.getReg(line[0],line),0)
                 AC.emit(label2+":")
 
+            #if
+            elif line[0]=='if':
+                AC.emit('bnez',AC.getReg(line[1],line),'$zero',line[3])
+
             #ifnot
             elif line[0]=='ifnot':
-                AC.emit('beq',AC.getReg(line[1],line),'$zero',line[3])
+                AC.emit('beqz',AC.getReg(line[1],line),line[3])
 
             #goto
             elif line[0]=='goto':
@@ -184,5 +188,11 @@ if __name__=='__main__':
             #label
             elif line[0]=='label':
                 AC.emit(line[1]+":")
+
+            #putint
+            elif line[0]=='putint':
+                AC.emit('move','$a0',AC.getReg(line[1],line))
+                AC.emit('li','$v0',1)
+                AC.emit('syscall')
 
         AC.printCode()

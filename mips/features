@@ -19,3 +19,4 @@
 -bitwise and, or, xor
 -greater than, less than, greater than equal to, less than equal to
 -equal to, not equal to
+-if, ifnot, label, goto ->Conditions and branching
