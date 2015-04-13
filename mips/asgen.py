@@ -129,27 +129,45 @@ if __name__=='__main__':
 
             #Subtraction
             elif line[3]=='-':
-                AC.emit("sub",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("sub",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
    
             #Left shift
             elif line[3]=='<<':
-                AC.emit("sllv",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))             
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("sllv",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Right shift
             elif line[3]=='>>':
-                AC.emit("srlv",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))             
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("srlv",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
         
             #Bitwise And
             elif line[3]=='&':
-                AC.emit("and",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("and",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Bitwise Or
             elif line[3]=='|':
-                AC.emit("or",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("or",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Bitwise Xor
             elif line[3]=='^':
-                AC.emit("xor",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("xor",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Greater than
             elif line[3]=='>':

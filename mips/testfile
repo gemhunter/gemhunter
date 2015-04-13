@@ -4,5 +4,5 @@ b = -20
 c = -b
 c *= b
 puts c
-c /= c
+c = 9 - 8
 puts c
