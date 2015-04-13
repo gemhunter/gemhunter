@@ -336,7 +336,7 @@ def p_stmt_get_objectvar(p):
 		error('Cannot dereference non-objects (%s)'%p[1]['place'])
 		return
 
-	instVar  = ST.lookUpInstanceVariable(p[2]['type'], "@" + p[3])
+	instVar  = ST.lookUpInstanceVariable(p[2]['type'], "@" + p[4])
 	if instVar != None:
 		#Code for instance var
 		fullAddr = ST.createTemp()
@@ -362,7 +362,7 @@ def p_stmt_get_objectvar(p):
 		else:
 			error('Can\'t read this type(%s)!'%str(mtype))
 			return
-	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
+	elif ST.lookupIdentifier("@@" + p[4] + "#" + p[2]['type'] ):
 		#Class Variable here
 		mplace = ST.getAttribute("@@" + p[4] + "#" + p[2]['type'], 'place')
 		mtype = ST.getAttribute("@@" + p[4] + "#" + p[2]['type'], 'type')
