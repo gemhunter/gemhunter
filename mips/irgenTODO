@@ -1,4 +1,4 @@
-strings
+strings as ptr
 range as pointer
 case
 for
