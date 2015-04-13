@@ -27,3 +27,7 @@
 ##Input/Output
 -read int, char, string, intmem
 -put int, char, string
+
+##Functions
+-parameter passing, argument reading
+-calling, returning

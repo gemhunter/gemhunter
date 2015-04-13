@@ -38,6 +38,7 @@ class AssemblyCode:
         
         #Variables to implement function stacks and parameters
         self.numArgsRead = 0
+        self.numArgsGiven = 0
 
         #MIPS label count
         self.labelBase = 'mipsLabel'

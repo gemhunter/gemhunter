@@ -24,7 +24,6 @@ if __name__=='__main__':
         #Start the localAllocated counter for 'main'
         AC.localAllocated.append(0)
 
-
         #iterate over all lines in the TAC to process
         for line in TAC.code:
             #print the TAC line as comment
@@ -338,13 +337,13 @@ if __name__=='__main__':
             #Start of a method definition- push to the localAllocated stack and reset args counter
             elif line[0]=='methodStarts':
                 #Allocate stack frame for callee by incrementing $sp
-                AC.emit('addi','$sp','$sp', (-4)*ST.methodSize[line[1]])
+                AC.emit('addi','$sp','$sp',(-4)*ST.methodSize[line[1]])
                 AC.localAllocated.append(0)
                 AC.numArgsRead = 0
 
             #Get the argument, according to the args counter
             elif line[3]=='getarg':
-                AC.getToReg('%d($fp)'%4*(2+numArgsRead),regt0)
+                AC.emit('lw',regt0,'%d($fp)'%(4*(2+AC.numArgsRead)))
                 AC.flushFromReg(regt0,line[0])
                 AC.numArgsRead += 1
 
@@ -363,13 +362,16 @@ if __name__=='__main__':
 
             #Pass parameter for a function call
             elif line[0]=='param':
-                #Store the parameter on stack after incrementing $sp
-                AC.emit('addi','$sp','$sp',-4)
+                #Store the parameter on stack
                 AC.getToReg(line[1],regt0)
-                AC.emit('sw',regt0,'0($sp)')
+                AC.emit('sw',regt0,'%d($sp)'%(-4*AC.numArgsGiven - 4))
+                AC.numArgsGiven += 1
 
             #Method call and return from callee
             elif line[3]=='call':
+                #Increment $sp to accommodate for arguments
+                AC.emit('addi','$sp','$sp',-4*AC.numArgsGiven)
+                AC.numArgsGiven = 0
                 #Push $fp and $ra to stack
                 AC.emit('addi','$sp','$sp',-4)
                 AC.emit('sw','$fp','0($sp)')
@@ -390,8 +392,11 @@ if __name__=='__main__':
                 #store value from $v0 to line[0]
                 AC.flushFromReg(regv0,line[0])
 
+            
             #Exit
             elif line[0]=='exit':
                 AC.emit('b exit')
+
+
 
         AC.printCode()

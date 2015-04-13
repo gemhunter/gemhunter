@@ -1043,7 +1043,7 @@ def p_primary_expr(p):
 		size = len(p[2])
 		newPlace = ST.createTemp()
 		newType = ('ARRAY', arrType, size)
-		TAC.emit(newPlace, newType, '', 'new')
+		TAC.emit(newPlace, ST.getActualSize(newType), '', 'new')
 		cnt = 0
 		for i in p[2]:
 			offset = ST.createTemp()
@@ -1058,7 +1058,7 @@ def p_primary_expr(p):
 		#implicit declaration
 		newPlace = ST.createTemp()
 		newType = ('ARRAY', p[1], '', p[3])
-		TAC.emit(newPlace,newType, '', 'new')
+		TAC.emit(newPlace,ST.getActualSize(newType), '', 'new')
 		p[0] = {
 				'place' : newPlace,
 				'type' : newType
@@ -1294,7 +1294,7 @@ def p_class_method_call(p):
 	
 	#Create a new temporary and allocate memory
 	newPlace = ST.createTemp()
-	TAC.emit(newPlace,p[1], '', 'new')
+	TAC.emit(newPlace,ST.getActualSize(p[1]), '', 'new')
 
 	#Add self to arguments
 	p[5] = [(p[1], newPlace)] + p[5]
