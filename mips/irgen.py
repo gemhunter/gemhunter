@@ -1402,6 +1402,7 @@ def p_lhs_dot(p):
 	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
 		#Class Variable here
 		p[0] = {
+				'idenName' : 'NOPE',
 				'place' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'place'),
 				'type' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'type')
 				}
