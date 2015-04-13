@@ -305,12 +305,6 @@ if __name__=='__main__':
                 AC.emit('li','$v0',11)
                 AC.emit('syscall')
 
-            #putstring
-            elif line[0]=='putstring':
-                AC.getToReg(line[1],rega0)
-                AC.emit('li','$v0',4)
-                AC.emit('syscall')
-
             #readint
             elif line[0]=='readint':
                 AC.emit('li','$v0',5)
@@ -329,12 +323,6 @@ if __name__=='__main__':
                 AC.emit('syscall')
                 AC.getToReg(line[1],regt0)
                 AC.emit('sw','$v0','0(%s)'%regt0)
-
-            #readstring
-            elif line[0]=='readstring':
-                AC.getToReg(line[1],rega0)
-                AC.emit('li','$a1',int(line[2]))
-                AC.emit('syscall')
 
             #METHOD MANIPULATORS
             #Start of a method definition- push to the localAllocated stack and reset args counter

@@ -25,8 +25,8 @@
 -label, goto
 
 ##Input/Output
--read int, char, string, intmem
--put int, char, string
+-read int, char, intmem
+-put int, char
 
 ##Functions
 -parameter passing, argument reading

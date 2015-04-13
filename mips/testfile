@@ -1,2 +1,2 @@
-a = "da"
+a = 'a'
 puts a

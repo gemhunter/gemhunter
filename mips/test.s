@@ -1,13 +1,13 @@
 # Hello, World!
 .data ## Data declaration section
 ## String to be printed:
-out_string: .asciiz "He"
+out_string: .asciiz "Held"
 .text ## Assembly language instructions go in text segment
 main: ## Start of code section
 
 la $t0, out_string
 
-lw $a0, 4($t0)
+lb $a0, 3($t0)
 li $v0, 11
 syscall
 # specified in $v0
