@@ -180,7 +180,7 @@ def p_stmt_print(p):
 	p[0] = {}
 	if p[2]['type'] == 'TYPE_ERROR':
 		return
-	if p[2]['type'] == 'INT':
+	if p[2]['type'] == 'INT' or p[2]['type'] == 'BOOL':
 		TAC.emit('putint', p[2]['place'], '', '')
 	elif p[2]['type'] == 'CHAR':
 		TAC.emit('putchar', p[2]['place'], '', '')

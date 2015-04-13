@@ -28,6 +28,7 @@ class SymbolTable:
 		self.methodSize = {
 			'main': 0
 		}
+		self.methodNumArgs = {}
 
         #Methods to manipulate (add/end) scope blocks
 	def addBlock(self):
@@ -186,6 +187,14 @@ class SymbolTable:
 		#Sets the argument list of the current method as typeExprs (list)
 		assert(self.symbolTable[self.currentScope]['type'] == 'method')
 		self.symbolTable[self.currentScope]['argList'] = typeExprs
+		self.methodNumArgs[self.symbolTable[self.currentScope]['label']] = len(typeExprs)
+	
+	def getNumArgs(self, mtName):
+		#Get the number of arguments in the method (given label)
+		if mtName in self.methodNumArgs:
+			return self.methodNumArgs[mtName]
+		else:
+			return None
 
 	def lookUpMethod(self, mtName):
 		#Search for a method in all ancestor scopes (till main)

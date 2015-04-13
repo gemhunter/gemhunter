@@ -5,6 +5,7 @@ for
 super (will be used in new)
 putint/ getint/ putstring
 string equal/not equal operators
+exit
 # optimizations
 # type casting
 # yield / blocks
