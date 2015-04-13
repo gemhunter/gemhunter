@@ -1,10 +1,2 @@
-a = true
-a = !a
-b = -20
-c = -b
-c *= b
-puts c
-c = 9 - 8
-puts c
-gets c
-puts c
+a = 1 <= 1
+puts a

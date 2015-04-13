@@ -186,13 +186,37 @@ if __name__=='__main__':
 
             #Greater than or equal to
             elif line[3]=='>=':
-                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
-                AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[0],line))
+                label1 = AC.getLabel()
+                label2 = AC.getLabel()
+
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("slt",regt0,regt1,regt2)
+                AC.emit("beqz",regt0,label1)
+                AC.emit("li",regt0,0)
+                AC.emit("b",label2)
+
+                AC.emit(label1+":")
+                AC.emit("li",regt0,1)
+                AC.emit(label2+":")
+                AC.flushFromReg(regt0,line[0])
 
             #Less than or equal to
             elif line[3]=='<=':
-                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
-                AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[0],line))
+                label1 = AC.getLabel()
+                label2 = AC.getLabel()
+
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("slt",regt0,regt2,regt1)
+                AC.emit("beqz",regt0,label1)
+                AC.emit("li",regt0,0)
+                AC.emit("b",label2)
+
+                AC.emit(label1+":")
+                AC.emit("li",regt0,1)
+                AC.emit(label2+":")
+                AC.flushFromReg(regt0,line[0])
 
             #Equal to
             elif line[3]=='==':
@@ -200,20 +224,24 @@ if __name__=='__main__':
                 label2 = AC.getLabel()
                 label3 = AC.getLabel()
 
-                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
-                AC.emit("beqz",AC.getReg(line[0],line),label1)
-                AC.emit("li",AC.getReg(line[0],line),0)
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+
+                AC.emit("slt",regt0,regt1,regt2)
+                AC.emit("beqz",regt0,label1)
+                AC.emit("li",regt0,0)
                 AC.emit("b",label2)
                 
                 AC.emit(label1+":")
-                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
-                AC.emit("beqz",AC.getReg(line[0],line),label3)
-                AC.emit("li",AC.getReg(line[0],line),0)
+                AC.emit("slt",regt0,regt2,regt1)
+                AC.emit("beqz",regt0,label3)
+                AC.emit("li",regt0,0)
                 AC.emit("b",label2)
 
                 AC.emit(label3+":")
-                AC.emit("li",AC.getReg(line[0],line),1)
+                AC.emit("li",regt0,1)
                 AC.emit(label2+":")
+                AC.flushFromReg(regt0,line[0])
 
             #Not equal to
             elif line[3]=='!=':
@@ -221,28 +249,34 @@ if __name__=='__main__':
                 label2 = AC.getLabel()
                 label3 = AC.getLabel()
 
-                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
-                AC.emit("beqz",AC.getReg(line[0],line),label1)
-                AC.emit("li",AC.getReg(line[0],line),1)
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+
+                AC.emit("slt",regt0,regt1,regt2)
+                AC.emit("beqz",regt0,label1)
+                AC.emit("li",regt0,1)
                 AC.emit("b",label2)
                 
                 AC.emit(label1+":")
-                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
-                AC.emit("beqz",AC.getReg(line[0],line),label3)
-                AC.emit("li",AC.getReg(line[0],line),1)
+                AC.emit("slt",regt0,regt2,regt1)
+                AC.emit("beqz",regt0,label3)
+                AC.emit("li",regt0,1)
                 AC.emit("b",label2)
 
                 AC.emit(label3+":")
-                AC.emit("li",AC.getReg(line[0],line),0)
+                AC.emit("li",regt0,0)
                 AC.emit(label2+":")
+                AC.flushFromReg(regt0,line[0])
 
             #if
             elif line[0]=='if':
-                AC.emit('bnez',AC.getReg(line[1],line),line[3])
+                AC.getToReg(line[1],regt1)
+                AC.emit('bnez',regt1,line[3])
 
             #ifnot
             elif line[0]=='ifnot':
-                AC.emit('beqz',AC.getReg(line[1],line),line[3])
+                AC.getToReg(line[1],regt1)
+                AC.emit('beqz',regt1,line[3])
 
             #goto
             elif line[0]=='goto':
@@ -260,13 +294,13 @@ if __name__=='__main__':
 
             #putchar
             elif line[0]=='putchar':
-                AC.emit('move','$a0',AC.getReg(line[1],line))
+                AC.getToReg(line[1],rega0)
                 AC.emit('li','$v0',11)
                 AC.emit('syscall')
 
             #putstring
             elif line[0]=='putstring':
-                AC.emit('move','$a0',AC.getReg(line[1],line))
+                AC.getToReg(line[1],rega0)
                 AC.emit('li','$v0',4)
                 AC.emit('syscall')
 
@@ -280,27 +314,21 @@ if __name__=='__main__':
             elif line[0]=='readchar':
                 AC.emit('li','$v0',12)
                 AC.emit('syscall')
-                AC.emit('move',AC.getReg(line[1],line),'$v0')
+                AC.flushFromReg(regv0,line[1])
 
             #readintmem
             elif line[0]=='readintmem':
                 AC.emit('li','$v0',5)
                 AC.emit('syscall')
-                AC.emit('sw','$v0','0(%s)'%AC.getReg(line[1],line))
-
-            #readchar
-            elif line[0]=='readchar':
-                AC.emit('li','$v0',12)
-                AC.emit('syscall')
-                AC.emit('sw','$v0','0(%s)'%AC.getReg(line[1],line))
+                AC.getToReg(line[1],regt0)
+                AC.emit('sw','$v0','0(%s)'%regt0)
 
             #readstring
             elif line[0]=='readstring':
-                AC.emit('move','$a0',AC.getReg(line[0],line))
+                AC.getToReg(line[1],rega0)
                 AC.emit('li','$a1',int(line[2]))
                 AC.emit('syscall')
 
             #
-
 
         AC.printCode()
