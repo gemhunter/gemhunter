@@ -203,11 +203,11 @@ def p_stmt_get_uservar(p):
 	'''stmt_get : KEYWORD_GETS user_var 
 	'''
 	p[0]={}
-	if p[1]['idenName'][:2] == '@@':
+	if p[2]['idenName'][:2] == '@@':
 		error('Cannot get class variables directly')
 		return
 
-	if p[1]['idenName'][0] == '@' and p[1]['idenName'][1] != '@':
+	if p[2]['idenName'][0] == '@' and p[2]['idenName'][1] != '@':
 		if not ST.currentlyInAClassMethod():
 			error('Can\'t use instance variables out of class method')
 			return
@@ -230,10 +230,10 @@ def p_stmt_get_uservar(p):
 			#		}
 			return
 
-	if ST.lookupIdentifier(p[1]['idenName']) :
+	if ST.lookupIdentifier(p[2]['idenName']) :
 		#Read into place
-		mplace = ST.getAttribute(p[1]['idenName'],'place')
-		mtype = ST.getAttribute(p[1]['idenName'],'type')
+		mplace = ST.getAttribute(p[2]['idenName'],'place')
+		mtype = ST.getAttribute(p[2]['idenName'],'type')
 		if mtype == 'INT':
 			#get int
 			TAC.emit('readint', mplace, '', '')
@@ -247,7 +247,7 @@ def p_stmt_get_uservar(p):
 			error('Can\'t read this type(%s)!'%str(mtype))
 			return
 	else:
-		error("Use of undefined variable %s!"%p[1]['idenName'])
+		error("Use of undefined variable %s!"%p[2]['idenName'])
 
 	#########
 

@@ -6,3 +6,5 @@ c *= b
 puts c
 c = 9 - 8
 puts c
+gets c
+puts c

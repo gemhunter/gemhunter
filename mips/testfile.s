@@ -66,5 +66,13 @@ sw  $t0, 28($sp)
 ld  $a0, 28($sp)
 li  $v0, 1
 syscall 
+#readint , t7 ,  , 
+li  $v0, 5
+syscall 
+sw  $v0, 28($sp)
+#putint , t7 ,  , 
+ld  $a0, 28($sp)
+li  $v0, 1
+syscall 
 li $v0, 10 
 syscall

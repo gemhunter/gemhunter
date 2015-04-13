@@ -15,6 +15,7 @@ if __name__=='__main__':
         regt2 = "$t2"
         rega0 = "$a0"
         rega1 = "$a1"
+        regv0 = "$v0"
 
         #allocate stack frame for 'main' by decrementing $sp
         AC.emit('addi','$sp','$sp', (-4)*ST.methodSize[currMeth])
@@ -171,11 +172,17 @@ if __name__=='__main__':
 
             #Greater than
             elif line[3]=='>':
-                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[2],line),AC.getReg(line[1],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("slt",regt0,regt2,regt1)
+                AC.flushFromReg(regt0,line[0])
 
             #Less than
             elif line[3]=='<':
-                AC.emit("slt",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("slt",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Greater than or equal to
             elif line[3]=='>=':
@@ -267,7 +274,7 @@ if __name__=='__main__':
             elif line[0]=='readint':
                 AC.emit('li','$v0',5)
                 AC.emit('syscall')
-                AC.emit('move',AC.getReg(line[1],line),'$v0')
+                AC.flushFromReg(regv0,line[1])
 
             #readchar
             elif line[0]=='readchar':
