@@ -2,4 +2,7 @@ a = true
 a = !a
 b = -20
 c = -b
+c *= b
+puts c
+c /= c
 puts c

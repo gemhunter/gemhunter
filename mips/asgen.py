@@ -101,19 +101,31 @@ if __name__=='__main__':
 
             #Multiplication
             elif line[3]=='*':
-                AC.emit("mul",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("mul",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Division
             elif line[3]=='/':
-                AC.emit("div",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("div",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Remainder on division
             elif line[3]=='%':
-                AC.emit("rem",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("rem",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Addition
             elif line[3]=='+':
-                AC.emit("add",AC.getReg(line[0],line),AC.getReg(line[1],line),AC.getReg(line[2],line))
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+                AC.emit("add",regt0,regt1,regt2)
+                AC.flushFromReg(regt0,line[0])
 
             #Subtraction
             elif line[3]=='-':

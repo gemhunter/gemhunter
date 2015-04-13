@@ -1,9 +1,3 @@
-on method labels, update the pointers, push the methodSize on localAllocated stack
-
-on methodEnds, pop from LA stack
-
-
-
 float - ??
 (all instrs for float)
 ** (exponent) (l3_expr) - left because no mips instr present for it

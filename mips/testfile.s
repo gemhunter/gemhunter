@@ -1,6 +1,6 @@
 .text 
 main:
-addi  $sp, $sp, -32
+addi  $sp, $sp, -40
 #t0 , true ,  , =
 li  $t0, 1
 sw  $t0, 0($sp)
@@ -35,6 +35,26 @@ sub  $t0, $zero, $t1
 sw  $t0, 24($sp)
 #t7 , t6 ,  , =
 ld  $t0, 24($sp)
+sw  $t0, 28($sp)
+#t8 , t7 , t5 , *
+ld  $t1, 28($sp)
+ld  $t2, 20($sp)
+mul  $t0, $t1, $t2
+sw  $t0, 32($sp)
+#t7 , t8 ,  , =
+ld  $t0, 32($sp)
+sw  $t0, 28($sp)
+#putint , t7 ,  , 
+ld  $a0, 28($sp)
+li  $v0, 1
+syscall 
+#t9 , t7 , t7 , /
+ld  $t1, 28($sp)
+ld  $t2, 28($sp)
+div  $t0, $t1, $t2
+sw  $t0, 36($sp)
+#t7 , t9 ,  , =
+ld  $t0, 36($sp)
 sw  $t0, 28($sp)
 #putint , t7 ,  , 
 ld  $a0, 28($sp)
