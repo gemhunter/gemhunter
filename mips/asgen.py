@@ -46,8 +46,19 @@ if __name__=='__main__':
                         AC.emit("li",tempReg,0)
 
                     #character
-                    elif len(line[1])==1:
-                        AC.emit("li",tempReg,line[1])
+                    elif line[1][0]=="'" and line[1][-1]=="'":
+                        if len(line[1])==4:
+                            if line[1][2]=='n':
+                                char = ord('\n')
+                            elif line[1][2]=="'":
+                                char = ord('\'')
+                            elif line[1][2]=="t":
+                                char = ord('\t')
+                            elif line[1][2]=="\\":
+                                char = ord('\\')
+                        else:
+                            char = ord(line[1][1])
+                        AC.emit("li",tempReg,char)
 
                     #assignment from a variable to another variable
                     elif line[1][0]=='t':
@@ -175,7 +186,7 @@ if __name__=='__main__':
 
             #if
             elif line[0]=='if':
-                AC.emit('bnez',AC.getReg(line[1],line),'$zero',line[3])
+                AC.emit('bnez',AC.getReg(line[1],line),line[3])
 
             #ifnot
             elif line[0]=='ifnot':
@@ -193,6 +204,48 @@ if __name__=='__main__':
             elif line[0]=='putint':
                 AC.emit('move','$a0',AC.getReg(line[1],line))
                 AC.emit('li','$v0',1)
+                AC.emit('syscall')
+
+            #putchar
+            elif line[0]=='putchar':
+                AC.emit('move','$a0',AC.getReg(line[1],line))
+                AC.emit('li','$v0',11)
+                AC.emit('syscall')
+
+            #putstring
+            elif line[0]=='putstring':
+                AC.emit('move','$a0',AC.getReg(line[1],line))
+                AC.emit('li','$v0',4)
+                AC.emit('syscall')
+
+            #readint
+            elif line[0]=='readint':
+                AC.emit('li','$v0',5)
+                AC.emit('syscall')
+                AC.emit('move',AC.getReg(line[1],line),'$v0')
+
+            #readchar
+            elif line[0]=='readchar':
+                AC.emit('li','$v0',12)
+                AC.emit('syscall')
+                AC.emit('move',AC.getReg(line[1],line),'$v0')
+
+            #readintmem
+            elif line[0]=='readintmem':
+                AC.emit('li','$v0',5)
+                AC.emit('syscall')
+                AC.emit('sw','$v0','0(%s)'%AC.getReg(line[1],line))
+
+            #readchar
+            elif line[0]=='readchar':
+                AC.emit('li','$v0',12)
+                AC.emit('syscall')
+                AC.emit('sw','$v0','0(%s)'%AC.getReg(line[1],line))
+
+            #readstring
+            elif line[0]=='readstring':
+                AC.emit('move','$a0',AC.getReg(line[0],line))
+                AC.emit('li','$a1',int(line[2]))
                 AC.emit('syscall')
 
         AC.printCode()

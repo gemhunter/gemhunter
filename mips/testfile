@@ -1,6 +1,5 @@
-a = true
-b = true
-c = a && b
-if c
-	puts 23
+a = 1
+while a <10
+	puts a
+	a += 1
 end
