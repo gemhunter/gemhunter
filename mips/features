@@ -20,3 +20,5 @@
 -greater than, less than, greater than equal to, less than equal to
 -equal to, not equal to
 -if, ifnot, label, goto ->Conditions and branching
+-read int, char, string, intmem
+-put int, char, string
