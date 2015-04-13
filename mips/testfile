@@ -1,10 +1,2 @@
-def Int fact(Int x)
-	if x==0
-		return 1
-	end
-	return x*fact(x-1)
-end
-a=1
-gets a
-puts fact(a)
-puts '\n'
+a = "da"
+puts a

@@ -1014,9 +1014,9 @@ def p_primary_expr_primitive_literals(p):
 		for i in range(0,p[1]['type'][1]):
 			tempChar = ST.createTemp()
 			if i == p[1]['type'][1]-1:
-				TAC.emit(tempChar, '\0', '', '=')
+				TAC.emit(tempChar, "'\\0'", '', '=')
 			else:
-				TAC.emit(tempChar,   p[1]['value'][i] , '', '=')
+				TAC.emit(tempChar,   "'"+p[1]['value'][i]+"'" , '', '=')
 			offset = ST.createTemp()
 			TAC.emit(offset, 4*i, '', '=')
 			TAC.emit(newPlace, offset, tempChar,'*=') 
