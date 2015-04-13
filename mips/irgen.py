@@ -77,6 +77,7 @@ def p_stmt(p):
 	| expr
 	| stmt_imp
 	| stmt_print
+	| stmt_get
 	'''
 	#Check for wrong breaks etc.
 	p[0] = p[1]
@@ -98,6 +99,7 @@ def p_method_defn_stmt(p):
 	| stmt_method
 	| method_defn
 	| stmt_print
+	| stmt_get
 	'''
 	#Check for wrong breaks etc.
 	p[0] = p[1]
@@ -124,6 +126,7 @@ def p_imp_body_stmt(p):
 	| stmt_imp
 	| stmt_method
 	| stmt_print
+	| stmt_get
 	'''
 	p[0] = p[1]
 
@@ -181,11 +184,164 @@ def p_stmt_print(p):
 		TAC.emit('putint', p[2]['place'], '', '')
 	elif p[2]['type'] == 'CHAR':
 		TAC.emit('putchar', p[2]['place'], '', '')
-	elif p[2]['type'] == 'STRING':
+	elif isinstance(p[2]['type'],tuple) and p[2]['type'][0] == 'STRING':
 		TAC.emit('putstring', p[2]['place'], '', '')
 	else :
 		error('Cannot print this type(%s)!'%str(p[2]['type']))
 		return
+
+def p_stmt_get_uservar(p):
+	'''stmt_get : KEYWORD_GETS user_var 
+	'''
+	p[0]={}
+	if p[1]['idenName'][:2] == '@@':
+		error('Cannot get class variables directly')
+		return
+
+	if p[1]['idenName'][0] == '@' and p[1]['idenName'][1] != '@':
+		if not ST.currentlyInAClassMethod():
+			error('Can\'t use instance variables out of class method')
+			return
+		else:
+			#Need to lookup instance variable and self!
+			#Now read into memory
+			#instVar = ST.lookUpInstanceVariable(ST.getParClass(), p[1]['idenName'])
+			#if instVar == None:
+			#	error('Instance Variable not declared (%s)'%p[1]['idenName'])
+			#	return
+			#selfPlace = ST.getAttribute('guys', 'place')
+			#assert(selfPlace != None)
+			#newPlace = ST.createTemp()
+			#offset = ST.createTemp()
+			#TAC.emit(offset,  4*instVar['place'], '', '=')
+			#TAC.emit(newPlace, selfPlace, offset, '=*')
+			#p[0] = {
+			#		'place' : newPlace,
+			#		'type' : instVar['type']
+			#		}
+			return
+
+	if ST.lookupIdentifier(p[1]['idenName']) :
+		#Read into place
+		mplace = ST.getAttribute(p[1]['idenName'],'place')
+		mtype = ST.getAttribute(p[1]['idenName'],'type')
+		if mtype == 'INT':
+			#get int
+			p=1
+		elif mtype == 'CHAR':
+			#getchar
+			p=1
+		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
+			#get string
+			p=1
+		else:
+			error('Can\'t read this type(%s)!'%str(mtype))
+			return
+	else:
+		error("Use of undefined variable %s!"%p[1]['idenName'])
+
+	#########
+
+#TODO
+def p_stmt_get_array_index(p):
+	'''stmt_get : KEYWORD_GETS primary_expr '[' expr ']' 
+	'''
+	p[0] = {}
+
+#	p[0] = {
+#			'place' : 'undefined',
+#			'type' : 'TYPE_ERROR'
+#			}
+#	if not isinstance(p[1]['type'], tuple):
+#		error('Only arrays or strings can be indexed')
+#		return
+#	if p[3]['type'] != 'INT':
+#		error('Arrays or Strings can only be indexed by integers')
+#		return
+#	if p[1]['type'][0] == 'STRING':
+#		#String index
+#		indivSize = ST.createTemp()
+#		TAC.emit(indivSize, '4', '', '=')
+#		offset = ST.createTemp()
+#		TAC.emit(offset, p[3]['place'], indivSize, '*')
+#		newPlace = ST.createTemp()
+#		TAC.emit(newPlace, p[1]['place'],offset , '=*')
+#		p[0] = {
+#				'place' : newPlace,
+#				'type' : 'CHAR'
+#				}
+#	elif p[1]['type'][0] == 'ARRAY':
+#		#Array index
+#		subType = p[1]['type'][1]
+#		indivSize = ST.createTemp()
+#		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
+#		offset = ST.createTemp()
+#		TAC.emit(offset, p[3]['place'], indivSize, '*')
+#		newPlace = ST.createTemp()
+#		TAC.emit(newPlace, p[1]['place'],offset , '=*')
+#		p[0] = {
+#				'place' : newPlace,
+#				'type' : subType
+#				}
+#	else:
+#		error('Only arrays or strings can be indexed')
+#		return
+
+#TODO
+def p_stmt_get_objectvar(p):
+	'''stmt_get : KEYWORD_GETS primary_expr '.' LOCALVAR 
+	'''
+	p[0] = {}
+
+#	p[0] = {
+#			'place' : 'undefined',
+#			'type' : 'TYPE_ERROR'
+#			}
+#	if not ST.classExists(p[1]['type']):
+#		error('Cannot dereference non-objects (%s)'%p[1]['place'])
+#		return
+#
+#	instVar  = ST.lookUpInstanceVariable(p[1]['type'], "@" + p[3])
+#	if instVar != None:
+#		#Code for instance var
+#		newPlace = ST.createTemp()
+#		offset = ST.createTemp()
+#		TAC.emit(offset,  4*instVar['place'], '', '=')
+#		TAC.emit(newPlace,p[1]['place'] ,offset , '=*')
+#		p[0] = {
+#				'place' : newPlace,
+#				'type' : instVar['type']
+#				}
+#	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
+#		#Class Variable here
+#		p[0] = {
+#				'place' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'place'),
+#				'type' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'type')
+#				}
+#	else:
+#		error('%s not found in '%p[3] + p[1]['place'])
+#		return
+
+#TODO
+def p_stmt_get_classvar(p):
+	'''stmt_get : KEYWORD_GETS CONST '.' LOCALVAR 
+	'''
+	p[0] = {}
+#	p[0] = {
+#			'place' : 'undefined',
+#			'type' : 'TYPE_ERROR'
+#			}
+#	if not ST.classExists(p[1]):
+#		error('Class (%s) does not exist'%p[1])
+#		return
+#
+#	idenName = "@@" + p[3] + "#" + p[1]
+#	if ST.lookupIdentifier(idenName) :
+#		p[0]['place'] = ST.getAttribute(idenName,'place')
+#		p[0]['type'] = ST.getAttribute(idenName,'type')
+#	else:
+#		error("Use of undefined variable %s!"%idenName)
+
 
 ############
 #Expression#
@@ -1545,7 +1701,7 @@ def p_start_method(p):
 	ST.addMethod(p[-2])
 	#Emit the label for method
 	TAC.emit('label', ST.getCurrLabel(), '', '')
-	
+	TAC.emit('methodStarts', ST.getCurrLabel(), '', '')
 	#Set the arg list
 	argList = []
 	args = p[-1]

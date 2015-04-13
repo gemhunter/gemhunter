@@ -68,6 +68,7 @@ reserved = {
     'yield' : "KEYWORD_YIELD",
     'guys' : "KEYWORD_GUYS",
     'puts' : "KEYWORD_PUTS",
+    "gets" : "KEYWORD_GETS",
 }
 
 
