@@ -78,6 +78,7 @@ def p_stmt(p):
 	| stmt_imp
 	| stmt_print
 	| stmt_get
+	| stmt_exit
 	'''
 	#Check for wrong breaks etc.
 	p[0] = p[1]
@@ -100,6 +101,7 @@ def p_method_defn_stmt(p):
 	| method_defn
 	| stmt_print
 	| stmt_get
+	| stmt_exit
 	'''
 	#Check for wrong breaks etc.
 	p[0] = p[1]
@@ -127,6 +129,7 @@ def p_imp_body_stmt(p):
 	| stmt_method
 	| stmt_print
 	| stmt_get
+	| stmt_exit
 	'''
 	p[0] = p[1]
 
@@ -173,6 +176,12 @@ def p_stmt_loop(p):
 		p[0]['nextList'] = [(currLine,TAC.getCurrQuad())] 
 	elif p[1] == 'redo':
 		p[0]['redoList'] = [(currLine,TAC.getCurrQuad())] 
+
+def p_stmt_exit(p):
+	'''stmt_exit : KEYWORD_EXIT
+	'''
+	p[0] = {}
+	TAC.emit('exit', '', '', '')
 
 def p_stmt_print(p):
 	'''stmt_print : KEYWORD_PUTS expr

@@ -69,6 +69,7 @@ reserved = {
     'guys' : "KEYWORD_GUYS",
     'puts' : "KEYWORD_PUTS",
     "gets" : "KEYWORD_GETS",
+    "exit" : "KEYWORD_EXIT",
 }
 
 
