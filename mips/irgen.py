@@ -236,13 +236,13 @@ def p_stmt_get_uservar(p):
 		mtype = ST.getAttribute(p[1]['idenName'],'type')
 		if mtype == 'INT':
 			#get int
-			p=1
+			TAC.emit('readint', mplace, '', '')
 		elif mtype == 'CHAR':
 			#getchar
-			p=1
+			TAC.emit('readchar', mplace, '', '')
 		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
 			#get string
-			p=1
+			TAC.emit('readstring', mplace, mtype[1], '')
 		else:
 			error('Can\'t read this type(%s)!'%str(mtype))
 			return
