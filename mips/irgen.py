@@ -1009,8 +1009,19 @@ def p_primary_expr_primitive_literals(p):
 	| literal
 	'''
 	newPlace = ST.createTemp()
-	#TODO for strings (ptr)
-	TAC.emit(newPlace,p[1]['value'],'','=')
+	if isinstance(p[1]['type'], tuple) and p[1]['type'][0] == 'STRING':
+		TAC.emit(newPlace, ST.getActualSize(p[1]['type']), '', 'new')
+		for i in range(0,p[1]['type'][1]):
+			tempChar = ST.createTemp()
+			if i == p[1]['type'][1]-1:
+				TAC.emit(tempChar, '\0', '', '=')
+			else:
+				TAC.emit(tempChar,   p[1]['value'][i] , '', '=')
+			offset = ST.createTemp()
+			TAC.emit(offset, 4*i, '', '=')
+			TAC.emit(newPlace, offset, tempChar,'*=') 
+	else:
+		TAC.emit(newPlace,p[1]['value'],'','=')
 	p[0] = {
 		'place' : newPlace,
 		'type' : p[1]['type']
@@ -1963,6 +1974,7 @@ def p_literal_char(p):
 def p_literal_string(p):
 	''' literal : STRING
 	'''
+	p[1] = p[1][1:-1]
 	p[0] = {
 		'type' : ('STRING', len(p[1])+1),
 		'value' : p[1]
