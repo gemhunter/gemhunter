@@ -14,6 +14,7 @@ if __name__=='__main__':
         regt0 = "$t0"
         regt1 = "$t1"
         regt2 = "$t2"
+        regt3 = "$t3"
         rega0 = "$a0"
         rega1 = "$a1"
         regv0 = "$v0"
@@ -68,6 +69,8 @@ if __name__=='__main__':
                                 char = ord('\t')
                             elif line[1][2]=="\\":
                                 char = ord('\\')
+                            elif line[1][2]=="0":
+                                char = 0
                         else:
                             char = ord(line[1][1])
                         AC.emit("li",regt0,char)
@@ -391,12 +394,35 @@ if __name__=='__main__':
                 AC.emit('addi','$sp','$sp', 4*(2+ST.getNumArgs(line[1])))
                 #store value from $v0 to line[0]
                 AC.flushFromReg(regv0,line[0])
-
             
             #Exit
             elif line[0]=='exit':
                 AC.emit('b exit')
 
+            #MEMORY OPERATIONS
+            #Dynamic memory allocation
+            elif line[3]=='new':
+                AC.emit('li',rega0,line[1])
+                AC.emit('li',regv0,9)
+                AC.emit('syscall')
+                AC.flushFromReg(regv0,line[0])
 
+            #Store value to memory
+            elif line[3]=='*=':
+                AC.getToReg(line[0],regt0)
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+
+                AC.emit('add',regt3,regt0,regt1)
+                AC.emit('sw',regt2,'0(%s)'%regt3)
+
+            #Load value from memory
+            elif line[3]=='=*':
+                AC.getToReg(line[1],regt1)
+                AC.getToReg(line[2],regt2)
+
+                AC.emit('add',regt3,regt1,regt2)
+                AC.emit('lw',regt0,'0(%s)'%regt3)
+                AC.flushFromReg(regt0,line[0])
 
         AC.printCode()

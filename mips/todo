@@ -12,8 +12,3 @@ float - ??
 #methodStarts -  allocate stack frame by incrementing the sp, push to local allocated, set numArgsRead = 0
 #call -  push $fp to stack, push $ra to stack, fp = sp, jal, store value from $v0 to line[0], set ra = old 0(sp); pop 2+numargs (ra,fp, args) (take number from symbol table)
 #param - store on stack after adding to sp
-
-
-new - ??
-=* - ??
-*= - ??
