@@ -290,7 +290,7 @@ def p_stmt_get_array_index(p):
 		#Array index
 		subType = p[2]['type'][1]
 		indivSize = ST.createTemp()
-		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
+		TAC.emit(indivSize, ST.getSize(subType), '', '=')
 		offset = ST.createTemp()
 		TAC.emit(offset, p[4]['place'], indivSize, '*')
 		fullAddr = ST.createTemp()
@@ -1066,7 +1066,7 @@ def p_primary_expr(p):
 		size = len(p[2])
 		newPlace = ST.createTemp()
 		newType = ('ARRAY', arrType, size)
-		TAC.emit(newPlace, ST.getActualSize(newType), '', 'new')
+		TAC.emit(newPlace, size * ST.getSize(newType), '', 'new')
 		cnt = 0
 		for i in p[2]:
 			offset = ST.createTemp()
@@ -1081,7 +1081,7 @@ def p_primary_expr(p):
 		#implicit declaration
 		newPlace = ST.createTemp()
 		newType = ('ARRAY', p[1], '', p[3])
-		TAC.emit(newPlace,ST.getActualSize(newType), '', 'new')
+		TAC.emit(newPlace,size * ST.getSize(newType), '', 'new')
 		p[0] = {
 				'place' : newPlace,
 				'type' : newType
@@ -1117,7 +1117,7 @@ def p_primary_expr_array_index(p):
 		#Array index
 		subType = p[1]['type'][1]
 		indivSize = ST.createTemp()
-		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
+		TAC.emit(indivSize, ST.getSize(subType), '', '=')
 		offset = ST.createTemp()
 		TAC.emit(offset, p[3]['place'], indivSize, '*')
 		newPlace = ST.createTemp()
@@ -1439,7 +1439,7 @@ def p_lhs_array(p):
 		#Array index
 		subType = p[1]['type'][1]
 		indivSize = ST.createTemp()
-		TAC.emit(indivSize, ST.getActualSize(subType), '', '=')
+		TAC.emit(indivSize, ST.getSize(subType), '', '=')
 		offset = ST.createTemp()
 		TAC.emit(offset, p[3]['place'], indivSize, '*')
 		p[0]['base'] = p[1]['place']
