@@ -1,2 +1,12 @@
-a = 'a'
-puts a
+$a = 1
+a = 2
+class Customer
+	@@a = 42
+	def Customer new()
+		@b = "asdf"
+	end
+end
+
+x = Customer.new()
+x.a = 44
+puts x.a
