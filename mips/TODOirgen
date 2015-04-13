@@ -1,8 +1,5 @@
-range as pointer
 case
 for
 super (will be used in new)
 string equal/not equal operators
-# optimizations
-# type casting
 # yield / blocks

@@ -551,11 +551,17 @@ def p_range_expr(p):
 		'place' : newPlace,
 		'type' : 'TYPE_ERROR'
 	}
-	#TODO range pointer
 	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
 		return
 	if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
-		p[0]['type'] = ('RANGE', p[1]['place'], p[3]['place'])
+		TAC.emit(newPlace, 8, '', 'new')
+		offset = ST.createTemp()
+		TAC.emit(offset, 0, '', '=')
+		TAC.emit(newPlace, offset, p[1]['place'], '*=')
+		offset = ST.createTemp()
+		TAC.emit(offset, 4, '', '=')
+		TAC.emit(newPlace, offset, p[3]['place'], '*=')
+		p[0]['type'] = 'RANGE'
 	else:
 		error('Type Error (Expected Integers) '+p[1]['place']+','+p[3]['place']+'!')
 
