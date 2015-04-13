@@ -194,7 +194,13 @@ def p_stmt_print(p):
 	elif p[2]['type'] == 'CHAR':
 		TAC.emit('putchar', p[2]['place'], '', '')
 	elif isinstance(p[2]['type'],tuple) and p[2]['type'][0] == 'STRING':
-		TAC.emit('putstring', p[2]['place'], '', '')
+		#print character by character
+		for i in range(0, p[2]['type'][1]):
+			offset = ST.createTemp()
+			TAC.emit(offset, 4*i, '', '=')
+			thisChar = ST.createTemp()
+			TAC.emit(thisChar, p[2]['place'], offset, '=*')
+			TAC.emit('putchar', thisChar, '', '')
 	else :
 		error('Cannot print this type(%s)!'%str(p[2]['type']))
 		return
