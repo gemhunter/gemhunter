@@ -307,35 +307,54 @@ def p_stmt_get_array_index(p):
 		error('Only arrays or strings can be indexed')
 		return
 
-#TODO
 def p_stmt_get_objectvar(p):
 	'''stmt_get : KEYWORD_GETS primary_expr '.' LOCALVAR 
 	'''
 	p[0] = {}
-#	if not ST.classExists(p[1]['type']):
-#		error('Cannot dereference non-objects (%s)'%p[1]['place'])
-#		return
-#
-#	instVar  = ST.lookUpInstanceVariable(p[1]['type'], "@" + p[3])
-#	if instVar != None:
-#		#Code for instance var
-#		newPlace = ST.createTemp()
-#		offset = ST.createTemp()
-#		TAC.emit(offset,  4*instVar['place'], '', '=')
-#		TAC.emit(newPlace,p[1]['place'] ,offset , '=*')
-#		p[0] = {
-#				'place' : newPlace,
-#				'type' : instVar['type']
-#				}
-#	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
-#		#Class Variable here
-#		p[0] = {
-#				'place' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'place'),
-#				'type' : ST.getAttribute("@@" + p[3] + "#" + p[1]['type'], 'type')
-#				}
-#	else:
-#		error('%s not found in '%p[3] + p[1]['place'])
-#		return
+	if not ST.classExists(p[2]['type']):
+		error('Cannot dereference non-objects (%s)'%p[1]['place'])
+		return
+
+	instVar  = ST.lookUpInstanceVariable(p[2]['type'], "@" + p[3])
+	if instVar != None:
+		#Code for instance var
+		fullAddr = ST.createTemp()
+		offset = ST.createTemp()
+		TAC.emit(offset,  4*instVar['place'], '', '=')
+		TAC.emit(fullAddr,p[2]['place'] ,offset , '+')
+		mtype = instVar['type']
+		if mtype == 'INT':
+			TAC.emit('readintmem', fullAddr, '', '')
+		elif mtype == 'CHAR':
+			TAC.emit('readcharmem', fullAddr, '', '')
+		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
+			zero = ST.createTemp()
+			TAC.emit(zero, 0, '', '=')
+			stringAddr = ST.createTemp()
+			TAC.emit(stringAddr,fullAddr, zero, '=*')
+			TAC.emit('readstring', stringAddr, mtype[1], '')
+		else:
+			error('Can\'t read this type(%s)!'%str(mtype))
+			return
+	elif ST.lookupIdentifier("@@" + p[3] + "#" + p[1]['type'] ):
+		#Class Variable here
+		mplace = ST.getAttribute("@@" + p[4] + "#" + p[2]['type'], 'place')
+		mtype = ST.getAttribute("@@" + p[4] + "#" + p[2]['type'], 'type')
+		if mtype == 'INT':
+			#get int
+			TAC.emit('readint', mplace, '', '')
+		elif mtype == 'CHAR':
+			#getchar
+			TAC.emit('readchar', mplace, '', '')
+		elif isinstance(mtype,tuple) and mtype[0] == 'STRING':
+			#get string
+			TAC.emit('readstring', mplace, mtype[1], '')
+		else:
+			error('Can\'t read this type(%s)!'%str(mtype))
+			return
+	else:
+		error('%s not found in '%p[4] + p[2]['place'])
+		return
 
 def p_stmt_get_classvar(p):
 	'''stmt_get : KEYWORD_GETS CONST '.' LOCALVAR 
