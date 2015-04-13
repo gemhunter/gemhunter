@@ -1,2 +1,7 @@
-a = 1 <= 1
-puts a
+def Void noReturn
+	a = 1
+	exit
+	puts a
+end
+
+noReturn()

@@ -7,18 +7,13 @@ float - ??
 
 METHODS
 return - set ret value in $v0, sp = fp, set fp = -4(fp), jr ra
-getarg - read from (2 + numArgsRead)fp to getReg
+getarg - read from (2 + numArgsRead)fp
 methodEnds - pop from local allocated
-methodStarts -  allocate stack frame by incrementing the sp, set numArgsRead = 0
-call -  push fp to stack, push ra to stack, fp = sp, jal, store value from $v0 to line[0], set ra = old 0(sp); pop 2+numargs (ra,fp, args) (take number from symbol table)
+methodStarts -  allocate stack frame by incrementing the sp, push to local allocated, set numArgsRead = 0
+call -  push $fp to stack, push $ra to stack, fp = sp, jal, store value from $v0 to line[0], set ra = old 0(sp); pop 2+numargs (ra,fp, args) (take number from symbol table)
 param - store on stack after adding to sp
-
 
 
 new - ??
 =* - ??
 *= - ??
-exit - ??
-
-AC.getToReg(line[1],tempReg)
-AC.flushFromReg(tempReg,line[0])

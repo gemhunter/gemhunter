@@ -35,8 +35,9 @@ class AssemblyCode:
         #reflects the number of variables (each of size one word), which have been allocated currently, for global and local scopes
         self.globalAllocated = 0
         self.localAllocated = []
-        #Start the localAllocated counter for 'main'
-        self.localAllocated.append(0)
+        
+        #Variables to implement function stacks and parameters
+        self.numArgsRead = 0
 
         #MIPS label count
         self.labelBase = 'mipsLabel'
@@ -53,11 +54,11 @@ class AssemblyCode:
 
             else:
                 #local variable, stack allocation
-                self.addressDescriptors[tempName] = '%d($sp)'%(4*self.localAllocated[len(self.localAllocated)-1])
-                self.localAllocated[len(self.localAllocated)-1] += 1
+                self.addressDescriptors[tempName] = '%d($sp)'%(4*self.localAllocated[-1])
+                self.localAllocated[-1] += 1
 
         #assign register and return
-        self.emit('ld',reg,self.addressDescriptors[tempName])
+        self.emit('lw',reg,self.addressDescriptors[tempName])
         return
 
     def flushFromReg(self,reg,tempName):
@@ -70,8 +71,8 @@ class AssemblyCode:
 
             else:
                 #local variable, stack allocation
-                self.addressDescriptors[tempName] = '%d($sp)'%(4*self.localAllocated[len(self.localAllocated)-1])
-                self.localAllocated[len(self.localAllocated)-1] += 1
+                self.addressDescriptors[tempName] = '%d($sp)'%(4*self.localAllocated[-1])
+                self.localAllocated[-1] += 1
 
         self.emit('sw',reg,self.addressDescriptors[tempName])
         return
@@ -164,7 +165,7 @@ class AssemblyCode:
     def printCode(self):
         with open(sys.argv[1]+'.s','w+') as outfile:
             header = '.text \nmain:'
-            footer = 'li $v0, 10 \nsyscall'
+            footer = 'exit:\nli $v0, 10 \nsyscall'
 
             outfile.write(header+'\n')
 

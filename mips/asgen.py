@@ -8,8 +8,9 @@ if __name__=='__main__':
 
         #initialize all the helpers
         ST,TAC = parse()
-        currMeth = 'main'
         AC = AssemblyCode.AssemblyCode(ST,TAC)
+
+        #Variables storing register names
         regt0 = "$t0"
         regt1 = "$t1"
         regt2 = "$t2"
@@ -17,8 +18,12 @@ if __name__=='__main__':
         rega1 = "$a1"
         regv0 = "$v0"
 
+        
         #allocate stack frame for 'main' by decrementing $sp
-        AC.emit('addi','$sp','$sp', (-4)*ST.methodSize[currMeth])
+        AC.emit('addi','$sp','$sp', (-4)*ST.methodSize['main'])
+        #Start the localAllocated counter for 'main'
+        AC.localAllocated.append(0)
+
 
         #iterate over all lines in the TAC to process
         for line in TAC.code:
@@ -329,6 +334,64 @@ if __name__=='__main__':
                 AC.emit('li','$a1',int(line[2]))
                 AC.emit('syscall')
 
-            #
+            #METHOD MANIPULATORS
+            #Start of a method definition- push to the localAllocated stack and reset args counter
+            elif line[0]=='methodStarts':
+                #Allocate stack frame for callee by incrementing $sp
+                AC.emit('addi','$sp','$sp', (-4)*ST.methodSize[line[1]])
+                AC.localAllocated.append(0)
+                AC.numArgsRead = 0
+
+            #Get the argument, according to the args counter
+            elif line[3]=='getarg':
+                AC.getToReg('%d($fp)'%4*(2+numArgsRead),regt0)
+                AC.flushFromReg(regt0,line[0])
+                AC.numArgsRead += 1
+
+            #Returning from function
+            elif line[0]=='return':
+                #pass return value to $v0
+                AC.getToReg(line[1],regv0)
+                #Reset the stack frame and jump back to caller
+                AC.emit("move","$sp","$fp")
+                AC.emit('lw',"$fp","4($fp)")
+                AC.emit("jr","$ra")
+
+            #End of method definition, pop from localAllocated stack
+            elif line[0]=='methodEnds':
+                AC.localAllocated.pop()
+
+            #Pass parameter for a function call
+            elif line[0]=='param':
+                #Store the parameter on stack after incrementing $sp
+                AC.emit('addi','$sp','$sp',-4)
+                AC.getToReg(line[1],regt0)
+                AC.emit('sw',regt0,'0($sp)')
+
+            #Method call and return from callee
+            elif line[3]=='call':
+                #Push $fp and $ra to stack
+                AC.emit('addi','$sp','$sp',-4)
+                AC.emit('sw','$fp','0($sp)')
+                AC.emit('addi','$sp','$sp',-4)
+                AC.emit('sw','$ra','0($sp)')
+
+                #Set $fp
+                AC.emit('move','$fp','$sp')
+
+                #Jump to the function defintion
+                AC.emit('jal',line[1])
+
+                #AFTER RETURNING from callee:
+                #Reset the old return address for the caller
+                AC.emit('lw','$ra','0($sp)')
+                #pop 2+numargs (ra,fp, args) (take number from symbol table)
+                AC.emit('addi','$sp','$sp', 4*(2+ST.getNumArgs(line[1])))
+                #store value from $v0 to line[0]
+                AC.flushFromReg(regv0,line[0])
+
+            #Exit
+            elif line[0]=='exit':
+                AC.emit('b exit')
 
         AC.printCode()
