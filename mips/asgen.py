@@ -325,6 +325,13 @@ if __name__=='__main__':
                 AC.getToReg(line[1],regt0)
                 AC.emit('sw','$v0','0(%s)'%regt0)
 
+            #readcharmem
+            elif line[0]=='readcharmem':
+                AC.emit('li','$v0',12)
+                AC.emit('syscall')
+                AC.getToReg(line[1],regt0)
+                AC.emit('sw','$v0','0(%s)'%regt0)
+
             #METHOD MANIPULATORS
             #Start of a method definition- push to the localAllocated stack and reset args counter
             elif line[0]=='methodStarts':

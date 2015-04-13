@@ -25,9 +25,12 @@
 -label, goto
 
 ##Input/Output
--read int, char, intmem
+-read int, char, intmem, charmem
 -put int, char
 
 ##Functions
 -parameter passing, argument reading
 -calling, returning
+
+#Memory operations
+-new alloc, store to mem, load from mem
