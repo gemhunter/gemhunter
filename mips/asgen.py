@@ -30,21 +30,25 @@ if __name__=='__main__':
                     #TODO
 
                 else:    
-                    tempReg = AC.getReg(line[0],line)
+                    tempReg = '$t0'
 
                     #assignment from immediate value to a variable
                     if isinstance(line[1],int):
                         AC.emit("li",tempReg,line[1])
+                        AC.flushFromReg(tempReg,line[0])
 
                     elif line[1]=='true':
                         AC.emit("li",tempReg,1)
+                        AC.flushFromReg(tempReg,line[0])
 
                     elif line[1]=='false':
                         AC.emit("li",tempReg,0)
-
+                        AC.flushFromReg(tempReg,line[0])
+                        
                     elif line[1]=='nil':
                         AC.emit("li",tempReg,0)
-
+                        AC.flushFromReg(tempReg,line[0])
+                        
                     #character
                     elif line[1][0]=="'" and line[1][-1]=="'":
                         if len(line[1])==4:
@@ -59,11 +63,13 @@ if __name__=='__main__':
                         else:
                             char = ord(line[1][1])
                         AC.emit("li",tempReg,char)
-
+                        AC.flushFromReg(tempReg,line[0])
+                        
                     #assignment from a variable to another variable
                     elif line[1][0]=='t':
-                        AC.emit("move",tempReg,AC.getReg(line[1],line))
-
+                        AC.getToReg(line[1],tempReg)
+                        AC.flushFromReg(tempReg,line[0])
+                        
             #Bitwise not
             elif line[3]=='~':
                 AC.emit("not",AC.getReg(line[0],line),AC.getReg(line[1],line))
@@ -247,5 +253,8 @@ if __name__=='__main__':
                 AC.emit('move','$a0',AC.getReg(line[0],line))
                 AC.emit('li','$a1',int(line[2]))
                 AC.emit('syscall')
+
+            #
+
 
         AC.printCode()
