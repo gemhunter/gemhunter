@@ -208,8 +208,11 @@ class SymbolTable:
 
 	def getCurrMethodName(self):
 		#Get the method name (current scope)
-		assert(self.symbolTable[self.currentScope]['type'] == 'method')
-		return self.symbolTable[self.currentScope]['name']
+		scope = self.currentScope
+		while self.symbolTable[scope]['type'] not in ['main', 'method', 'class']:
+			scope = self.symbolTable[scope]['parent']
+		assert(self.symbolTable[scope]['type'] == 'method')
+		return self.symbolTable[scope]['name']
 
 	def lookUpMethod(self, mtName):
 		#Search for a method in all ancestor scopes (till main)

@@ -1828,6 +1828,12 @@ def p_outputForCondn(p):
 		error('Can only iterate over arrays/range!')
 		return
 	#TODO
+	if p[-1]['type'] == 'RANGE':
+		#iterate over range
+
+	else:
+		#iterate over array
+
 	TAC.emit('ifnot', p[-3]['place'], 'goto', p[-3][2])
 	TAC.emit('label', p[-4][1],'', '')
         ST.addBlock()
