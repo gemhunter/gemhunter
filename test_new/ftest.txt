@@ -1,0 +1,10 @@
+while
+if then else
+len(array)
+pass array to function
+inheritance of instance variables
+overwriting of method
+method lookup in parent class
+next
+redo
+break
