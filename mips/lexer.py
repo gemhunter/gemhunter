@@ -70,6 +70,7 @@ reserved = {
     'puts' : "KEYWORD_PUTS",
     "gets" : "KEYWORD_GETS",
     "exit" : "KEYWORD_EXIT",
+    "len" : "KEYWORD_LEN",
 }
 
 

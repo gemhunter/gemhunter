@@ -1073,6 +1073,26 @@ def p_primary_expr_bracket(p):
 	''' primary_expr : '(' expr ')' '''
 	p[0] = p[2]
 
+def p_primary_expr_len(p):
+	''' primary_expr : KEYWORD_LEN '(' expr ')' '''
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR'
+		}
+	if p[3]['type'] == 'TYPE_ERROR':
+		return
+	if isinstance(p[3]['type'], tuple) and p[3]['type'][0] == 'ARRAY':
+		newPlace = ST.createTemp()
+		TAC.emit(newPlace, p[3]['type'][2], '', '=')
+		p[0] = {
+				'place' : newPlace,
+				'type' : 'INT'
+				}
+		return
+	else:
+		error('Cannot take length of non-arrays!')
+		return
+
 def p_primary_expr(p):
 	''' primary_expr : '[' arg_list ']'
 	| type_param '[' INT ']'
