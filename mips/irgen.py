@@ -1852,7 +1852,20 @@ def p_outputForCondn(p):
 		TAC.emit(p[-4][3], p[-4][3], one, '+')
 	else:
 		#iterate over array
-		dosmt=1
+		idenType = p[-1]['type'][1]
+		size = ST.createTemp()
+		TAC.emit(size,p[-1]['type'][2], '', '=') 
+		toBrk = ST.createTemp()
+		TAC.emit(toBrk, offset, size, '>=')
+		TAC.emit('if', toBrk, 'goto', p[-4][2])
+		four = ST.createTemp()
+		TAC.emit(four, '4', '', '=')
+		nowOffset = ST.createTemp()
+		TAC.emit(nowOffset, offset, four, '*')
+		TAC.emit(newPlace, p[-1]['place'], nowOffset, '=*')
+		one = ST.createTemp()
+		TAC.emit(one, 1, '', '=')
+		TAC.emit(p[-4][3], p[-4][3], one, '+')
 	TAC.emit('label', p[-4][1],'', '')
         ST.addBlock()
 	ST.addIdentifier(p[-3],idenPlace,idenType)
