@@ -1820,14 +1820,13 @@ def p_makeForLabels(p):
 	offset = ST.createTemp()
 	TAC.emit(offset, 0, '', '=')
 	p[0] = [startLabel, bodyLabel, doneLabel, offset]
-	TAC.emit('label', startLabel, '', '')
 
 def p_outputForCondn(p):
 	''' M_for2 : '''
 	if p[-1]['type'] != 'RANGE' and (not (isinstance(p[-1]['type'],tuple) and p[-1]['type'][0] == 'ARRAY')):
 		error('Can only iterate over arrays/range!')
 		return
-	#TODO
+	TAC.emit('label', p[-4][0], '', '')
 	idenPlace = ST.createTemp()
 	idenType = 'TYPE_ERROR'
 	if p[-1]['type'] == 'RANGE':
@@ -1849,7 +1848,7 @@ def p_outputForCondn(p):
 		TAC.emit('if', toBrk, 'goto', p[-4][2])
 		idenType = 'INT'
 		one = ST.createTemp()
-		TAC.emit(one, '1', '', '=')
+		TAC.emit(one, 1, '', '=')
 		TAC.emit(p[-4][3], p[-4][3], one, '+')
 	else:
 		#iterate over array
