@@ -9,7 +9,7 @@ end
 def Void insertion_sort()
 	for i in 0..(len($a)-1)
 		j = i
-		while j>0 && $a[j-1]>$a[i]
+		while j>0 && $a[j-1]>$a[j]
 			temp = $a[j]
 			$a[j] = $a[j-1]
 			$a[j-1] = temp
