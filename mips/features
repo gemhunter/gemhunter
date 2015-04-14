@@ -16,7 +16,7 @@
 -subtraction
 -left shift
 -right shift
--bitwise and, or, xor
+-boolean and, or, xor
 -greater than, less than, greater than equal to, less than equal to
 -equal to, not equal to
 

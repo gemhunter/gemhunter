@@ -31,5 +31,14 @@ class B < A
 	end
 end
 
-x = B.new()
-puts x.addtob(5)
+#x = B.new()
+#puts x.addtob(5)
+
+
+
+
+b = ["haha","hads"]
+puts b[1]
+puts '\n'
+puts b[0]
+puts '\n'
