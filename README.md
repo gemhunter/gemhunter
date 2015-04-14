@@ -6,11 +6,25 @@ Ruby is a powerful language with support for various programming paradigms and a
 *gemhunter* is written completely in Python, making use of the PLY (Python Lex-Yacc).
 
 ##Some salient features:
+
 -Support for basic arithmetic and logical expressions
+
 	-`unary +,-`
-	-`bitwise !,&,|`
+
+	-`bitwise ~,&,|,^,<<,>>`
+
 	-`+,-,*,/,%`
-	-`boolean !,&&,,^,||,<<,>>
+
+	-`boolean !,&&,||`
+
+	-`comparison >,<,<=,>=,==,!=`
+
+	-`assignment =,+=,-=,*=,/=`
+
+-Support for basic imperative constructs
+
+	-if, elsif, else
+
 
 To run the compiler, use the following command:
 `bin/irgen.py test/nameOfTestFile`

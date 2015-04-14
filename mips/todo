@@ -1,9 +1,8 @@
 NOT DOING
 float - (all instrs for float)
-** (exponent) (l3_expr) - left because no mips instr present for it
-case
 string operator
 register allocation (static)
+case
 
 #METHODS
 #return - set ret value in $v0, sp = fp, set fp = -4(fp), jr ra
