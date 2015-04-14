@@ -1,9 +1,16 @@
-gemhunter - a cross compiler for Ruby, written in Python
-=======================================================
+gemhunter - A minimal Ruby compiler
+===================================
 
-**Mah Ruby, Mah rulzz**
+Ruby is a powerful language with support for various programming paradigms and a lot of syntactic sugar. In *gemhunter*, we have eliminated a lot of extra features of Ruby to give a clean implementation, supporting our own brand of Ruby, with minor tweaks from the original.
 
-*The compiler is written in Python, hence no executable was created for it.*
+*gemhunter* is written completely in Python, making use of the PLY (Python Lex-Yacc).
+
+##Some salient features:
+-Support for basic arithmetic and logical expressions
+	-`unary +,-`
+	-`bitwise !,&,|`
+	-`+,-,*,/,%`
+	-`boolean !,&&,,^,||,<<,>>
 
 To run the compiler, use the following command:
 `bin/irgen.py test/nameOfTestFile`
