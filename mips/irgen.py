@@ -922,6 +922,7 @@ def p_l3_expr(p):
 	'''l3_expr : l2_expr POW l3_expr
 	'''
 	#Exponentiation
+	error('power operator not supported!')
 	newPlace = ST.createTemp()
 	p[0] = {
 		'place' : newPlace,
@@ -1131,7 +1132,7 @@ def p_primary_expr(p):
 		#implicit declaration
 		newPlace = ST.createTemp()
 		newType = ('ARRAY', p[1], '', p[3])
-		TAC.emit(newPlace,size * ST.getSize(newType), '', 'new')
+		TAC.emit(newPlace,p[3] * ST.getSize(newType), '', 'new')
 		p[0] = {
 				'place' : newPlace,
 				'type' : newType
@@ -1397,11 +1398,63 @@ def p_method_callBlock(p):
 	| method_var '{' '|' block_param_list '|' compstmt '}' 
 	'''
 
-#TODO
 def p_method_super(p):
-	#Should return type, place
 	'''method_call : KEYWORD_SUPER '(' arg_list ')'
 	'''
+	p[0] = {
+			'place' : 'undefined',
+			'type' : 'TYPE_ERROR'
+			}
+	if not ST.currentlyInAClassMethod():
+		error('Cannot use super outside a class method!')
+		return
+	parClass = ST.getParentOfClass(ST.getParClass())
+	if parClass == 'main':
+		error('Cannot find super function to call here!')
+		return
+
+	label, argList, retType = ST.lookUpClassMethod(parClass,ST.getCurrMethodName() )
+	if label == None:
+		error('Cannot find super function to call here')
+		return
+	
+	if retType == 'TYPE_ERROR':
+		error('Super function is ill-defined. Thus cannot be called')
+		return
+
+	#Add a default self argument
+	p[3] = [(ST.getParClass(), ST.getAttribute('guys', 'place') )] + p[3]
+	#Check arguments
+	givenArgs = []
+	for i in p[3]:
+		givenArgs.append(i[0])
+	argError = False
+	if len(givenArgs) != len(argList):
+		argError = True
+	for a,b in zip(givenArgs, argList):
+		if ST.classExists(a):
+			if not ST.classExists(b):
+				argError = True
+			else:
+				#Check if ancestor
+				if not ST.checkIfAncestor(b, a):
+					#LSP
+					argError = True
+		else:
+			if a != b:
+				argError = True
+	if argError:
+		error('Cannot call this super. Wrong argument(s)')
+
+	#Call function
+	newPlace = ST.createTemp()	
+	for i in p[3]:
+		TAC.emit('param', i[1], '', '')
+	TAC.emit(newPlace, label, '', 'call')
+	p[0] = {
+			'place' : newPlace,
+			'type' : retType
+			}
 
 ###################
 #lhs of expression#

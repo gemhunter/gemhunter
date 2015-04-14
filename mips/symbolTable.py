@@ -82,6 +82,10 @@ class SymbolTable:
 		assert(self.symbolTable[parentScope]['type'] == 'class')
 		return parentScope
 
+	def getParentOfClass(self, className):
+		assert(self.classExists(className) == 1)
+		return self.symbolTable[className]['parent']
+
         def classExists(self,className):
 		if self.symbolTable.get(className) == None:
 			return False
@@ -195,6 +199,11 @@ class SymbolTable:
 			return self.methodNumArgs[mtName]
 		else:
 			return None
+
+	def getCurrMethodName(self):
+		#Get the method name (current scope)
+		assert(self.symbolTable[self.currentScope]['type'] == 'method')
+		return self.symbolTable[self.currentScope]['name']
 
 	def lookUpMethod(self, mtName):
 		#Search for a method in all ancestor scopes (till main)
