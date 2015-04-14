@@ -205,8 +205,7 @@ def p_stmt_print(p):
 		error('Cannot print this type(%s)!'%str(p[2]['type']))
 		return
 	newLine = ST.createTemp()
-	#NOTE possible bug here
-	TAC.emit(newLine, '\n', '','=')
+	TAC.emit(newLine, "\'\\n\'", '','=')
 	TAC.emit('putchar', newLine, '', '')
 
 def p_stmt_get_uservar(p):
