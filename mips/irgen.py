@@ -1848,6 +1848,9 @@ def p_outputForCondn(p):
 		TAC.emit(toBrk, idenPlace, right, '>')
 		TAC.emit('if', toBrk, 'goto', p[-4][2])
 		idenType = 'INT'
+		one = ST.createTemp()
+		TAC.emit(one, '1', '', '=')
+		TAC.emit(p[-4][3], p[-4][3], one, '+')
 	else:
 		#iterate over array
 		dosmt=1
