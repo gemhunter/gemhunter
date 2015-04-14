@@ -21,9 +21,8 @@ $n = 4
 
 class Xyz < Abc
 	def Xyz new()
-		@var = Abc.a
-		@nvar = $n
-		@b = 1
+		@a = 20
+		super()
 	end
 	def Void incvar(Int a)
 		super(a)
@@ -40,21 +39,15 @@ end
 
 x = Abc.new()
 puts x.a
-puts '\n'
-$n = $n + 4
+$n = $n + 1
 puts $n
-puts '\n'
 x.incvar(4)
-y = Abc.new()
-puts y.nvar
-puts " here"
-puts '\n'
-#puts y.incvar(1)
+y = Xyz.new()
+puts y.a
+puts y.var
+puts "here"
+y.incvar(1)
 puts fact(y.var)
-puts '\n'
-
-#puts fact(x.var)
-#puts '\n'
 
 a = [1,2,3,4]
 
