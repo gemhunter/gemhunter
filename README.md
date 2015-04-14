@@ -5,6 +5,19 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 *gemhunter* is written completely in Python, making use of the PLY (Python Lex-Yacc) package.
 
+
+##Instructions to run
+To run, run the following command:
+
+	./compile test/NAME_OF_TEST_FILE.rb
+
+This will give a file NAME_OF_TEST_FILE.s in the root folder with the MIPS assembly code.
+
+To simulate the MIPS code on SPIM simulator, use the following command:
+
+	spim -file NAME_OF_TEST_FILE.s
+
+
 ##Language Features:
 -	Imperative and object-oriented paradigm
 
@@ -247,19 +260,6 @@ Ruby is a powerful language with support for various programming paradigms and a
 			a = 1
 			gets a
 			puts a
-
-
-
-##Instructions to run
-To run, run the following command:
-
-	./compile test/NAME_OF_TEST_FILE.rb
-
-This will give a file NAME_OF_TEST_FILE.s in the root folder with the MIPS assembly code.
-
-To simulate the MIPS code on SPIM simulator, use the following command:
-
-	spim -file NAME_OF_TEST_FILE.s
 
 
 ##References
