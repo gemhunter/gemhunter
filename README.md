@@ -7,7 +7,7 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 ##Language specifications:
 
-*	###Basic data types###
+*	**Basic data types**
 
 	-	Int (signed integers)
 
@@ -17,9 +17,9 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 	-	Void (can assign value `nil`)
 
-	-	String (fixed-size, *not* supporting escape sequences, indexed from 0)
+	-	String(#x) (fixed-size of length #x (incl. \0 terminator), *not* supporting escape sequences, indexed from 0)
 
-*	###Variable declaration and assignment###
+*	**Variable declaration and assignment**
 
 	-	There are no explicit declarations. A variable is declared the first time something is assigned to it, using the `=` operator.
 
@@ -52,7 +52,7 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 		This is a *wrong* program, as x is a string of size 3 characters, and assigning a string of size 4 characters to x is illegal.
 
-*	###Arrays###
+*	**Arrays**
 
 	-	Arrays should have all elements of the same type, with the size of array being included in the type information of that array. Memory for all array objects is assigned dynamically.
 
@@ -84,7 +84,7 @@ Ruby is a powerful language with support for various programming paradigms and a
 		This program declares x as a 2x2 integer array, and y as a one-dimensional integer array of size two, and does some valid assignments.
 
 
-*	###Arithmetic and Logical Operators###
+*	**Arithmetic and Logical Operators**
 
 	-	unary `+,-`
 
@@ -98,9 +98,9 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 	-	assignment `+=, -=, *=, /=`
 
-*	###Basic imperative constructs###
+*	**Basic imperative constructs**
 
-	-	**if-elsif-else**
+	-	*if-elsif-else*
 
 			if check-expr then(optional)
 				stmt-block
@@ -112,24 +112,63 @@ Ruby is a powerful language with support for various programming paradigms and a
 				stmt-block
 			end
 
-	-	**until**
+	-	*until*
 
 			until check-expr do(optional)
 				stmt-block
 			end
 
-	-	**while**
+	-	*while*
 
 			while check-expr do(optional)
 				stmt-block
 			end
 
 
-*	###Functions###
+*	**Methods**
 
 	-	Definition
 
+			def ReturnType methodName (arguments)
+				method-body
+			end
 
+	-	ReturnType can be a class object, Int, Bool, Void, Char or String(#x). All the return statements in the method body should return values accordingly
+
+	-	If no arguments are being passed to the method, () is optional
+
+	-	Arguments are provided with types
+
+		e.g.
+
+			def Int factorial (Int x)
+				if x <= 0
+					return 1
+				end
+				return x*factorial(x-1)
+			end
+
+	-	Method name should follow one of the following rules:
+
+		+	It may begin with _ or a-z, and contain a-z, A-Z, 0-9 or _
+
+		+	It may begin with _,a-z or A-Z, contain a-z, A-Z, 0-9 or _ and end with ?
+
+*	**Classes**
+
+	-	Definition
+
+			class className
+
+			   [class variable operations]
+
+			   def className new (arguments)
+			       body-of-method-new
+			   end
+
+			   [class-methods]
+			   
+			end
 
 To run the compiler, use the following command:
 `bin/irgen.py test/nameOfTestFile`

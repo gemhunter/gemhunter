@@ -5,6 +5,10 @@ def Int findFact(Int x)
 	return x*findFact(x-1)
 end
 
+def Void helloWorld
+	return nil
+end
+
 class A
 	@@g = 3
 	def A new()
@@ -31,16 +35,12 @@ class B < A
 	end
 end
 
-#x = B.new()
-#puts x.addtob(5)
-x = true
-y = false
-z = x&&y
-until z do
-	puts '\n'
-	z = !z
+class Cass
+	@@d = 1
+	@@d = 2
+	def Cass new()
+	end
 end
-
 
 b = ["haha","hads"]
 puts b[1]
