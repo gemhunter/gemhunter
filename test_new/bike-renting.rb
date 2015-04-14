@@ -57,15 +57,17 @@ class Bike < Vehicle
 			return true
 		end
 	end
+
+	def String(8) rentedBy()
+		return @currentlyRentedBy
+	end
 end
 
-m = Member.new("aaabbbb")
+m = Member.new("dhruv s")
 
 b = Bike.new()
-puts b.wheels
-
 b.rent(1,m)
+puts b.rentedBy()
 b.giveBack(2)
 
-
-
+puts b.rentedBy()
