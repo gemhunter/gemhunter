@@ -707,10 +707,6 @@ def p_l11_expr(p):
 		elif p[1]['type'] == 'BOOL' and p[3]['type'] == 'BOOL':
 			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
 			p[0]['type']='BOOL'
-		#elif baseType(p[1]['type'][0]) == 'STRING' and baseType(p[3]['type'][0]) == 'STRING':
-			#TODO String comparison
-			#TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
-			#p[0]['type']='BOOL'
 		elif p[1]['type'] == 'VOID' and p[3]['type'] == 'VOID':
 			if p[2] == '==' :
 				TAC.emit(newPlace,'true','','=')
@@ -1766,29 +1762,76 @@ def p_outputWhileCondn(p):
 ################
 #Case statement#
 ################
-#TODO pass patchlist
-#TODO pass return list
 def p_case_block(p):
 	'''case_block : KEYWORD_CASE expr opt_terms case_body KEYWORD_END
 	'''
+	p[0] = {}
+	error('Case not supported! Please use if else if. Thanks!')
 
 def p_case_body(p):
 	'''case_body : KEYWORD_WHEN arg_list_tail then_clause imp_body_compstmt case_clause   
 	'''
+	p[0] = {}
+        error('Case not supported! Please use if else if. Thanks!')
 
 def p_case_clause(p):
 	'''case_clause : opt_else 
 	| case_body
 	'''
-
+	p[0] = {}
+        error('Case not supported! Please use if else if. Thanks!')
+	
 ###########
 #For Block#
 ###########
-#TODO pass patchlist
-#TODO pass return list
 def p_for_block(p):
-	'''for_block : KEYWORD_FOR lhs KEYWORD_IN expr do_clause imp_body_compstmt KEYWORD_END
+	'''for_block : KEYWORD_FOR M_for1 LOCALVAR KEYWORD_IN expr M_for2 do_clause imp_body_compstmt KEYWORD_END
 	'''
+#	ST.endBlock()
+#	TAC.emit('goto', p[2][0], '', '')
+#	TAC.emit('label', p[2][2], '', '')
+#	p[0] = {}
+#	if p[7].get('breakList') != None:
+#		instr = []
+#		for i in p[7]['breakList']:
+#			instr += [i[1]]
+#
+#		TAC.patch(instr, p[2][2])
+#	if p[7].get('nextList') != None:
+#		instr = []
+#		for i in p[7]['nextList']:
+#			instr += [i[1]]
+#
+#		TAC.patch(instr, p[2][0])
+#	if p[7].get('redoList') != None:
+#		instr = []
+#		for i in p[7]['redoList']:
+#			instr += [i[1]]
+#
+#		TAC.patch(instr, p[2][1])
+#	if p[7].get('retType') != None:
+#		p[0]['retType'] = p[7]['retType']
+
+def p_makeForLabels(p):
+	''' M_for1 : '''
+	startLabel = TAC.makeLabel()
+	bodyLabel = TAC.makeLabel()
+	doneLabel = TAC.makeLabel()
+	offset = ST.createTemp()
+	TAC.emit(offset, 0, '', '=')
+	p[0] = [startLabel, bodyLabel, doneLabel, offset]
+	TAC.emit('label', startLabel, '', '')
+
+def p_outputForCondn(p):
+	''' M_for2 : '''
+	if p[-1]['type'] != 'RANGE' and (not (isinstance(p[-1]['type'],tuple) and p[-1]['type'][0] == 'ARRAY')):
+		error('Can only iterate over arrays/range!')
+		return
+	#TODO
+	TAC.emit('ifnot', p[-3]['place'], 'goto', p[-3][2])
+	TAC.emit('label', p[-4][1],'', '')
+        ST.addBlock()
+
 
 ##################
 #Class Definition#
@@ -2208,6 +2251,17 @@ def baseType ( typeExpr ):
 		return typeExpr[0]
 	else :
 		return typeExpr
+
+#Equal ignoring size
+def equalIgnoringSize(t1, t2):
+	if t1==t2:
+		return 1
+	if isinstance(t1, tuple) and isinstance(t2, tuple) and t1[0] == t2[0]:
+		if t1[0] == 'STRING':
+			return 1
+		elif t1[0] == 'ARRAY':
+			return equalIgnoringSize(t1[1], t2[1])
+	return 0
 
 #Declare globals
 ST = symbolTable.SymbolTable()

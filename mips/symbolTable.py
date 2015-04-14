@@ -78,8 +78,11 @@ class SymbolTable:
 		return self.currentScope
 	
 	def getParClass(self):
-		parentScope = self.symbolTable[self.currentScope]['parent']
-		assert(self.symbolTable[parentScope]['type'] == 'class')
+		scope = self.currentScope
+		while self.symbolTable[scope]['type'] not in ['main', 'method', 'class']:
+			scope = self.symbolTable[scope]['parent']
+		parentScope = self.symbolTable[scope]['parent']
+		assert(parentScope != None and self.symbolTable[parentScope]['type'] == 'class')
 		return parentScope
 
 	def getParentOfClass(self, className):
@@ -121,8 +124,11 @@ class SymbolTable:
 		return self.classes
 
 	def currentlyInAClassMethod(self):
-		parentScope = self.symbolTable[self.currentScope]['parent']
-		return self.symbolTable[self.currentScope]['type'] == 'method' and parentScope != None and self.symbolTable[parentScope]['type'] == 'class'
+		scope = self.currentScope
+		while self.symbolTable[scope]['type'] not in ['main', 'method', 'class']:
+			scope = self.symbolTable[scope]['parent']
+		parentScope = self.symbolTable[scope]['parent']
+		return self.symbolTable[scope]['type'] == 'method' and parentScope != None and self.symbolTable[parentScope]['type'] == 'class'
 
 	def checkIfAncestor(self, a, b):
 		#Checks if a is an ancestor of b
