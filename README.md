@@ -7,23 +7,24 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 ##Some salient features:
 
--Support for basic arithmetic and logical expressions
+*	Support for basic arithmetic and logical expressions
 
-	-`unary +,-`
+	-	`unary +,-`
 
-	-`bitwise ~,&,|,^,<<,>>`
+	-	`bitwise ~,&,|,^,<<,>>`
 
-	-`+,-,*,/,%`
+	-	`+,-,*,/,%`
 
-	-`boolean !,&&,||`
+	-	`boolean !,&&,||`
 
-	-`comparison >,<,<=,>=,==,!=`
+	-	`comparison >,<,<=,>=,==,!=`
 
-	-`assignment =,+=,-=,*=,/=`
+	-	`assignment =,+=,-=,*=,/=`
 
--Support for basic imperative constructs
+*	Support for basic imperative constructs
 
-	-if, elsif, else
+	-	if, elsif, else
+	
 
 
 To run the compiler, use the following command:
