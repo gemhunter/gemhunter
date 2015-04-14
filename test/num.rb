@@ -5,6 +5,14 @@ def Int cube(Int x)
 	return x * square(x)
 end
 
+def Int fact(Int x)
+	if x<=0
+		return 1
+	end
+	return x*fact(x-1)
+end
+
 a = 0
 gets a
 puts cube(a)
+puts fact(a)

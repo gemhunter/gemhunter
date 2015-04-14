@@ -75,26 +75,23 @@ class AssemblyCode:
     
     #print the whole assembly code
     def printCode(self):
-        with open(sys.argv[1]+'.s','w+') as outfile:
             header = '.text \nmain:'
             footer = 'exit:\nli $v0, 10 \nsyscall'
 
-            outfile.write(header+'\n')
+            print(header)
 
             for line in self.code:
                 if line[0][0]=='#':
-                    outfile.write(line[0]+', '+line[1]+', '+line[2]+', '+line[3]+'\n')
+                    print line[0]+', '+line[1]+', '+line[2]+', '+line[3]
                     continue
         
-                outfile.write(str(line[0])+" ")
+                print str(line[0])+" ",
                 if str(line[1]):
-                    outfile.write(" ")
-                    outfile.write(str(line[1]))
+                    print " "+str(line[1]),
                 if str(line[2]):
-                    outfile.write(", ")
-                    outfile.write(str(line[2]))
+                    print ", "+str(line[2]),
                 if str(line[3]): 
-                    outfile.write(", ")
-                    outfile.write(str(line[3]))
-                outfile.write("\n")
-            outfile.write(footer)
+                    print ", "+str(line[3]),   
+
+                print "\n"             
+            print(footer)

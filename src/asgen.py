@@ -5,8 +5,8 @@ import threeAddressCode
 import AssemblyCode
 
 
-if __name__=='__main__':
-
+#if __name__=='__main__':
+def run():
         #initialize all the helpers
         ST,TAC = parse()
         AC = AssemblyCode.AssemblyCode(ST,TAC)
@@ -421,4 +421,4 @@ if __name__=='__main__':
                 AC.emit('lw',regt0,'0(%s)'%regt3)
                 AC.flushFromReg(regt0,line[0])
 
-        AC.printCode()
+        return AC,TAC

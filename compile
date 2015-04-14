@@ -1,0 +1,17 @@
+#!/usr/bin/python
+import sys
+sys.path.append('./src')
+import asgen
+import AssemblyCode
+import threeAddressCode
+
+if __name__=="__main__":
+	AC,TAC= asgen.run()
+
+	outfile = sys.argv[1].rsplit(".rb",1)
+	extn = ".s"
+	outfile = extn.join(outfile)
+	outfile = outfile.rsplit("/",1)[1]
+	sys.stdout = open(outfile,'w+')
+
+	AC.printCode()

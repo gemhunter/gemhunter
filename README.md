@@ -1,4 +1,4 @@
-gemhunter - A minimal Ruby compiler
+gemhunter - A customized Ruby compiler
 ===================================
 
 Ruby is a powerful language with support for various programming paradigms and a lot of syntactic sugar. In *gemhunter*, we have eliminated a lot of extra features of Ruby to give a clean implementation, supporting our own brand of Ruby, with minor tweaks from the original.
@@ -238,7 +238,7 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 *	**Input/Output**
 
-	-	The keywords `puts` and `gets` can be used with strings, characters, integers and booleans to do input and output operations.
+	-	The keywords `puts` and `gets` can be used with strings, characters and integers to do input and output operations.
 
 	-	`puts` outputs a line break after every call
 
@@ -251,17 +251,16 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 
 ##Instructions to run
--	TODO
+To run, run the following command:
 
+	./compile test/NAME_OF_TEST_FILE.rb
 
-##Debugging tools
--	Tokenized code
+This will give a file NAME_OF_TEST_FILE.s in the root folder with the MIPS assembly code.
 
--	Parse tree
+To simulate the MIPS code on SPIM simulator, use the following command:
 
--	Three address code
+	spim -file NAME_OF_TEST_FILE.s
 
--	MIPS code
 
 ##References
 -	[CS335A - Compiler Design](http://web.cse.iitk.ac.in/users/subhajit/courses/CS335_Jan2015/CS335.php) (2014-15/Spring at IIT Kanpur by Prof. Subhajit Roy)
@@ -269,17 +268,3 @@ Ruby is a powerful language with support for various programming paradigms and a
 -	[Documentation for PLY](http://www.dabeaz.com/ply/)
 
 -	[Documentation for Ruby](http://ruby-doc.org/)
-
-
-
-
-##Old stuff
-
-To run the compiler, use the following command:
-`bin/irgen.py test/nameOfTestFile`
-
-This generates output.out file in root folder
-
-We do not provide a makefile since running python is too easy.
-
-To clean directory run `make clean`

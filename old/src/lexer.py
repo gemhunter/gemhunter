@@ -4,19 +4,29 @@ import sys
 import re
 import os
 import lex
-from termcolor import colored
 
 # List of token names.
 tokens = (
+"LSHIFTEQ",
+"RSHIFTEQ",
+"ANDEQ",
+"OREQ",
+"BITANDEQ",
+"BITOREQ",
+"BITNOTEQ",
 "PLUSEQ",
 "MINUSEQ",
 "STAREQ",
 "DIVEQ",
+"MODEQ",
+"POWEQ",
 "POW",
 "EQEQUAL",
 "NOTEQ",
 "GTEQUAL",
 "LTEQUAL",
+"NOEQ",
+"CASEEQ",
 "LSHIFT",
 "RSHIFT",
 "AND",
@@ -24,6 +34,7 @@ tokens = (
 "CHAR",
 "STRING",
 "SEQIN",
+"SEQEX",
 "LOCALVAR",
 "GLOBALVAR",
 "CLASSVAR",
@@ -32,6 +43,7 @@ tokens = (
 "INT",
 "FLOAT",
 "CONST",
+"DOL0",
 "NEWLINE"
 )
 
@@ -40,21 +52,22 @@ literals = "+-*/%><=&|^!~?.:,(){}[];"
 
 # tokens for reserved keywords of ruby
 reserved = {
-    'Array' : "KEYWORD_ARRAY", 
-    'Range' : "KEYWORD_RANGE",
-    'String' : "KEYWORD_STRING",
     'def' : "KEYWORD_DEF",
-    'end' : "KEYWORD_END",
+    'end' : "KEYWORD_end",
     'in' : "KEYWORD_IN",
+    'self' : "KEYWORD_SELF",
+    'unless' : "KEYWORD_UNLESS",
     'redo' : "KEYWORD_REDO",
     'super' : "KEYWORD_SUPER",
     'until' : "KEYWORD_UNTIL",
+    'BEGIN' : "KEYWORD_BEGIN",
     'break' : "KEYWORD_BREAK",
     'do' : "KEYWORD_DO",
     'false' : "KEYWORD_FALSE",
     'next' : "KEYWORD_NEXT",
     'then' : "KEYWORD_THEN",
     'when' : "KEYWORD_WHEN",
+    'END' : "KEYWORD_END",
     'case' : "KEYWORD_CASE",
     'else' : "KEYWORD_ELSE",
     'for' : "KEYWORD_FOR",
@@ -66,30 +79,40 @@ reserved = {
     'if' : "KEYWORD_IF",
     'return' : "KEYWORD_RETURN",
     'yield' : "KEYWORD_YIELD",
-    'guys' : "KEYWORD_GUYS",
-    'puts' : "KEYWORD_PUTS",
-    "gets" : "KEYWORD_GETS",
-    "exit" : "KEYWORD_EXIT",
-    "len" : "KEYWORD_LEN",
+    '__FILE__' : "KEYWORD_FILE",
+    '__LINE__' : "KEYWORD_LINE",
+    '__ENCODING__' : "KEYWORD_ENCODING",
 }
-
 
 tokens = tokens + tuple(reserved.values())
 
+t_LSHIFTEQ = r'<<='
+t_RSHIFTEQ = r'>>='
+t_ANDEQ = r'\&\&='
+t_OREQ = r'\|\|=' 
+t_BITANDEQ = r'\&='
+t_BITOREQ = r'\|='
+t_BITNOTEQ = r'\^='
 t_POW = r'\*\*'
 t_EQEQUAL = r'=='
 t_NOTEQ = r'!='
 t_GTEQUAL = r'>='
 t_LTEQUAL = r'<='
+t_NOEQ = r'<=>'
+t_CASEEQ = r'==='
 t_PLUSEQ = r'\+='
 t_MINUSEQ = r'-='
 t_STAREQ = r'\*='
 t_DIVEQ = r'/='
+t_MODEQ = r'%='
+t_POWEQ = r'\*\*='
 t_LSHIFT = r'<<'
 t_RSHIFT = r'>>'
 t_AND = r'\&\&'
 t_OR = r'\|\|'
 t_SEQIN = r'\.\.'
+t_SEQEX = r'\.\.\.'
+t_DOL0 = r'\$0'
 
 def t_MULTICOMMENT(t):
     r'(?<=\n)=begin(.*\n)+=end(?=\s)'
@@ -130,12 +153,10 @@ def t_INSTANCEVAR(t):
 
 def t_FLOAT(t):
     r'(((\d+\.\d+)|(\.\d+))([eE][\+-]?\d+)?[fF]?) | (((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)[fF]?) | (((\d+\.\d+)|(\.\d+)|\d+)([eE][\+-]?\d+)?[fF])'
-    t.value = float(t.value)
     return t
 
 def t_INT(t):
-    r'([1-9]\d*)|(0[xX][\da-fA-F]+)|(0[_oO][0-7]+)|(0b[01]+)|0'
-    t.value = int(t.value,0)
+    r'(((0[dD]\d)|[1-9])[1-9]*\d*)|(0[xX][\da-fA-F]+)|(0[_oO][0-7]+)|(0b[01]+)|0'
     return t
 
 def t_CHAR(t):
@@ -149,7 +170,7 @@ def t_STRING(t):
     return t
 
 def t_NEWLINE(t):
-    r'\n'
+    r'\n+'
     t.lexer.lineno+= len(t.value)
     return t;
 
@@ -157,8 +178,44 @@ t_ignore = ' \t'
 
 # Error handling rule
 def t_error(t):
-    print colored("Illegal character '%s'" % t.value[0],'yellow'), colored("Skipping it!",'yellow')
+    print "Illegal character '%s'" % t.value[0]
     t.lexer.skip(1)
 
 # Build the lexer
 lexer = lex.lex()
+
+
+if __name__ == "__main__":
+	# Test it out
+	with open(sys.argv[1], 'r') as my_file:
+	     data = my_file.read()
+
+	# Give the lexer some input
+	lexer.input(data)
+
+	# Tokenize
+	currLineNo = lexer.lineno
+	lines = data.split('\n')
+	buff = []
+
+	for tok in lexer:
+		#tok = lexer.token()
+		#if not tok: break      # No more input
+		#print tok
+		if tok.lineno > currLineNo:
+			print lines[currLineNo-1]+"\t"+"#",
+			for item in buff:
+				print item,
+			print "\n",
+			buff = []
+			for i in xrange(currLineNo,tok.lineno-1):
+				print lines[i],"\n",
+			currLineNo = tok.lineno
+		buff.append(tok.type)
+		buffEmpty = 0
+		#buff.append(tok.value)
+
+	print lines[currLineNo-1]+"\t"+"#",
+	for item in buff:
+		print item,
+
