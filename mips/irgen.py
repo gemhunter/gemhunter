@@ -1089,6 +1089,14 @@ def p_primary_expr_len(p):
 				'type' : 'INT'
 				}
 		return
+	elif isinstance(p[3]['type'], tuple) and p[3]['type'][0] == 'STRING':
+		newPlace = ST.createTemp()
+		TAC.emit(newPlace, p[3]['type'][1], '', '=')
+		p[0] = {
+				'place' : newPlace,
+				'type' : 'INT'
+				}
+		return
 	else:
 		error('Cannot take length of non-arrays!')
 		return
@@ -1830,10 +1838,10 @@ def p_outputForCondn(p):
 	#TODO
 	if p[-1]['type'] == 'RANGE':
 		#iterate over range
-
+		dosmt=1
 	else:
 		#iterate over array
-
+		dosmt=1
 	TAC.emit('ifnot', p[-3]['place'], 'goto', p[-3][2])
 	TAC.emit('label', p[-4][1],'', '')
         ST.addBlock()
