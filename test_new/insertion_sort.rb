@@ -1,5 +1,4 @@
 $b = 2
-puts $b
 $a = [5,4,7,9,0,3,2,11,1]
 
 for i in 0..(len($a)-1)
@@ -17,7 +16,8 @@ def Void insertion_sort()
 		$a[j] = x
 	end
 end
-
+puts "in sorted order"
+insertion_sort()
 for i in 0..(len($a)-1)
 	puts $a[i]
 end
