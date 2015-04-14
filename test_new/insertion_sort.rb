@@ -18,14 +18,8 @@ def Void insertion_sort()
 	end
 end
 
-<<<<<<< HEAD
-
-insertion_sort()
-
-=======
 puts "in sorted order"
 insertion_sort()
->>>>>>> 3b52406acf212f5901dc129dc131e766031743da
 for i in 0..(len($a)-1)
 	puts $a[i]
 end
