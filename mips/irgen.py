@@ -1832,13 +1832,25 @@ def p_outputForCondn(p):
 	idenType = 'TYPE_ERROR'
 	if p[-1]['type'] == 'RANGE':
 		#iterate over range
-		dosmt=1
 		#break if over
 		#else assign idenplace, type
+		left = ST.createTemp()
+		right = ST.createTemp()
+		zero = ST.createTemp()
+		four = ST.createTemp()
+		rplace = p[-1]['place']
+		TAC.emit(zero, 0, '', '=')
+		TAC.emit(four, 4, '', '=')
+		TAC.emit(left, rplace, zero, '=*')
+		TAC.emit(right, rplace, four, '=*')
+		TAC.emit(idenPlace, left, p[-4][3], '+')
+		toBrk = ST.createTemp()
+		TAC.emit(toBrk, idenPlace, right, '>')
+		TAC.emit('if', toBrk, 'goto', p[-4][2])
+		idenType = 'INT'
 	else:
 		#iterate over array
 		dosmt=1
-
 	TAC.emit('label', p[-4][1],'', '')
         ST.addBlock()
 	ST.addIdentifier(p[-3],idenPlace,idenType)
