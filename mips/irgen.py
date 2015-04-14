@@ -1859,7 +1859,7 @@ def p_outputForCondn(p):
 		TAC.emit(toBrk, p[-4][3], size, '>=')
 		TAC.emit('if', toBrk, 'goto', p[-4][2])
 		four = ST.createTemp()
-		TAC.emit(four, '4', '', '=')
+		TAC.emit(four, 4, '', '=')
 		nowOffset = ST.createTemp()
 		TAC.emit(nowOffset, p[-4][3], four, '*')
 		TAC.emit(idenPlace, p[-1]['place'], nowOffset, '=*')
