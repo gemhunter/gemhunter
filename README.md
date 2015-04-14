@@ -7,34 +7,84 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 ##Salient features of our Ruby mod:
 
--	Basic data types
+*	###Basic data types
 
 	-	Int (signed integers)
 
-	-	Char (ASCII characters)
+	-	Char (ASCII characters, uses single quotes e.g. 'a', and supports `\n,\t,\',\\,\0` escape sequences)
 
 	-	Bool (boolean `true` and `false`)
 
 	-	Void (can assign value `nil`)
 
-*	Variable declaration, assignment and operations
+	-	String (fixed-size, *not* supporting escape sequences, indexed from 0)
+
+*	###Variable declaration, assignment and operations
 
 	-	There are no explicit declarations. A variable is declared the first time something is assigned to it, using the `=` operator.
-		eg.
+
+		e.g.
+
 			x = 1
 			y = x
+
 		This program declares x on line 1 and assigns a value of 1 to x.
 		It then declares y and assigns the value of x to y.
 
-	-	We *do not* support dynamic typing. Once a variable has been assigned a type, it can't be assigned values of other types.  
+			x  = "Hallo World"
+			x[1] = e
 
-*	Arrays
+		This program declares x as a string of size 12 (including \0), and changes the second character from 'a' to 'e'.
 
-	- 	Strings are fixed size arrays of characters
+	-	We **do not** support dynamic typing. Once a variable has been assigned a type, it can't be assigned values of other types.  
 
-	-	Arrays of 
+		e.g.
 
-*	Operations on variables (basic arithmetic and logical expressions)
+			x = 1
+			x = true
+
+		This is a *wrong* program, as x is of type Int, and assigning a Bool to x is illegal.
+
+		e.g.
+
+			x = "ABC"
+			x = "ABCD"
+
+		This is a *wrong* program, as x is a string of size 3 characters, and assigning a string of size 4 characters to x is illegal.
+
+*	###Arrays
+
+	-	Arrays should have all elements of the same type, with the size of array being included in the type information of that array. Memory for all array objects is assigned dynamically.
+
+		e.g.
+
+			x = [1,2,3]
+			x = [3,4,5]
+
+		This program creates an array `x` in memory, storing 3 integers. Reassigning values to the same array is allowed, as long as type and size of the array is respected.
+
+			x = [1,'a']
+
+		This is a *wrong* program, as all elements of the array should be of the same type.
+
+			x = [1,2]
+			x = [1,2,3]
+
+		This is a *wrong* program, as the size of an array can not be changed.
+
+	-	Since arrays themselves are implicit data types, arrays of arrays (multi-dimensional arrays) can be used. However, the types and sizes of the arrays should be respected according to preceding rules.
+
+		e.g.
+
+			x = [[1,2],[3,4]]
+			y = [5,6]
+			x[1] = y
+			x[1][1] = 7
+
+		This program declares x as a 2x2 integer array, and y as a one-dimensional integer array of size two, and does some valid assignments.
+
+
+*	###Operations on variables (basic arithmetic and logical expressions)
 
 	-	unary `+,-`
 

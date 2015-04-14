@@ -33,19 +33,15 @@ end
 
 #x = B.new()
 #puts x.addtob(5)
-
-z = 1
-xy = z
-puts xy
+x = [[1,2],[3,4]]
+y = [5,6]
+x[1] = y
+puts x[1][1]
 puts '\n'
-
-x = true
-y = false
 
 
 b = ["haha","hads"]
 puts b[1]
 puts '\n'
 puts b[0]
-puts x
 puts '\n'
