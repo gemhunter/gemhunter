@@ -34,11 +34,18 @@ end
 #x = B.new()
 #puts x.addtob(5)
 
+z = 1
+xy = z
+puts xy
+puts '\n'
 
+x = true
+y = false
 
 
 b = ["haha","hads"]
 puts b[1]
 puts '\n'
 puts b[0]
+puts x
 puts '\n'

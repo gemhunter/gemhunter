@@ -5,26 +5,53 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 *gemhunter* is written completely in Python, making use of the PLY (Python Lex-Yacc).
 
-##Some salient features:
+##Salient features of our Ruby mod:
 
-*	Support for basic arithmetic and logical expressions
+-	Basic data types
 
-	-	`unary +,-`
+	-	Int (signed integers)
 
-	-	`bitwise ~,&,|,^,<<,>>`
+	-	Char (ASCII characters)
 
-	-	`+,-,*,/,%`
+	-	Bool (boolean `true` and `false`)
 
-	-	`boolean !,&&,||`
+	-	Void (can assign value `nil`)
 
-	-	`comparison >,<,<=,>=,==,!=`
+*	Variable declaration, assignment and operations
 
-	-	`assignment =,+=,-=,*=,/=`
+	-	There are no explicit declarations. A variable is declared the first time something is assigned to it, using the `=` operator.
+		eg.
+			x = 1
+			y = x
+		This program declares x on line 1 and assigns a value of 1 to x.
+		It then declares y and assigns the value of x to y.
+
+	-	We *do not* support dynamic typing. Once a variable has been assigned a type, it can't be assigned values of other types.  
+
+*	Arrays
+
+	- 	Strings are fixed size arrays of characters
+
+	-	Arrays of 
+
+*	Operations on variables (basic arithmetic and logical expressions)
+
+	-	unary `+,-`
+
+	-	bitwise `~,&,|,^,<<,>>`
+
+	-	arithmetic `+,-,*,/,%`
+
+	-	boolean `!,&&,||`
+
+	-	comparison `>,<,<=,>=,==,!=`
+
+	-	assignment `+=,-=,*=,/=`
 
 *	Support for basic imperative constructs
 
 	-	if, elsif, else
-	
+
 
 
 To run the compiler, use the following command:

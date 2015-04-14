@@ -1,6 +1,6 @@
 .text 
 main:
-addi  $sp, $sp, -232
+addi  $sp, $sp, -264
 #goto , l0 ,  , 
 b  l0
 #label , m0 ,  , 
@@ -778,236 +778,216 @@ jr  $ra
 #methodEnds ,  ,  , 
 #label , l8 ,  , 
 l8: 
-#t111 , 20 ,  , new
+#t111 , 1 ,  , =
+li  $t0, 1
+sw  $t0, 4($sp)
+#t112 , t111 ,  , =
+lw  $t0, 4($sp)
+sw  $t0, 8($sp)
+#t113 , t112 ,  , =
+lw  $t0, 8($sp)
+sw  $t0, 12($sp)
+#putint , t113 ,  , 
+lw  $a0, 12($sp)
+li  $v0, 1
+syscall 
+#t114 , '\n' ,  , =
+li  $t0, 10
+sw  $t0, 16($sp)
+#putchar , t114 ,  , 
+lw  $a0, 16($sp)
+li  $v0, 11
+syscall 
+#t115 , true ,  , =
+li  $t0, 1
+sw  $t0, 20($sp)
+#t116 , t115 ,  , =
+lw  $t0, 20($sp)
+sw  $t0, 24($sp)
+#t117 , false ,  , =
+li  $t0, 0
+sw  $t0, 28($sp)
+#t118 , t117 ,  , =
+lw  $t0, 28($sp)
+sw  $t0, 32($sp)
+#t119 , 20 ,  , new
 li  $a0, 20
 li  $v0, 9
 syscall 
-sw  $v0, 4($sp)
-#t112 , 'h' ,  , =
+sw  $v0, 36($sp)
+#t120 , 'h' ,  , =
 li  $t0, 104
-sw  $t0, 8($sp)
-#t113 , 0 ,  , =
-li  $t0, 0
-sw  $t0, 12($sp)
-#t111 , t113 , t112 , *=
-lw  $t0, 4($sp)
-lw  $t1, 12($sp)
-lw  $t2, 8($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t114 , 'a' ,  , =
-li  $t0, 97
-sw  $t0, 16($sp)
-#t115 , 4 ,  , =
-li  $t0, 4
-sw  $t0, 20($sp)
-#t111 , t115 , t114 , *=
-lw  $t0, 4($sp)
-lw  $t1, 20($sp)
-lw  $t2, 16($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t116 , 'h' ,  , =
-li  $t0, 104
-sw  $t0, 24($sp)
-#t117 , 8 ,  , =
-li  $t0, 8
-sw  $t0, 28($sp)
-#t111 , t117 , t116 , *=
-lw  $t0, 4($sp)
-lw  $t1, 28($sp)
-lw  $t2, 24($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t118 , 'a' ,  , =
-li  $t0, 97
-sw  $t0, 32($sp)
-#t119 , 12 ,  , =
-li  $t0, 12
-sw  $t0, 36($sp)
-#t111 , t119 , t118 , *=
-lw  $t0, 4($sp)
-lw  $t1, 36($sp)
-lw  $t2, 32($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t120 , '\0' ,  , =
-li  $t0, 0
 sw  $t0, 40($sp)
-#t121 , 16 ,  , =
-li  $t0, 16
+#t121 , 0 ,  , =
+li  $t0, 0
 sw  $t0, 44($sp)
-#t111 , t121 , t120 , *=
-lw  $t0, 4($sp)
+#t119 , t121 , t120 , *=
+lw  $t0, 36($sp)
 lw  $t1, 44($sp)
 lw  $t2, 40($sp)
 add  $t3, $t0, $t1
 sw  $t2, 0($t3)
-#t122 , 20 ,  , new
+#t122 , 'a' ,  , =
+li  $t0, 97
+sw  $t0, 48($sp)
+#t123 , 4 ,  , =
+li  $t0, 4
+sw  $t0, 52($sp)
+#t119 , t123 , t122 , *=
+lw  $t0, 36($sp)
+lw  $t1, 52($sp)
+lw  $t2, 48($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t124 , 'h' ,  , =
+li  $t0, 104
+sw  $t0, 56($sp)
+#t125 , 8 ,  , =
+li  $t0, 8
+sw  $t0, 60($sp)
+#t119 , t125 , t124 , *=
+lw  $t0, 36($sp)
+lw  $t1, 60($sp)
+lw  $t2, 56($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t126 , 'a' ,  , =
+li  $t0, 97
+sw  $t0, 64($sp)
+#t127 , 12 ,  , =
+li  $t0, 12
+sw  $t0, 68($sp)
+#t119 , t127 , t126 , *=
+lw  $t0, 36($sp)
+lw  $t1, 68($sp)
+lw  $t2, 64($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t128 , '\0' ,  , =
+li  $t0, 0
+sw  $t0, 72($sp)
+#t129 , 16 ,  , =
+li  $t0, 16
+sw  $t0, 76($sp)
+#t119 , t129 , t128 , *=
+lw  $t0, 36($sp)
+lw  $t1, 76($sp)
+lw  $t2, 72($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t130 , 20 ,  , new
 li  $a0, 20
 li  $v0, 9
 syscall 
-sw  $v0, 48($sp)
-#t123 , 'h' ,  , =
+sw  $v0, 80($sp)
+#t131 , 'h' ,  , =
 li  $t0, 104
-sw  $t0, 52($sp)
-#t124 , 0 ,  , =
-li  $t0, 0
-sw  $t0, 56($sp)
-#t122 , t124 , t123 , *=
-lw  $t0, 48($sp)
-lw  $t1, 56($sp)
-lw  $t2, 52($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t125 , 'a' ,  , =
-li  $t0, 97
-sw  $t0, 60($sp)
-#t126 , 4 ,  , =
-li  $t0, 4
-sw  $t0, 64($sp)
-#t122 , t126 , t125 , *=
-lw  $t0, 48($sp)
-lw  $t1, 64($sp)
-lw  $t2, 60($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t127 , 'd' ,  , =
-li  $t0, 100
-sw  $t0, 68($sp)
-#t128 , 8 ,  , =
-li  $t0, 8
-sw  $t0, 72($sp)
-#t122 , t128 , t127 , *=
-lw  $t0, 48($sp)
-lw  $t1, 72($sp)
-lw  $t2, 68($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t129 , 's' ,  , =
-li  $t0, 115
-sw  $t0, 76($sp)
-#t130 , 12 ,  , =
-li  $t0, 12
-sw  $t0, 80($sp)
-#t122 , t130 , t129 , *=
-lw  $t0, 48($sp)
-lw  $t1, 80($sp)
-lw  $t2, 76($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t131 , '\0' ,  , =
-li  $t0, 0
 sw  $t0, 84($sp)
-#t132 , 16 ,  , =
-li  $t0, 16
+#t132 , 0 ,  , =
+li  $t0, 0
 sw  $t0, 88($sp)
-#t122 , t132 , t131 , *=
-lw  $t0, 48($sp)
+#t130 , t132 , t131 , *=
+lw  $t0, 80($sp)
 lw  $t1, 88($sp)
 lw  $t2, 84($sp)
 add  $t3, $t0, $t1
 sw  $t2, 0($t3)
-#t133 , 8 ,  , new
+#t133 , 'a' ,  , =
+li  $t0, 97
+sw  $t0, 92($sp)
+#t134 , 4 ,  , =
+li  $t0, 4
+sw  $t0, 96($sp)
+#t130 , t134 , t133 , *=
+lw  $t0, 80($sp)
+lw  $t1, 96($sp)
+lw  $t2, 92($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t135 , 'd' ,  , =
+li  $t0, 100
+sw  $t0, 100($sp)
+#t136 , 8 ,  , =
+li  $t0, 8
+sw  $t0, 104($sp)
+#t130 , t136 , t135 , *=
+lw  $t0, 80($sp)
+lw  $t1, 104($sp)
+lw  $t2, 100($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t137 , 's' ,  , =
+li  $t0, 115
+sw  $t0, 108($sp)
+#t138 , 12 ,  , =
+li  $t0, 12
+sw  $t0, 112($sp)
+#t130 , t138 , t137 , *=
+lw  $t0, 80($sp)
+lw  $t1, 112($sp)
+lw  $t2, 108($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t139 , '\0' ,  , =
+li  $t0, 0
+sw  $t0, 116($sp)
+#t140 , 16 ,  , =
+li  $t0, 16
+sw  $t0, 120($sp)
+#t130 , t140 , t139 , *=
+lw  $t0, 80($sp)
+lw  $t1, 120($sp)
+lw  $t2, 116($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t141 , 8 ,  , new
 li  $a0, 8
 li  $v0, 9
 syscall 
-sw  $v0, 92($sp)
-#t134 , 0 ,  , =
+sw  $v0, 124($sp)
+#t142 , 0 ,  , =
 li  $t0, 0
-sw  $t0, 96($sp)
-#t133 , t134 , t111 , *=
-lw  $t0, 92($sp)
-lw  $t1, 96($sp)
-lw  $t2, 4($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t135 , 4 ,  , =
-li  $t0, 4
-sw  $t0, 100($sp)
-#t133 , t135 , t122 , *=
-lw  $t0, 92($sp)
-lw  $t1, 100($sp)
-lw  $t2, 48($sp)
-add  $t3, $t0, $t1
-sw  $t2, 0($t3)
-#t136 , t133 ,  , =
-lw  $t0, 92($sp)
-sw  $t0, 104($sp)
-#t137 , 1 ,  , =
-li  $t0, 1
-sw  $t0, 108($sp)
-#t138 , 4 ,  , =
-li  $t0, 4
-sw  $t0, 112($sp)
-#t139 , t137 , t138 , *
-lw  $t1, 108($sp)
-lw  $t2, 112($sp)
-mul  $t0, $t1, $t2
-sw  $t0, 116($sp)
-#t140 , t136 , t139 , =*
-lw  $t1, 104($sp)
-lw  $t2, 116($sp)
-add  $t3, $t1, $t2
-lw  $t0, 0($t3)
-sw  $t0, 120($sp)
-#t141 , 0 ,  , =
-li  $t0, 0
-sw  $t0, 124($sp)
-#t142 , t140 , t141 , =*
-lw  $t1, 120($sp)
-lw  $t2, 124($sp)
-add  $t3, $t1, $t2
-lw  $t0, 0($t3)
 sw  $t0, 128($sp)
-#putchar , t142 ,  , 
-lw  $a0, 128($sp)
-li  $v0, 11
-syscall 
+#t141 , t142 , t119 , *=
+lw  $t0, 124($sp)
+lw  $t1, 128($sp)
+lw  $t2, 36($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
 #t143 , 4 ,  , =
 li  $t0, 4
 sw  $t0, 132($sp)
-#t144 , t140 , t143 , =*
-lw  $t1, 120($sp)
-lw  $t2, 132($sp)
-add  $t3, $t1, $t2
-lw  $t0, 0($t3)
+#t141 , t143 , t130 , *=
+lw  $t0, 124($sp)
+lw  $t1, 132($sp)
+lw  $t2, 80($sp)
+add  $t3, $t0, $t1
+sw  $t2, 0($t3)
+#t144 , t141 ,  , =
+lw  $t0, 124($sp)
 sw  $t0, 136($sp)
-#putchar , t144 ,  , 
-lw  $a0, 136($sp)
-li  $v0, 11
-syscall 
-#t145 , 8 ,  , =
-li  $t0, 8
+#t145 , 1 ,  , =
+li  $t0, 1
 sw  $t0, 140($sp)
-#t146 , t140 , t145 , =*
-lw  $t1, 120($sp)
-lw  $t2, 140($sp)
-add  $t3, $t1, $t2
-lw  $t0, 0($t3)
+#t146 , 4 ,  , =
+li  $t0, 4
 sw  $t0, 144($sp)
-#putchar , t146 ,  , 
-lw  $a0, 144($sp)
-li  $v0, 11
-syscall 
-#t147 , 12 ,  , =
-li  $t0, 12
+#t147 , t145 , t146 , *
+lw  $t1, 140($sp)
+lw  $t2, 144($sp)
+mul  $t0, $t1, $t2
 sw  $t0, 148($sp)
-#t148 , t140 , t147 , =*
-lw  $t1, 120($sp)
+#t148 , t144 , t147 , =*
+lw  $t1, 136($sp)
 lw  $t2, 148($sp)
 add  $t3, $t1, $t2
 lw  $t0, 0($t3)
 sw  $t0, 152($sp)
-#putchar , t148 ,  , 
-lw  $a0, 152($sp)
-li  $v0, 11
-syscall 
-#t149 , 16 ,  , =
-li  $t0, 16
+#t149 , 0 ,  , =
+li  $t0, 0
 sw  $t0, 156($sp)
-#t150 , t140 , t149 , =*
-lw  $t1, 120($sp)
+#t150 , t148 , t149 , =*
+lw  $t1, 152($sp)
 lw  $t2, 156($sp)
 add  $t3, $t1, $t2
 lw  $t0, 0($t3)
@@ -1016,87 +996,87 @@ sw  $t0, 160($sp)
 lw  $a0, 160($sp)
 li  $v0, 11
 syscall 
-#t151 , '\n' ,  , =
-li  $t0, 10
+#t151 , 4 ,  , =
+li  $t0, 4
 sw  $t0, 164($sp)
-#putchar , t151 ,  , 
-lw  $a0, 164($sp)
-li  $v0, 11
-syscall 
-#t152 , 0 ,  , =
-li  $t0, 0
+#t152 , t148 , t151 , =*
+lw  $t1, 152($sp)
+lw  $t2, 164($sp)
+add  $t3, $t1, $t2
+lw  $t0, 0($t3)
 sw  $t0, 168($sp)
-#t153 , 4 ,  , =
-li  $t0, 4
-sw  $t0, 172($sp)
-#t154 , t152 , t153 , *
-lw  $t1, 168($sp)
-lw  $t2, 172($sp)
-mul  $t0, $t1, $t2
-sw  $t0, 176($sp)
-#t155 , t136 , t154 , =*
-lw  $t1, 104($sp)
-lw  $t2, 176($sp)
-add  $t3, $t1, $t2
-lw  $t0, 0($t3)
-sw  $t0, 180($sp)
-#t156 , 0 ,  , =
-li  $t0, 0
-sw  $t0, 184($sp)
-#t157 , t155 , t156 , =*
-lw  $t1, 180($sp)
-lw  $t2, 184($sp)
-add  $t3, $t1, $t2
-lw  $t0, 0($t3)
-sw  $t0, 188($sp)
-#putchar , t157 ,  , 
-lw  $a0, 188($sp)
+#putchar , t152 ,  , 
+lw  $a0, 168($sp)
 li  $v0, 11
 syscall 
-#t158 , 4 ,  , =
-li  $t0, 4
-sw  $t0, 192($sp)
-#t159 , t155 , t158 , =*
-lw  $t1, 180($sp)
-lw  $t2, 192($sp)
+#t153 , 8 ,  , =
+li  $t0, 8
+sw  $t0, 172($sp)
+#t154 , t148 , t153 , =*
+lw  $t1, 152($sp)
+lw  $t2, 172($sp)
 add  $t3, $t1, $t2
 lw  $t0, 0($t3)
+sw  $t0, 176($sp)
+#putchar , t154 ,  , 
+lw  $a0, 176($sp)
+li  $v0, 11
+syscall 
+#t155 , 12 ,  , =
+li  $t0, 12
+sw  $t0, 180($sp)
+#t156 , t148 , t155 , =*
+lw  $t1, 152($sp)
+lw  $t2, 180($sp)
+add  $t3, $t1, $t2
+lw  $t0, 0($t3)
+sw  $t0, 184($sp)
+#putchar , t156 ,  , 
+lw  $a0, 184($sp)
+li  $v0, 11
+syscall 
+#t157 , 16 ,  , =
+li  $t0, 16
+sw  $t0, 188($sp)
+#t158 , t148 , t157 , =*
+lw  $t1, 152($sp)
+lw  $t2, 188($sp)
+add  $t3, $t1, $t2
+lw  $t0, 0($t3)
+sw  $t0, 192($sp)
+#putchar , t158 ,  , 
+lw  $a0, 192($sp)
+li  $v0, 11
+syscall 
+#t159 , '\n' ,  , =
+li  $t0, 10
 sw  $t0, 196($sp)
 #putchar , t159 ,  , 
 lw  $a0, 196($sp)
 li  $v0, 11
 syscall 
-#t160 , 8 ,  , =
-li  $t0, 8
+#t160 , 0 ,  , =
+li  $t0, 0
 sw  $t0, 200($sp)
-#t161 , t155 , t160 , =*
-lw  $t1, 180($sp)
-lw  $t2, 200($sp)
-add  $t3, $t1, $t2
-lw  $t0, 0($t3)
+#t161 , 4 ,  , =
+li  $t0, 4
 sw  $t0, 204($sp)
-#putchar , t161 ,  , 
-lw  $a0, 204($sp)
-li  $v0, 11
-syscall 
-#t162 , 12 ,  , =
-li  $t0, 12
+#t162 , t160 , t161 , *
+lw  $t1, 200($sp)
+lw  $t2, 204($sp)
+mul  $t0, $t1, $t2
 sw  $t0, 208($sp)
-#t163 , t155 , t162 , =*
-lw  $t1, 180($sp)
+#t163 , t144 , t162 , =*
+lw  $t1, 136($sp)
 lw  $t2, 208($sp)
 add  $t3, $t1, $t2
 lw  $t0, 0($t3)
 sw  $t0, 212($sp)
-#putchar , t163 ,  , 
-lw  $a0, 212($sp)
-li  $v0, 11
-syscall 
-#t164 , 16 ,  , =
-li  $t0, 16
+#t164 , 0 ,  , =
+li  $t0, 0
 sw  $t0, 216($sp)
-#t165 , t155 , t164 , =*
-lw  $t1, 180($sp)
+#t165 , t163 , t164 , =*
+lw  $t1, 212($sp)
 lw  $t2, 216($sp)
 add  $t3, $t1, $t2
 lw  $t0, 0($t3)
@@ -1105,11 +1085,67 @@ sw  $t0, 220($sp)
 lw  $a0, 220($sp)
 li  $v0, 11
 syscall 
-#t166 , '\n' ,  , =
-li  $t0, 10
+#t166 , 4 ,  , =
+li  $t0, 4
 sw  $t0, 224($sp)
-#putchar , t166 ,  , 
-lw  $a0, 224($sp)
+#t167 , t163 , t166 , =*
+lw  $t1, 212($sp)
+lw  $t2, 224($sp)
+add  $t3, $t1, $t2
+lw  $t0, 0($t3)
+sw  $t0, 228($sp)
+#putchar , t167 ,  , 
+lw  $a0, 228($sp)
+li  $v0, 11
+syscall 
+#t168 , 8 ,  , =
+li  $t0, 8
+sw  $t0, 232($sp)
+#t169 , t163 , t168 , =*
+lw  $t1, 212($sp)
+lw  $t2, 232($sp)
+add  $t3, $t1, $t2
+lw  $t0, 0($t3)
+sw  $t0, 236($sp)
+#putchar , t169 ,  , 
+lw  $a0, 236($sp)
+li  $v0, 11
+syscall 
+#t170 , 12 ,  , =
+li  $t0, 12
+sw  $t0, 240($sp)
+#t171 , t163 , t170 , =*
+lw  $t1, 212($sp)
+lw  $t2, 240($sp)
+add  $t3, $t1, $t2
+lw  $t0, 0($t3)
+sw  $t0, 244($sp)
+#putchar , t171 ,  , 
+lw  $a0, 244($sp)
+li  $v0, 11
+syscall 
+#t172 , 16 ,  , =
+li  $t0, 16
+sw  $t0, 248($sp)
+#t173 , t163 , t172 , =*
+lw  $t1, 212($sp)
+lw  $t2, 248($sp)
+add  $t3, $t1, $t2
+lw  $t0, 0($t3)
+sw  $t0, 252($sp)
+#putchar , t173 ,  , 
+lw  $a0, 252($sp)
+li  $v0, 11
+syscall 
+#putint , t116 ,  , 
+lw  $a0, 24($sp)
+li  $v0, 1
+syscall 
+#t174 , '\n' ,  , =
+li  $t0, 10
+sw  $t0, 256($sp)
+#putchar , t174 ,  , 
+lw  $a0, 256($sp)
 li  $v0, 11
 syscall 
 exit:
