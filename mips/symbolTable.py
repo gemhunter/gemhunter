@@ -62,7 +62,7 @@ class SymbolTable:
 				}
 		if parent != 'main' :
 			#Inheritance Baby!
-			self.symbolTable[className]['instanceVars'] = self.symbolTable[parent]['instanceVars']
+			self.symbolTable[className]['instanceVars'] = self.symbolTable[parent]['instanceVars'].copy()
 			self.symbolTable[className]['instanceNum'] = self.symbolTable[parent]['instanceNum']
 		self.currentScope = className
 		self.classes.append(className)

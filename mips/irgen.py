@@ -204,6 +204,10 @@ def p_stmt_print(p):
 	else :
 		error('Cannot print this type(%s)!'%str(p[2]['type']))
 		return
+	newLine = ST.createTemp()
+	#NOTE possible bug here
+	TAC.emit(newLine, '\n', '','=')
+	TAC.emit('putchar', newLine, '', '')
 
 def p_stmt_get_uservar(p):
 	'''stmt_get : KEYWORD_GETS user_var 
@@ -1190,7 +1194,7 @@ def p_primary_expr_objectVar(p):
 	if not ST.classExists(p[1]['type']):
 		error('Cannot dereference non-objects (%s)'%p[1]['place'])
 		return
-
+	
 	instVar  = ST.lookUpInstanceVariable(p[1]['type'], "@" + p[3])
 	if instVar != None:
 		#Code for instance var
@@ -1392,7 +1396,7 @@ def p_class_method_call(p):
 			}
 
 #NOTE - figure out what compstmt should be
-#NOTE - implement yield
+#TODO - implement yield
 def p_method_callBlock(p):
 	''' method_call : primary_expr '.' method_var '{' '|' block_param_list '|' compstmt '}' 
 	| method_var '{' '|' block_param_list '|' compstmt '}' 
