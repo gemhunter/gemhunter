@@ -1,10 +1,3 @@
-# def Int test(Array(Int,4) arr, Int i)
-# 	if i == 3 
-# 		return i
-# 	end
-# 	return arr[i] + test(arr,i+1)
-# end
-
 def Int prod(Array(Int,3) arr)
 	ans = 1
 	for i in arr
