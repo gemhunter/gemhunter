@@ -3,7 +3,7 @@ gemhunter - A minimal Ruby compiler
 
 Ruby is a powerful language with support for various programming paradigms and a lot of syntactic sugar. In *gemhunter*, we have eliminated a lot of extra features of Ruby to give a clean implementation, supporting our own brand of Ruby, with minor tweaks from the original.
 
-*gemhunter* is written completely in Python, making use of the PLY (Python Lex-Yacc).
+*gemhunter* is written completely in Python, making use of the PLY (Python Lex-Yacc) package.
 
 ##Language Features:
 -	Imperative and object-oriented paradigm
