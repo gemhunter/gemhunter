@@ -20,6 +20,6 @@ POSSIBLE
 
 
 README
-not doing cute dynamic (dispatching and typing) stuff and syntactic sugars
+not doing cute dynamic (dispatching and typing) stuff and syntactic sugar
 fn can access args and globals only (and self class)
 no dynamic scoping for funcs

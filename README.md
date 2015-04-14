@@ -12,9 +12,13 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 -	Dynamic memory allocation to arrays, strings and objects
 
--	Implicit static typing and type checking
+-	Implicit static typing and type checking, no dynamic typing
 
 -	Non duck-typed language
+
+-	Follows lexical scoping, no support for dynamic scoping
+
+-	Static dispatching of functions, as upcasting is not allowed
 
 
 ##Language specifications:
@@ -163,6 +167,8 @@ Ruby is a powerful language with support for various programming paradigms and a
 				return x*factorial(x-1)
 			end
 
+	-	Methods can only access the arguments, global variables and the instance and class variables from the class containing the method
+
 	-	Method name should follow one of the following rules:
 
 		+	It may begin with _ or a-z, and contain a-z, A-Z, 0-9 or _
@@ -233,6 +239,8 @@ Ruby is a powerful language with support for various programming paradigms and a
 *	**Input/Output**
 
 	-	The keywords `puts` and `gets` can be used with strings, characters, integers and booleans to do input and output operations.
+
+	-	`puts` outputs a line break after every call
 
 		e.g.
 
