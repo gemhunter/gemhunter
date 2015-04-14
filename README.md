@@ -5,6 +5,18 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 *gemhunter* is written completely in Python, making use of the PLY (Python Lex-Yacc).
 
+##Language Features:
+-	Imperative and object-oriented paradigm
+
+-	Inheritance of instance variables and methods, with method dispatch over the whole inheritance hierarchy
+
+-	Dynamic memory allocation to arrays, strings and objects
+
+-	Implicit static typing and type checking
+
+-	Non duck-typed language
+
+
 ##Language specifications:
 
 *	**Basic data types**
@@ -83,6 +95,9 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 		This program declares x as a 2x2 integer array, and y as a one-dimensional integer array of size two, and does some valid assignments.
 
+	-	Arrays are special data types, with type Array(ElementType,ElementNos).
+
+	-	Although arrays are passed to methods by reference, you can't do pointer arithmetic on them.
 
 *	**Arithmetic and Logical Operators**
 
@@ -158,17 +173,99 @@ Ruby is a powerful language with support for various programming paradigms and a
 
 	-	Definition
 
-			class className
+			class className < parentClass
 
-			   [class variable operations]
+			   [only class variable operations]
 
 			   def className new (arguments)
 			       body-of-method-new
 			   end
 
-			   [class-methods]
+			   [other class methods]
 			   
 			end
+
+	-	Class name should start with A-Z, and contain a-z, A-Z, 0-9 or _
+
+	-	The class can have any number of valid class variable operations interspersed in the class method definitions.
+
+	-	Every class *should* have a `new` method, with return type as the class name. Apart from this, `new` method is like any other method. Declare `new` method before any other method in the class.
+
+	-	Any instance variable used in any class method should be declared in the `new` method of the class.
+
+	-	All the instance variables, class variables and methods are inherited from the parent class. However, overriding methods may be declared in the class.
+
+*	**Variable Types**
+
+	-	*Global* variable names start with $. They can be declared and used anywhere in the whole program, with a global scope.
+
+	-	*Local* variable names start with _ or a-z. They have a scope limited to the current method definition.
+
+	-	*Class* variable names start with @@. They are shared across all the instances of a class. They are declared and used anywhere in the body of the class, but not inside class methods. While dereferencing from an object, drop the @@. Class variables can also be accessed without using an object.
+
+		e.g.
+
+			class Try
+				@@a = 1
+				@@b = 2
+				def Try new
+					Try.a = 2
+				end
+			end
+
+			x = Try.new()
+			x.a = 3
+			Try.b = 4
+
+	-	*Instance* variable names start with @. They are declared in the `new` method of the class. They are inherited by the children of the class. While dereferencing from an object, drop the @.
+
+		e.g.
+
+			class Try
+				def Try new
+					@c = 3
+				end
+			end
+
+			x = Try.new()
+			x.c = 4
+
+*	**Input/Output**
+
+	-	The keywords `puts` and `gets` can be used with strings, characters, integers and booleans to do input and output operations.
+
+		e.g.
+
+			a = 1
+			gets a
+			puts a
+
+
+
+##Instructions to run
+-	TODO
+
+
+##Debugging tools
+-	Tokenized code
+
+-	Parse tree
+
+-	Three address code
+
+-	MIPS code
+
+##References
+-	[CS335A - Compiler Design](http://web.cse.iitk.ac.in/users/subhajit/courses/CS335_Jan2015/CS335.php) (2014-15/Spring at IIT Kanpur by Prof. Subhajit Roy)
+
+-	[Documentation for PLY](http://www.dabeaz.com/ply/)
+
+-	[Documentation for Ruby](http://ruby-doc.org/)
+
+
+
+
+##Old stuff
 
 To run the compiler, use the following command:
 `bin/irgen.py test/nameOfTestFile`
