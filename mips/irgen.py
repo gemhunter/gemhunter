@@ -833,24 +833,16 @@ def p_l6_expr(p):
 	}
 	if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
 		return
-	if p[2] == '+':
-		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
-			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
-			p[0]['type'] = 'INT'
-		elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
-			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
-			p[0]['type'] = 'FLOAT'
-		else:
-			error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
-	elif p[2] == '-':
-		if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
-			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
-			p[0]['type'] = 'INT'
-		elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
-			TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
-			p[0]['type'] = 'FLOAT'
-		else:
-			error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
+	if p[1]['type'] in ['CHAR', 'INT'] and p[3]['type'] in ['INT','CHAR'] :
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'INT'
+		if p[1]['type']=='CHAR' or p[3]['type']=='CHAR':
+			p[0]['type']= 'CHAR'
+	elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT':
+		TAC.emit(newPlace,p[1]['place'],p[3]['place'],p[2])
+		p[0]['type'] = 'FLOAT'
+	else:
+		error('Type Error (Expected floats or integers) '+p[1]['place']+','+p[3]['place']+'!')
 
 def p_l5_expr(p):
 	'''l5_expr : l5_expr '*' l4_expr
@@ -1795,30 +1787,30 @@ def p_case_clause(p):
 def p_for_block(p):
 	'''for_block : KEYWORD_FOR M_for1 LOCALVAR KEYWORD_IN expr M_for2 do_clause imp_body_compstmt KEYWORD_END
 	'''
-#	ST.endBlock()
-#	TAC.emit('goto', p[2][0], '', '')
-#	TAC.emit('label', p[2][2], '', '')
-#	p[0] = {}
-#	if p[7].get('breakList') != None:
-#		instr = []
-#		for i in p[7]['breakList']:
-#			instr += [i[1]]
-#
-#		TAC.patch(instr, p[2][2])
-#	if p[7].get('nextList') != None:
-#		instr = []
-#		for i in p[7]['nextList']:
-#			instr += [i[1]]
-#
-#		TAC.patch(instr, p[2][0])
-#	if p[7].get('redoList') != None:
-#		instr = []
-#		for i in p[7]['redoList']:
-#			instr += [i[1]]
-#
-#		TAC.patch(instr, p[2][1])
-#	if p[7].get('retType') != None:
-#		p[0]['retType'] = p[7]['retType']
+	ST.endBlock()
+	TAC.emit('goto', p[2][0], '', '')
+	TAC.emit('label', p[2][2], '', '')
+	p[0] = {}
+	if p[8].get('breakList') != None:
+		instr = []
+		for i in p[8]['breakList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][2])
+	if p[8].get('nextList') != None:
+		instr = []
+		for i in p[8]['nextList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][0])
+	if p[8].get('redoList') != None:
+		instr = []
+		for i in p[8]['redoList']:
+			instr += [i[1]]
+
+		TAC.patch(instr, p[2][1])
+	if p[8].get('retType') != None:
+		p[0]['retType'] = p[8]['retType']
 
 def p_makeForLabels(p):
 	''' M_for1 : '''
@@ -1836,16 +1828,20 @@ def p_outputForCondn(p):
 		error('Can only iterate over arrays/range!')
 		return
 	#TODO
+	idenPlace = ST.createTemp()
+	idenType = 'TYPE_ERROR'
 	if p[-1]['type'] == 'RANGE':
 		#iterate over range
 		dosmt=1
+		#break if over
+		#else assign idenplace, type
 	else:
 		#iterate over array
 		dosmt=1
-	TAC.emit('ifnot', p[-3]['place'], 'goto', p[-3][2])
+
 	TAC.emit('label', p[-4][1],'', '')
         ST.addBlock()
-
+	ST.addIdentifier(p[-3],idenPlace,idenType)
 
 ##################
 #Class Definition#
