@@ -16,3 +16,11 @@ a = 0
 gets a
 puts cube(a)
 puts fact(a)
+
+if a == 0
+    puts "Enter non-zero value"
+    b = 0
+    gets b
+end
+
+puts b
