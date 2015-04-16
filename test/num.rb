@@ -23,6 +23,19 @@ if a == 0
     gets b
 end
 
-#puts square(a)
+puts "Until example"
 
-#puts b
+x = 1
+until x >= 20
+	puts x
+	x+=1
+	if x<15
+		x+=2
+		next
+	else
+        x = 21
+        c = 'h'
+	end
+    #puts c
+end
+puts x
