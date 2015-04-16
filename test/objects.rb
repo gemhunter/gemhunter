@@ -48,7 +48,7 @@ class Abc
 				ans += arr[i][j]
 				j += 1
 			end
-			if ans==3
+			if ans == 3
 				puts i
 				next
 			end
@@ -101,6 +101,20 @@ puts y.flatten([[1,2,3],[-1,2,3],[1,2,3],[1,2,3]])
 puts y.a
 y.id(1)
 puts y.a
+
+a = 1
+b = 2
+
+if a == 1
+	puts "I'm here"
+	if b == 1
+		puts "I shouldn't be here"
+	elsif b == 2
+		puts "Wrong again"
+	else
+		puts "Yay!!!"
+	end
+end	
 
 #puts here
 y.incvar(1)
