@@ -3,6 +3,7 @@ def Int prod(Array(Int,3) arr)
 	for i in arr
 		ans *= i
 	end
+	#break redo next
 	return ans
 end
 
@@ -100,5 +101,7 @@ puts y.flatten([[1,2,3],[-1,2,3],[1,2,3],[1,2,3]])
 puts y.a
 y.id(1)
 puts y.a
+
+#puts here
 y.incvar(1)
 puts fact(y.var)

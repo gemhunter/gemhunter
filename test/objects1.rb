@@ -66,6 +66,17 @@ puts doc2.doc_count
 
 staff = [doc1,doc2,doc3]
 
+
+for doc in staff
+    puts "Doctor:"
+    doc.id()
+    puts "Patient:"
+    puts doc.patient.name
+    puts '\n'
+end
+
+puts '\n'
+
 puts "Patient of first doctor is"
 puts staff[0].patient.name
 puts "Patient of third doctor is"
