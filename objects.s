@@ -1,6 +1,10 @@
 .text 
 main:
+<<<<<<< HEAD
 addi   $sp , $sp , -1176 
+=======
+addi   $sp , $sp , -384 
+>>>>>>> 65cbbe91cea084bf9014ec127e5a7fb03ac4c307
 
 #goto , l0 ,  , 
 b   l0 
@@ -2742,6 +2746,7 @@ li   $t0 , 1
 
 sw   $t0 , 304($sp) 
 
+<<<<<<< HEAD
 #t210 , t209 ,  , =
 lw   $t0 , 304($sp) 
 
@@ -5034,11 +5039,54 @@ sw   $t0 , 1116($sp)
 lw   $t1 , 1024($sp) 
 
 lw   $t2 , 1116($sp) 
+=======
+#param , t164 ,  , 
+lw   $t0 , 124($sp) 
+
+sw   $t0 , -4($sp) 
+
+#param , t209 ,  , 
+lw   $t0 , 304($sp) 
+
+sw   $t0 , -8($sp) 
+
+#t210 , m8 ,  , call
+addi   $sp , $sp , -8 
+
+addi   $sp , $sp , -4 
+
+sw   $fp , 0($sp) 
+
+addi   $sp , $sp , -4 
+
+sw   $ra , 0($sp) 
+
+move   $fp , $sp 
+
+jal   m8 
+
+lw   $ra , 0($sp) 
+
+addi   $sp , $sp , 16 
+
+sw   $v0 , 308($sp) 
+
+#t212 , 0 ,  , =
+li   $t0 , 0 
+
+sw   $t0 , 312($sp) 
+
+#t211 , t164 , t212 , =*
+lw   $t1 , 124($sp) 
+
+lw   $t2 , 312($sp) 
+>>>>>>> 65cbbe91cea084bf9014ec127e5a7fb03ac4c307
 
 add   $t3 , $t1 , $t2 
 
 lw   $t0 , 0($t3) 
 
+<<<<<<< HEAD
 sw   $t0 , 1120($sp) 
 
 #putchar , t413 ,  , 
@@ -5101,11 +5149,56 @@ sw   $t0 , 1140($sp)
 
 #putchar , t418 ,  , 
 lw   $a0 , 1140($sp) 
+=======
+sw   $t0 , 316($sp) 
+
+#param , t211 ,  , 
+lw   $t0 , 316($sp) 
+
+sw   $t0 , -4($sp) 
+
+#t213 , m10 ,  , call
+addi   $sp , $sp , -4 
+
+addi   $sp , $sp , -4 
+
+sw   $fp , 0($sp) 
+
+addi   $sp , $sp , -4 
+
+sw   $ra , 0($sp) 
+
+move   $fp , $sp 
+
+jal   m10 
+
+lw   $ra , 0($sp) 
+
+addi   $sp , $sp , 12 
+
+sw   $v0 , 320($sp) 
+
+#putint , t213 ,  , 
+lw   $a0 , 320($sp) 
+
+li   $v0 , 1 
+
+syscall  
+
+#t214 , '\n' ,  , =
+li   $t0 , 10 
+
+sw   $t0 , 324($sp) 
+
+#putchar , t214 ,  , 
+lw   $a0 , 324($sp) 
+>>>>>>> 65cbbe91cea084bf9014ec127e5a7fb03ac4c307
 
 li   $v0 , 11 
 
 syscall  
 
+<<<<<<< HEAD
 #label , l49 ,  , 
 l49:  
 
@@ -5201,11 +5294,108 @@ sw   $v0 , 1160($sp)
 
 #putint , t423 ,  , 
 lw   $a0 , 1160($sp) 
+=======
+#t215 , 1 ,  , =
+li   $t0 , 1 
+
+sw   $t0 , 328($sp) 
+
+#t216 , 1 ,  , =
+li   $t0 , 1 
+
+sw   $t0 , 332($sp) 
+
+#t217 , 1 ,  , =
+li   $t0 , 1 
+
+sw   $t0 , 336($sp) 
+
+#t218 , 12 ,  , new
+li   $a0 , 12 
+
+li   $v0 , 9 
+
+syscall  
+
+sw   $v0 , 340($sp) 
+
+#t219 , 0 ,  , =
+li   $t0 , 0 
+
+sw   $t0 , 344($sp) 
+
+#t218 , t219 , t215 , *=
+lw   $t0 , 340($sp) 
+
+lw   $t1 , 344($sp) 
+
+lw   $t2 , 328($sp) 
+
+add   $t3 , $t0 , $t1 
+
+sw   $t2 , 0($t3) 
+
+#t220 , 4 ,  , =
+li   $t0 , 4 
+
+sw   $t0 , 348($sp) 
+
+#t218 , t220 , t216 , *=
+lw   $t0 , 340($sp) 
+
+lw   $t1 , 348($sp) 
+
+lw   $t2 , 332($sp) 
+
+add   $t3 , $t0 , $t1 
+
+sw   $t2 , 0($t3) 
+
+#t221 , 8 ,  , =
+li   $t0 , 8 
+
+sw   $t0 , 352($sp) 
+
+#t218 , t221 , t217 , *=
+lw   $t0 , 340($sp) 
+
+lw   $t1 , 352($sp) 
+
+lw   $t2 , 336($sp) 
+
+add   $t3 , $t0 , $t1 
+
+sw   $t2 , 0($t3) 
+
+#t222 , t218 ,  , =
+lw   $t0 , 340($sp) 
+
+sw   $t0 , 356($sp) 
+
+#t223 , true ,  , =
+li   $t0 , 1 
+
+sw   $t0 , 360($sp) 
+
+#t224 , t223 ,  , =
+lw   $t0 , 360($sp) 
+
+sw   $t0 , 364($sp) 
+
+#t225 , 3 ,  , =
+li   $t0 , 3 
+
+sw   $t0 , 368($sp) 
+
+#putint , t225 ,  , 
+lw   $a0 , 368($sp) 
+>>>>>>> 65cbbe91cea084bf9014ec127e5a7fb03ac4c307
 
 li   $v0 , 1 
 
 syscall  
 
+<<<<<<< HEAD
 #t424 , '\n' ,  , =
 li   $t0 , 10 
 
@@ -5213,6 +5403,15 @@ sw   $t0 , 1164($sp)
 
 #putchar , t424 ,  , 
 lw   $a0 , 1164($sp) 
+=======
+#t226 , '\n' ,  , =
+li   $t0 , 10 
+
+sw   $t0 , 372($sp) 
+
+#putchar , t226 ,  , 
+lw   $a0 , 372($sp) 
+>>>>>>> 65cbbe91cea084bf9014ec127e5a7fb03ac4c307
 
 li   $v0 , 11 
 
