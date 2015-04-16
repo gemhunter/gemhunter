@@ -23,4 +23,6 @@ if a == 0
     gets b
 end
 
-puts b
+#puts square(a)
+
+#puts b

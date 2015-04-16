@@ -20,6 +20,9 @@ puts sum
 
 class Abc
 	@@a = 1
+	#local = 1
+	#@instance = 1
+	#gets @@a
 	def Abc new()
 		@var = 1
 		@arr = [[1,-2],[-3,4],[5,6]]
@@ -31,7 +34,11 @@ class Abc
 		end
 		printlen()
 	end
+	#incvar(1)
+	#use @var here
 	def Int flatten(Array(Array(Int,3),4) arr)
+		#use @notvar here
+		#read a bool here
 		ans = 0
 		for x in arr
 			do
@@ -76,6 +83,7 @@ class Xyz < Abc
 	end
 	def Void incvar(Int a)
 		super(a)
+		#return 1
 	end
 	def Void id(Int x)
 		@a = @a + x
@@ -102,6 +110,36 @@ puts y.a
 y.id(1)
 puts y.a
 
-#puts here
+#puts true
+
+
 y.incvar(1)
+#y.incvar(true)
+#y.kuchhBhi?(2)
+
+
+#undefinedMethod("not gonna happen")
+
+
 puts fact(y.var)
+
+#use an undefined variable
+
+#y.a[1]
+
+lol = [1,1,1]
+wut = true
+#lol[wut]
+
+#@@compilersAreNotBad = 2
+
+#lol.wut
+puts len 					(lol)
+#gets y.b
+
+#puts len(wut)
+
+#emptyArray = []
+#arrayType = [1,'a']
+
+#dummyObject  = NonExistentClass.new()
