@@ -9,7 +9,6 @@ puts x
 c = [42,20-10,+10,-10]
 #-12 && 1 ** ( !a + 123 ) - -123.32 + 12
 #@@ans = 1
-#@@@ans = 1
 n = nil
 #n = 1
 #puts n
@@ -18,6 +17,8 @@ puts y
 #s = 3 && 4
 #puts s
 t = 3 & 4
+puts t
+t = 5 & 4
 puts t
 puts "nil example"
 puts a
